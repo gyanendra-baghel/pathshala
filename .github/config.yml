@@ -1,0 +1,7 @@
+# Controls whether users can create blank issues (without selecting a template)
+blank_issues_enabled: false
+
+# You can specify labels that will automatically be added to issues created from certain templates.
+labels:
+  - bug
+  - enhancement
