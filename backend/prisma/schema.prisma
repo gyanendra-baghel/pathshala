@@ -1,0 +1,202 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model School {
+  id            Int            @id @default(autoincrement())
+  name          String         @unique
+  contactEmail  String
+  contactPhone  String
+  schoolBoard   SchoolBoard    // Example: "CBSE", "ICSE"
+  config        Json           // Custom settings for the school (optional)
+
+  address       SchoolAddress?
+  feeStructures FeeStructure[]
+  grades        Grade[]
+  users         User[]
+  students      Student[]
+  teachers      Teacher[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+
+model Attendance {
+  id            Int            @id @default(autoincrement())
+  gradeId       Int?
+  studentId     Int
+  date          DateTime
+  status        AttendanceStatus
+  reason        String?        // Optional reason for absence or lateness
+
+  grade         Grade?          @relation(fields: [gradeId], references: [id])
+  student       Student        @relation(fields: [studentId], references: [id])
+}
+
+
+model User {
+  id            Int            @id @default(autoincrement())
+  firstName     String
+  lastName      String
+  email         String         @unique
+  password      String
+  phoneNumber   String?
+  aadharNumber  String?        
+  role          UserRole
+  schoolId      Int
+
+  student       Student?
+  teacher       Teacher?
+  school        School       @relation(fields: [schoolId], references: [id])
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model Student {
+  id            Int            @id @default(autoincrement())
+  userId        Int            @unique
+  gradeId       Int
+  schoolId      Int
+  enrollmentDate DateTime      @default(now())
+  dob           DateTime
+
+  user          User           @relation(fields: [userId], references: [id])
+  grade         Grade          @relation(fields: [gradeId], references: [id])
+  school        School         @relation(fields: [schoolId], references: [id])
+  fees          Fee[]
+  attendance    Attendance[]
+}
+
+model Grade {
+  id        Int      @id @default(autoincrement())
+  name      String   // Example: "Grade 1", "Grade 10"
+  classTeacherId Int? // Optional: Class teacher for this grade
+  schoolId      Int
+  schedule      Json           // Store structured schedule data
+
+  students  Student[]
+  subjects  SubjectGrade[] // Subjects in this grade
+
+  school        School         @relation(fields: [schoolId], references: [id])
+  classTeacher  Teacher?       @relation(fields: [classTeacherId], references: [id])
+  attendance    Attendance[]
+}
+
+model Subject {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  description String?
+  schoolId    Int
+
+  subjectGrades SubjectGrade[]
+}
+
+model SubjectGrade {
+  id        Int       @id @default(autoincrement())
+  subjectId Int
+  gradeId   Int
+  teacherId Int      // Assigned teacher for this subject and grade
+
+  subject   Subject   @relation(fields: [subjectId], references: [id])
+  grade     Grade     @relation(fields: [gradeId], references: [id])
+  teacher   Teacher  @relation(fields: [teacherId], references: [id])
+}
+
+model Teacher {
+  id            Int            @id @default(autoincrement())
+  userId        Int            @unique
+  schoolId      Int
+  subject       String
+  joinDate      DateTime       @default(now())
+
+  user          User           @relation(fields: [userId], references: [id])
+  school        School         @relation(fields: [schoolId], references: [id])
+  grades        Grade[]
+  subjects      SubjectGrade[]
+}
+
+model Fee {
+  id            Int            @id @default(autoincrement())
+  studentId     Int
+  feeStructureId Int
+  status        FeeStatus
+  amount        Float
+
+  student       Student        @relation(fields: [studentId], references: [id])
+  feeStructure  FeeStructure   @relation(fields: [feeStructureId], references: [id])
+  createdAt      DateTime         @default(now())
+}
+
+model FeeStructure {
+  id            Int            @id @default(autoincrement())
+  schoolId      Int
+  gradeId       Int?
+  feeType       FeeType
+  amount        Float
+  frequency     FeeFrequency
+  dueDate       DateTime
+
+  school        School         @relation(fields: [schoolId], references: [id])
+  fees          Fee[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model SchoolAddress {
+  id            Int            @id @default(autoincrement())
+  schoolId      Int            @unique
+  street        String
+  city          String
+  state         String
+  country       String
+  postalCode    String
+
+  school        School         @relation(fields: [schoolId], references: [id])
+}
+
+enum FeeType {
+  TUITION
+  TRANSPORT
+  EXTRACURRICULAR
+  OTHER
+}
+
+enum FeeFrequency {
+  MONTHLY
+  YEARLY
+  ONCE
+}
+
+enum FeeStatus {
+  PARTIAL_PAID
+  PENDING
+  PAID
+  OVERDUE
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  TEACHER
+  STUDENT
+  PARENT
+}
+
+enum SchoolBoard {
+  CBSE
+  ICSE
+  STATE_BOARD
+  OTHER
+}

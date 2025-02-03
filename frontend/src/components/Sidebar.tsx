@@ -1,0 +1,112 @@
+import { Link } from "react-router-dom";
+import {
+  LogOut,
+  User,
+  Calendar,
+  DollarSign,
+  Bell,
+  BookOpen,
+  Users,
+  GraduationCap,
+  LayoutDashboard,
+  School,
+  Settings,
+  MessageSquareWarning,
+  BarChart,
+} from "lucide-react";
+import { useAuth } from "../hooks/useAuth";
+import logo from "../assets/logo.png";
+
+interface SidebarProps {
+  role: "admin" | "teacher" | "student";
+}
+
+export function Sidebar({ role }: SidebarProps) {
+  const { logout } = useAuth();
+  const menuItems =
+    role === "admin"
+      ? [
+          { icon: LayoutDashboard, label: "Dashboard", value: "" },
+          { icon: User, label: "Students", value: "students" },
+          { icon: GraduationCap, label: "Teachers", value: "teachers" },
+          {
+            icon: DollarSign,
+            label: "Fees Structure",
+            value: "fees-structure",
+          },
+          { icon: Calendar, label: "TimeTable", value: "timetable" },
+          {
+            icon: BarChart,
+            label: "Analytics",
+            value: "analytics",
+          },
+          { icon: Bell, label: "Announcements", value: "announcements" },
+          {
+            icon: MessageSquareWarning,
+            label: "Reports",
+            value: "reports",
+          },
+          { icon: Settings, label: "Settings", value: "settings" },
+        ]
+      : role === "teacher"
+      ? [
+          { icon: BookOpen, label: "My Classes", value: "classes" },
+          { icon: Users, label: "Students", value: "students" },
+          { icon: Calendar, label: "Attendance", value: "attendance" },
+          { icon: Bell, label: "Announcements", value: "announcements" },
+          { icon: Bell, label: "Assignments", value: "assignments" },
+        ]
+      : [
+          { icon: User, label: "My Profile", value: "profile" },
+          { icon: BookOpen, label: "My Classes", value: "classes" },
+          { icon: Calendar, label: "My Attendance", value: "attendance" },
+          { icon: DollarSign, label: "My Fees", value: "fees" },
+          { icon: Bell, label: "Announcements", value: "announcements" },
+        ];
+
+  return (
+    <div className="h-screen flex flex-col justify-between w-64 bg-blue-800 text-white p-4">
+      <div>
+        <Link to="/" className="flex items-center gap-2 mb-8">
+          {/* <School /> */}
+          <img src={logo} alt="Pathshala" className="w-8 h-8" />
+          <h1 className="text-xl font-bold">Pathshala</h1>
+        </Link>
+
+        <nav className="space-y-2">
+          {menuItems.map((item) => (
+            <Link
+              key={item.value}
+              to={`/${role}/${item.value}`}
+              className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-colors
+              ${
+                window.location.pathname.includes(item.value)
+                  ? "bg-indigo-700 text-white"
+                  : "hover:bg-indigo-700/50"
+              }`}
+            >
+              <item.icon className="w-5 h-5" />
+              <span>{item.label}</span>
+            </Link>
+          ))}
+        </nav>
+      </div>
+      <div className="flex flex-col flex-end">
+        <Link
+          to="/admin/profile"
+          className="flex items-center gap-3 px-4 py-2 "
+        >
+          <User />
+          <span>Profile</span>
+        </Link>
+        <button
+          className="flex items-center gap-3 px-4 py-2 text-red-300 hover:text-red-200"
+          onClick={logout}
+        >
+          <LogOut className="w-5 h-5" />
+          <span>Logout</span>
+        </button>
+      </div>
+    </div>
+  );
+}
