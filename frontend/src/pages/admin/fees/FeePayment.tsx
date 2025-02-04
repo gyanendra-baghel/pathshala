@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../../context/AppContext";
 
 const FeePayment: React.FC = () => {
@@ -9,6 +9,8 @@ const FeePayment: React.FC = () => {
   const [amount, setAmount] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [status, setStatus] = useState<"paid" | "pending">("pending");
+
+  const navigate = useNavigate();
 
   const student = students.find((s) => s.id === studentId);
   const feeStructure = feeStructures.find((fs) => fs.grade === student?.class);
@@ -32,6 +34,9 @@ const FeePayment: React.FC = () => {
     setAmount("");
     setDueDate("");
     setStatus("pending");
+
+    navigate(-1);
+
   };
 
   return (
