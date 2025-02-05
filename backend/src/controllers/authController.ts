@@ -1,34 +1,30 @@
 import { Request, Response } from "express";
 import { z } from "zod";
-import SchoolController from "./schoolController";
+import AuthService from "../services/authService";
+import ApiError from "../utils/ApiError";
 
 class AuthController {
-  static async login(req: Request, res: Response) {
-    // Check if email and password are provided
-    const loginSchema = z.object({
-      email: z.string().email(),
-      role: z.enum(["ADMIN", "TEACHER", "USER"]),
-      password: z.string().min(6),
-    });
-    loginSchema.parse(req.body);
+  static async login(req: Request, res: Response, next: any) {
+    try {
+      // Check if email and password are provided
+      const loginSchema = z.object({
+        email: z.string().email(),
+        role: z.enum(["ADMIN", "TEACHER", "USER"]),
+        password: z.string().min(6),
+      });
+      loginSchema.parse(req.body);
 
-    if (req.body.role === "ADMIN") {
-      // Authenticate admin
-    } else {
-      // Authenticate user
+      const { email, password, role } = req.body;
+
+      const token = await AuthService.authUser(email, password, role);
+
+      if (!token) {
+        throw new ApiError(401, "Invalid credentials");
+      }
+      res.status(200).json({ message: "Login Successful", token });
+    } catch (error) {
+      next(error);
     }
-  }
-
-  static async register(req: Request, res: Response) {
-    // ...
-  }
-
-  static async logout(req: Request, res: Response) {
-    // ...
-  }
-
-  static async forgotPassword(req: Request, res: Response) {
-    // ...
   }
 
   static async getMe(req: Request, res: Response) {

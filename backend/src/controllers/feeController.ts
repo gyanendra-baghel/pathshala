@@ -6,6 +6,7 @@ class FeeController {
   static async createFeeStructure(req: Request, res: Response) {
     try {
       const feeData = req.body;
+      // const feeSchema = z.object()
       const createdFee = await FeeService.createFeeStructure(feeData);
       res.status(201).json(createdFee);
     } catch (error) {

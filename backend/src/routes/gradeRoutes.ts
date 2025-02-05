@@ -1,22 +1,48 @@
 import { Router } from "express";
 import GradeController from "../controllers/gradeController";
-import { authMiddleware } from "../middlewares/authMiddleware";
+import { authMiddleware, roleMiddleware } from "../middlewares/authMiddleware";
+import { UserRole } from "../types/types";
 
 const router = Router();
 
 // Create a new grade
-router.post("/grades", GradeController.createGrade);
+router.post(
+  "/",
+  authMiddleware,
+  roleMiddleware([UserRole.ADMIN]),
+  GradeController.createGrade
+);
 
 // Get all grades for a specific school
-router.get("/grades/school/:schoolId", GradeController.getGradesBySchool);
+router.get(
+  "/school/:sid",
+  authMiddleware,
+  roleMiddleware([UserRole.ADMIN, UserRole.TEACHER]),
+  GradeController.getGradesBySchool
+);
 
 // Get a specific grade by ID
-router.get("/grades/:id", GradeController.getGradeById);
+router.get(
+  "/:id",
+  authMiddleware,
+  roleMiddleware([UserRole.ADMIN, UserRole.TEACHER]),
+  GradeController.getGradeById
+);
 
 // Update grade information
-router.put("/grades/:id", authMiddleware, GradeController.updateGrade);
+router.put(
+  "/:id",
+  authMiddleware,
+  roleMiddleware([UserRole.ADMIN]),
+  GradeController.updateGrade
+);
 
 // Delete a grade by ID
-router.delete("/grades/:id", GradeController.deleteGrade);
+router.delete(
+  "/:id",
+  // authMiddleware,
+  // roleMiddleware([UserRole.ADMIN]),
+  GradeController.deleteGrade
+);
 
 export default router;

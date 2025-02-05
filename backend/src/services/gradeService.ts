@@ -3,7 +3,10 @@ import GradeModel from "../models/gradeModel";
 class GradeService {
   // Create a new grade
   static async createGrade(data: any) {
-    return GradeModel.createGrade(data);
+    if (!data.schedule) {
+      data.schedule = {};
+    }
+    return await GradeModel.createGrade(data);
   }
 
   // Get all grades for a specific school

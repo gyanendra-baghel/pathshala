@@ -1,7 +1,7 @@
 import { Router } from "express";
 import FeeController from "../controllers/feeController";
 import { authMiddleware, roleMiddleware } from "../middlewares/authMiddleware";
-import { UserRole } from "@prisma/client";
+import { UserRole } from "../types/types";
 
 const router = Router();
 
@@ -9,7 +9,7 @@ const router = Router();
 router.post(
   "/",
   authMiddleware,
-  roleMiddleware(UserRole.ADMIN),
+  roleMiddleware([UserRole.ADMIN]),
   FeeController.createFeeStructure
 );
 
@@ -20,7 +20,7 @@ router.get("/:gradeId", authMiddleware, FeeController.getFeeStructuresByGrade);
 router.put(
   "/:id",
   authMiddleware,
-  roleMiddleware(UserRole.ADMIN),
+  roleMiddleware([UserRole.ADMIN]),
   FeeController.updateFeeStructure
 );
 

@@ -1,88 +1,151 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { StudentService } from "../services/studentService";
+import { z } from "zod";
+import { parse } from "path";
+import ApiError from "../utils/ApiError";
 
 class StudentController {
   // Create a new student
-  static async createStudent(req: Request, res: Response) {
+  static async createStudent(req: Request, res: Response, next: NextFunction) {
     try {
       const studentData = req.body;
+      const studentSchema = z.object({
+        firstName: z.string().nonempty(),
+        lastName: z.string().nonempty(),
+        dob: z.string(),
+        email: z.string().email(),
+        password: z.string().min(6),
+        phoneNumber: z.string().length(10),
+        aadharNumber: z.string(),
+        fatherName: z.string(),
+        motherName: z.string(),
+        address: z.string(),
+        gradeId: z.number(),
+        schoolId: z.number(),
+      });
+      studentSchema.parse(studentData);
       const createdStudent = await StudentService.createStudent(studentData);
       res.status(201).json(createdStudent);
     } catch (error) {
-      res.status(500).json({ message: "Failed to create student", error });
+      next(error);
     }
   }
 
   // Get all students for a specific school
-  static async getStudentsBySchool(req: Request, res: Response) {
+  static async getStudentsBySchool(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
-      const { schoolId } = req.params;
-      const students = await StudentService.getStudentsBySchool(
-        parseInt(schoolId)
-      );
+      let { schoolId } = req.body;
+      schoolId = parseInt(schoolId);
+
+      const schoolIdSchema = z.object({
+        schoolId: z.number(),
+      });
+      schoolIdSchema.parse({ schoolId });
+
+      const students = await StudentService.getStudentsBySchool(schoolId);
       res.status(200).json(students);
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch students", error });
+      next(error);
     }
   }
 
   // Get all students for a specific class
-  static async getStudentsByGrade(req: Request, res: Response) {
+  static async getStudentsByGrade(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
-      const { gradeId } = req.params;
-      const students = await StudentService.getStudentsGrade(parseInt(gradeId));
+      let { gradeId } = req.body;
+      console.log("Grade ID: ", gradeId);
+      console.log("Type: ", typeof gradeId);
+      console.log("-------------------");
+      // gradeId = parseInt(gradeId);
+      const gradeIdSchema = z.object({
+        gradeId: z.number(),
+      });
+      gradeIdSchema.parse({ gradeId });
+      const students = await StudentService.getStudentsGrade(gradeId);
       res.status(200).json(students);
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch students", error });
+      // next(error);
     }
   }
 
   // Get a student by ID
-  static async getStudentById(req: Request, res: Response) {
+  static async getStudentById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const student = await StudentService.getStudentById(parseInt(id));
-      if (student) {
-        res.status(200).json(student);
-      } else {
-        res.status(404).json({ message: "Student not found" });
+      const studentId = parseInt(id);
+      const studentIdSchema = z.object({
+        id: z.number(),
+      });
+      studentIdSchema.parse({ id: studentId });
+      const student = await StudentService.getStudentById(studentId);
+      if (!student) {
+        throw new ApiError(404, "Student not found");
       }
+      res.status(200).json(student);
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch student", error });
+      next(error);
     }
   }
 
   // Update student information
-  static async updateStudent(req: Request, res: Response) {
+  static async updateStudent(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
+      const studentId = parseInt(id);
       const studentData = req.body;
+      const studentSchema = z.object({
+        firstName: z.string().nonempty().optional(),
+        lastName: z.string().nonempty().optional(),
+        dob: z.string().optional(),
+        email: z.string().email().optional(),
+        password: z.string().min(6).optional(),
+        phoneNumber: z.string().length(10).optional(),
+        aadharNumber: z.string().optional(),
+        fatherName: z.string().optional(),
+        motherName: z.string().optional(),
+        address: z.string().optional(),
+        gradeId: z.number().optional(),
+        schoolId: z.number().optional(),
+      });
+      studentSchema.parse(studentData);
+      z.object({
+        id: z.number(),
+      }).parse({ id: studentId });
+
       const updatedStudent = await StudentService.updateStudent(
-        parseInt(id),
+        studentId,
         studentData
       );
-      if (updatedStudent) {
-        res.status(200).json(updatedStudent);
-      } else {
-        res.status(404).json({ message: "Student not found" });
+      if (!updatedStudent) {
+        throw new ApiError(404, "Student not found");
       }
+      res.status(200).json(updatedStudent);
     } catch (error) {
-      res.status(500).json({ message: "Failed to update student", error });
+      next(error);
     }
   }
 
   // Delete a student by ID
-  static async deleteStudent(req: Request, res: Response) {
+  static async deleteStudent(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const deletedStudent = await StudentService.deleteStudent(parseInt(id));
-      if (deletedStudent) {
-        res.status(200).json({ message: "Student deleted successfully" });
-      } else {
-        res.status(404).json({ message: "Student not found" });
-      }
+      const studentId = parseInt(id);
+      const studentIdSchema = z.object({
+        id: z.number(),
+      });
+      studentIdSchema.parse({ id: studentId });
+      await StudentService.deleteStudent(studentId);
+      res.status(200).json({ message: "Student deleted successfully" });
     } catch (error) {
-      res.status(500).json({ message: "Failed to delete student", error });
+      next(error);
     }
   }
 }

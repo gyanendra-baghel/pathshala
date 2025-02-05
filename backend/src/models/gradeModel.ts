@@ -3,9 +3,10 @@ import prisma from "../config/database";
 class GradeModel {
   // Create a new grade
   static async createGrade(data: any) {
-    return prisma.grade.create({
+    const grade = await prisma.grade.create({
       data,
     });
+    return grade;
   }
 
   // Get all gredes for a school

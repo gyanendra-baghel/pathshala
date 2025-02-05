@@ -1,6 +1,6 @@
 import prisma from "../config/database";
 
-export class TeacherModel {
+class TeacherModel {
   // Create a new teacher
   static async createTeacher(data: any) {
     return prisma.teacher.create({
@@ -22,6 +22,13 @@ export class TeacherModel {
     });
   }
 
+  // Get teacher by email
+  static async getTeacherByEmail(email: string) {
+    return prisma.teacher.findFirst({
+      where: { email },
+    });
+  }
+
   // Update teacher information
   static async updateTeacher(id: number, data: any) {
     return prisma.teacher.update({
@@ -37,3 +44,5 @@ export class TeacherModel {
     });
   }
 }
+
+export default TeacherModel;

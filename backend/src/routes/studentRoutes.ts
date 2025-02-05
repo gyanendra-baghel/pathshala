@@ -1,7 +1,7 @@
 import { Router } from "express";
-import SchoolController from "../controllers/studentController";
+import StudentController from "../controllers/studentController";
 import { authMiddleware, roleMiddleware } from "../middlewares/authMiddleware";
-import { UserRole } from "@prisma/client";
+import { UserRole } from "../types/types";
 
 const router = Router();
 
@@ -9,27 +9,38 @@ const router = Router();
 router.post(
   "/",
   authMiddleware,
-  roleMiddleware(UserRole.ADMIN),
-  SchoolController.createStudent
+  roleMiddleware([UserRole.ADMIN]),
+  StudentController.createStudent
 );
 
-// Route to get a specific student
-router.get("/:id", authMiddleware, SchoolController.getStudentById);
+// Route to get a all student in a school
+router.get("/school", authMiddleware, StudentController.getStudentsBySchool);
 
 // Route to get all students in a class
 router.get(
-  "/:gradeId",
+  "/grade",
   authMiddleware,
-  roleMiddleware(UserRole.ADMIN),
-  SchoolController.getStudentsByGrade
+  roleMiddleware([UserRole.ADMIN]),
+  StudentController.getStudentsByGrade
 );
+
+// Route to get a specific student
+router.get("/:id", authMiddleware, StudentController.getStudentById);
 
 // Route to update student details (Admin only)
 router.put(
   "/:id",
   authMiddleware,
-  roleMiddleware(UserRole.ADMIN),
-  SchoolController.updateStudent
+  roleMiddleware([UserRole.ADMIN]),
+  StudentController.updateStudent
+);
+
+// Route to delete student (Admin only)
+router.delete(
+  "/:id",
+  authMiddleware,
+  roleMiddleware([UserRole.ADMIN]),
+  StudentController.deleteStudent
 );
 
 export default router;

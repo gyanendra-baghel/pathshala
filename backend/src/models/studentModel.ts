@@ -3,15 +3,23 @@ import prisma from "../config/database";
 export class StudentModel {
   // Create a new student
   static async createStudent(data: any) {
-    return prisma.student.create({
+    const student = await prisma.student.create({
       data,
     });
+    return student;
   }
 
   // Get all students for a grade
   static async getStudentsByGrade(gradeId: number) {
     return prisma.student.findMany({
       where: { gradeId },
+    });
+  }
+
+  // Get a student by email
+  static async getStudentByEmail(email: string) {
+    return prisma.student.findFirst({
+      where: { email },
     });
   }
 

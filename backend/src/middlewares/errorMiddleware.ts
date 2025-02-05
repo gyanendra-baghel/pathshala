@@ -1,4 +1,3 @@
-// src/middlewares/errorMiddleware.ts
 import { Request, Response, NextFunction } from "express";
 
 // Middleware to handle all errors
@@ -8,14 +7,20 @@ export const errorMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  console.error(err); // Log the error for debugging (use a logger in production)
+  console.error("Error:-----\n", err, "\n----"); // Log the error for debugging (use a logger in production)
 
   const statusCode = err.statusCode || 500;
-  const message = err.message || "Internal Server Error";
+  const message = "Internal Server Error";
+
+  if (err.name === "ZodError") {
+    res.status(400).json({ errors: err.errors });
+    return;
+  }
 
   res.status(statusCode).json({
     success: false,
     message,
     ...(process.env.NODE_ENV === "development" && { stack: err.stack }), // Optionally show stack trace in dev mode
   });
+  return;
 };
