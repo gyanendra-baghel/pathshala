@@ -36,7 +36,7 @@ function App() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/admin" element={<Dashboard role="admin" />}>
+      <Route path="/admin" element={<Dashboard role="ADMIN" />}>
         <Route index path="" element={<AdminDashboard />} />
         <Route path="students" element={<Students />} />
         <Route path="students/add" element={<AddStudent />} />
@@ -54,7 +54,7 @@ function App() {
         <Route path="analytics" element={<UnderProduction />} />
         <Route path="profile" element={<Profile />} />
       </Route>
-      <Route path="/teacher" element={<Dashboard role="teacher" />}>
+      <Route path="/teacher" element={<Dashboard role="TEACHER" />}>
         <Route index path="" element={<TeacherBoard />} />
         <Route path="classes" element={<TeacherClassroom />} />
         <Route path="students" element={<TeacherStudents />} />
@@ -62,7 +62,7 @@ function App() {
         <Route path="assignments" element={<Assignments />} />
         <Route path="classes/:classId" element={<ClassroomDetails />} />
       </Route>
-      <Route path="/student" element={<Dashboard role="student" />}>
+      <Route path="/student" element={<Dashboard role="STUDENT" />}>
         <Route index path="" element={<StudentAnnoncement />} />
         <Route path="announcements" element={<StudentAnnoncement />} />
         <Route path="classes" element={<StudentClassroom />} />

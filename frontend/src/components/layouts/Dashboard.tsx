@@ -4,14 +4,13 @@ import { useAuth } from "../../hooks/useAuth";
 import AccessDenied from "../AccessDenied";
 
 interface DashboardProps {
-  role: "admin" | "teacher" | "student";
+  role: "ADMIN" | "TEACHER" | "STUDENT";
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ role }) => {
-  const { user, login } = useAuth();
+  const { user } = useAuth();
 
   if (!user || user.role !== role) {
-    login("gyan@gmail.com", "admin");
     return <AccessDenied />;
   }
   return (

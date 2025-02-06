@@ -2,21 +2,34 @@ import React, { useState } from "react";
 import { School } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import API from "../utils/api";
 
 export function Login() {
   const { login } = useAuth();
-  const [email, setEmail] = useState("gyan@gmail.com");
-  const [password, setPassword] = useState("123");
-  const [role, setRole] = useState<"admin" | "teacher" | "student">("admin");
+  const [email, setEmail] = useState("rahul.sharma@greenwoodschool.com");
+  const [password, setPassword] = useState("SecurePass@123");
+  const [role, setRole] = useState<"ADMIN" | "TEACHER" | "STUDENT">("ADMIN");
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Add validation
-    // TODO: Add API call to authenticate user
-    login(email, role);
-    navigate(`/${role}`);
+    try {
+      // TODO: Add validation
+      const response = await API.post("/auth/login", { email, password, role });
+      console.log(response);
+      if (response.status !== 200) {
+        setError(response.data.message);
+        return;
+      }
+      localStorage.setItem("token", response.data.token);
+      login(email, role);
+      navigate(`/${role.toLowerCase()}`);
+    } catch (error: any) {
+      if (error.response.data) setError(error.response.data.message);
+      else setError("Something went wrong");
+    }
   };
 
   return (
@@ -42,13 +55,13 @@ export function Login() {
                 id="role"
                 value={role}
                 onChange={(e) =>
-                  setRole(e.target.value as "admin" | "teacher" | "student")
+                  setRole(e.target.value as "ADMIN" | "TEACHER" | "STUDENT")
                 }
                 className="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
               >
-                <option value="admin">Administrator</option>
-                <option value="student">Student</option>
-                <option value="teacher">Teacher</option>
+                <option value="ADMIN">Administrator</option>
+                <option value="STUDENT">Student</option>
+                <option value="TEACHER">Teacher</option>
               </select>
             </div>
             <div>
@@ -86,7 +99,7 @@ export function Login() {
               />
             </div>
           </div>
-
+          <div className="text-red-500 text-center">{error}</div>
           <div>
             <button
               type="submit"

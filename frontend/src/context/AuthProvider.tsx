@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 
 interface User {
   email: string;
-  role: "admin" | "teacher" | "student";
+  role: "ADMIN" | "TEACHER" | "STUDENT";
 }
 
 interface AuthContextProps {
   user: User | null;
-  login: (email: string, role: "admin" | "teacher" | "student") => void;
+  login: (email: string, role: "ADMIN" | "TEACHER" | "STUDENT") => void;
   logout: () => void;
 }
 
@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const navigate = useNavigate();
 
-  const login = (email: string, role: "admin" | "teacher" | "student") => {
+  const login = (email: string, role: "ADMIN" | "TEACHER" | "STUDENT") => {
     setUser({ email, role });
   };
 

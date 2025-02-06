@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import authRoutes from "./routes/authRoutes";
 import schoolRoutes from "./routes/schoolRoutes";
 import gradeRoutes from "./routes/gradeRoutes";
@@ -10,6 +11,14 @@ import { errorMiddleware } from "./middlewares/errorMiddleware";
 
 const app = express();
 
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+    credentials: true,
+  })
+);
 // Middleware for parsing JSON bodies
 app.use(express.json());
 

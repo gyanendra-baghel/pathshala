@@ -9,7 +9,6 @@ import {
   Users,
   GraduationCap,
   LayoutDashboard,
-  School,
   Settings,
   MessageSquareWarning,
   BarChart,
@@ -18,13 +17,13 @@ import { useAuth } from "../hooks/useAuth";
 import logo from "../assets/logo.png";
 
 interface SidebarProps {
-  role: "admin" | "teacher" | "student";
+  role: "ADMIN" | "TEACHER" | "STUDENT";
 }
 
 export function Sidebar({ role }: SidebarProps) {
   const { logout } = useAuth();
   const menuItems =
-    role === "admin"
+    role === "ADMIN"
       ? [
           { icon: LayoutDashboard, label: "Dashboard", value: "" },
           { icon: User, label: "Students", value: "students" },
@@ -48,7 +47,7 @@ export function Sidebar({ role }: SidebarProps) {
           },
           { icon: Settings, label: "Settings", value: "settings" },
         ]
-      : role === "teacher"
+      : role === "TEACHER"
       ? [
           { icon: BookOpen, label: "My Classes", value: "classes" },
           { icon: Users, label: "Students", value: "students" },
