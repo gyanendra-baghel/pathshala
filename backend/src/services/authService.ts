@@ -36,12 +36,25 @@ class AuthService {
       {
         userId: user.id,
         role: user.role,
+        schoolId: user.schoolId,
       },
       config.app.jwtSecret,
       {
         expiresIn: "1h",
       }
     );
+  }
+
+  static async getUserByIdAndRole(userId: number, role: string) {
+    if (role === "ADMIN") {
+      return AdminService.getAdminById(userId);
+    } else if (role === "TEACHER") {
+      return TeacherService.getTeacherById(userId);
+    } else if (role === "STUDENT") {
+      return StudentService.getStudentById(userId);
+    } else {
+      throw new ApiError(400, "Invalid Role");
+    }
   }
 }
 

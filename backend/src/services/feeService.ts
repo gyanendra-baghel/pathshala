@@ -1,28 +1,30 @@
-import { FeeStructureModel } from "../models/feeStructureModel";
+import FeeModel from "../models/feeModel";
+import ApiError from "../utils/ApiError";
 
-export class FeeService {
-  // Create a new fee structure
-  static async createFeeStructure(data: any) {
-    return FeeStructureModel.createFeeStructure(data);
+class FeeService {
+  static async getAllSchoolFee(schoolId: number) {
+    return FeeModel.getAllSchoolFee(schoolId);
   }
-
-  // Get fee structures for a specific grade
-  static async getFeeStructuresByGrade(gradeId: number) {
-    return FeeStructureModel.getFeeStructuresByGrade(gradeId);
+  static async addFee(data: any) {
+    return FeeModel.addFee(data);
   }
-
-  // Get a fee structure by ID
-  static async getFeeStructureById(id: number) {
-    return FeeStructureModel.getFeeStructureById(id);
+  static async getFeeById(id: number) {
+    return FeeModel.getFeeById(id);
   }
-
-  // Update a fee structure
-  static async updateFeeStructure(id: number, data: any) {
-    return FeeStructureModel.updateFeeStructure(id, data);
+  static async updateFee(id: number, data: any) {
+    const fee = await FeeModel.getFeeById(id);
+    if (!fee) {
+      throw new ApiError(404, "Fee not found");
+    }
+    return FeeModel.updateFee(id, data);
   }
-
-  // Delete a fee structure
-  static async deleteFeeStructure(id: number) {
-    return FeeStructureModel.deleteFeeStructure(id);
+  static async deleteFee(id: number) {
+    const fee = await FeeModel.getFeeById(id);
+    if (!fee) {
+      throw new ApiError(404, "Fee not found");
+    }
+    return FeeModel.deleteFee(id);
   }
 }
+
+export default FeeService;

@@ -1,86 +1,90 @@
-import { Request, Response } from "express";
-import { FeeService } from "../services/feeService";
+import { NextFunction, Request, Response } from "express";
+import FeeService from "../services/feeService";
+import { z } from "zod";
+import ApiError from "../utils/ApiError";
 
 class FeeController {
-  // Create a new fee structure
-  static async createFeeStructure(req: Request, res: Response) {
+  // Get all fees of the school
+  static async getAllSchoolFee(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      if (!req.user) {
+        throw new ApiError(401, "Unauthorized access. No token provided.");
+      }
+      const { schoolId } = req.user;
+      z.number().positive().parse(schoolId);
+      const fees = await FeeService.getAllSchoolFee(schoolId);
+      res.status(200).json(fees);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // Get fee by id
+  static async getFeeById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const feeId = parseInt(id);
+      z.number().positive().parse(feeId);
+      const fee = await FeeService.getFeeById(feeId);
+      res.status(200).json(fee);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // Create a fee
+  static async createFee(req: Request, res: Response, next: NextFunction) {
     try {
       const feeData = req.body;
-      // const feeSchema = z.object()
-      const createdFee = await FeeService.createFeeStructure(feeData);
-      res.status(201).json(createdFee);
+      const feeSchema = z.object({
+        studentId: z.number().positive(),
+        feeStructureId: z.number().positive(),
+        status: z.enum(["PAID", "UNPAID", "PARTIAL"]),
+        amount: z.number().positive(),
+      });
+      feeSchema.parse(feeData);
+      const fee = await FeeService.addFee(feeData);
+      res.status(201).json(fee);
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Failed to create fee structure", error });
+      next(error);
     }
   }
 
-  // Get fee structures for a specific class
-  static async getFeeStructuresByGrade(req: Request, res: Response) {
-    try {
-      const { gradeId } = req.params;
-      const feeStructures = await FeeService.getFeeStructuresByGrade(
-        parseInt(gradeId)
-      );
-      res.status(200).json(feeStructures);
-    } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Failed to fetch fee structures", error });
-    }
-  }
-
-  // Get a fee structure by ID
-  static async getFeeStructureById(req: Request, res: Response) {
+  // Update a fee
+  static async updateFee(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const feeStructure = await FeeService.getFeeStructureById(parseInt(id));
-      if (feeStructure) {
-        res.status(200).json(feeStructure);
-      } else {
-        res.status(404).json({ message: "Fee structure not found" });
-      }
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch fee structure", error });
-    }
-  }
-
-  // Update fee structure
-  static async updateFeeStructure(req: Request, res: Response) {
-    try {
-      const { id } = req.params;
+      const feeId = parseInt(id);
+      z.number().positive().parse(feeId);
       const feeData = req.body;
-      const updatedFee = await FeeService.updateFeeStructure(
-        parseInt(id),
-        feeData
-      );
-      if (updatedFee) {
-        res.status(200).json(updatedFee);
-      } else {
-        res.status(404).json({ message: "Fee structure not found" });
-      }
+      const feeSchema = z.object({
+        studentId: z.number().positive(),
+        feeStructureId: z.number().positive(),
+        status: z.enum(["PAID", "UNPAID", "PARTIAL"]),
+        amount: z.number().positive(),
+      });
+      feeSchema.parse(feeData);
+      const fee = await FeeService.updateFee(feeId, feeData);
+      res.status(200).json(fee);
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Failed to update fee structure", error });
+      next(error);
     }
   }
 
-  // Delete fee structure by ID
-  static async deleteFeeStructure(req: Request, res: Response) {
+  // Delete a fee
+  static async deleteFee(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const deletedFee = await FeeService.deleteFeeStructure(parseInt(id));
-      if (deletedFee) {
-        res.status(200).json({ message: "Fee structure deleted successfully" });
-      } else {
-        res.status(404).json({ message: "Fee structure not found" });
-      }
+      const feeId = parseInt(id);
+      z.number().positive().parse(feeId);
+      await FeeService.deleteFee(feeId);
+      res.status(204).end();
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Failed to delete fee structure", error });
+      next(error);
     }
   }
 }
