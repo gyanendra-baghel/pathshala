@@ -1,7 +1,7 @@
 import { Router } from "express";
 import FeeStructureController from "../controllers/feeStructureController";
 import { authMiddleware, roleMiddleware } from "../middlewares/authMiddleware";
-import { UserRole } from "../types/types";
+import { UserRole } from "../@types/types";
 
 const router = Router();
 

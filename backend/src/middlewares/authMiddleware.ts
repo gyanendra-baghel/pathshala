@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import config from "../config/config";
-import { UserRole } from "../types/types";
+import { JWTUser, UserRole } from "../@types/types";
 import AuthService from "../services/authService";
 import ApiError from "../utils/ApiError";
 
@@ -19,11 +19,7 @@ export const authMiddleware = (
   }
 
   try {
-    const decoded = jwt.verify(token, config.app.jwtSecret) as {
-      userId: number;
-      role: "STUDENT" | "TEACHER" | "ADMIN" | "MAIN_ADMIN";
-      schoolId: number;
-    };
+    const decoded = jwt.verify(token, config.app.jwtSecret) as JWTUser;
     if (!decoded) {
       next(new ApiError(401, "Unauthorized access. Invalid token."));
       return;
@@ -39,7 +35,7 @@ export const authMiddleware = (
 // Middleware to check if the user has a specific role
 export const roleMiddleware = (roles: UserRole[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    if (roles.includes(req.user?.role)) {
+    if (!req.user || roles.includes(req.user.role)) {
       res
         .status(403)
         .json({ message: "Forbidden access. Insufficient permissions." });

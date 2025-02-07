@@ -8,12 +8,13 @@ import feeRoutes from "./routes/feeRoutes";
 import feeStructureRoutes from "./routes/feeStructureRoutes";
 import subjectRoutes from "./routes/subjectRoutes";
 import { errorMiddleware } from "./middlewares/errorMiddleware";
+import config from "./config/config";
 
 const app = express();
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL, // Allow the client to connect
+    origin: config.app.clientUrl, // Allow the client to connect
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
     allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
     credentials: true,

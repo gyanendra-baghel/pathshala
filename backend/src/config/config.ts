@@ -7,6 +7,7 @@ const config = {
   app: {
     port: process.env.PORT || 5000, // Port the app will run on
     jwtSecret: process.env.JWT_SECRET || "your-secret-key", // Secret key for JWT
+    clientUrl: process.env.CLIENT_URL || "http://localhost:3000", // CORS origin
   },
   db: {
     host: process.env.DB_HOST || "localhost",
