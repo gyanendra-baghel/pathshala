@@ -13,6 +13,13 @@ router.post(
   FeeStructureController.createFeeStructure
 );
 
+// Route to get the fee structure for a specific school
+router.get(
+  "/",
+  authMiddleware,
+  FeeStructureController.getFeeStructuresBySchool
+);
+
 // Route to get the fee structure for a specific class
 router.get(
   "/:gradeId",

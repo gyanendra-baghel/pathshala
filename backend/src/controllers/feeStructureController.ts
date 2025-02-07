@@ -49,6 +49,24 @@ class FeeStructureController {
     }
   }
 
+  static async getFeeStructuresBySchool(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      if (!req.user) {
+        throw new ApiError(401, "Unauthorized");
+      }
+      const feeStructures = await FeeStructureService.getFeeStructuresBySchool(
+        req.user.schoolId
+      );
+      res.status(200).json(feeStructures);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   // Get a fee structure by ID
   static async getFeeStructureById(
     req: Request,

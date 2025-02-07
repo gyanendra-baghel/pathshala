@@ -1,35 +1,36 @@
 import React, { useState } from "react";
 import { School } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
-import API from "../utils/api";
+import { UserRole } from "../utils/types";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../redux/store";
+import { loginUser } from "../redux/features/authSlice";
 
 export function Login() {
-  const { login } = useAuth();
+  const dispatch = useDispatch<AppDispatch>();
+  const { error } = useSelector((state: RootState) => state.auth);
   const [email, setEmail] = useState("rahul.sharma@greenwoodschool.com");
   const [password, setPassword] = useState("SecurePass@123");
-  const [role, setRole] = useState<"ADMIN" | "TEACHER" | "STUDENT">("ADMIN");
-  const [error, setError] = useState("");
-
-  const navigate = useNavigate();
+  const [role, setRole] = useState<UserRole>(UserRole.MAIN_ADMIN);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      // TODO: Add validation
-      const response = await API.post("/auth/login", { email, password, role });
-      console.log(response);
-      if (response.status !== 200) {
-        setError(response.data.message);
-        return;
-      }
-      localStorage.setItem("token", response.data.token);
-      login(email, role);
-      navigate(`/${role.toLowerCase()}`);
-    } catch (error: any) {
-      if (error.response.data) setError(error.response.data.message);
-      else setError("Something went wrong");
-    }
+    dispatch(loginUser({ email, password, role }));
+    // try {
+    //   // TODO: Add validation
+
+    //   const response = await API.post("/auth/login", { email, password, role });
+    //   console.log(response);
+    //   if (response.status !== 200) {
+    //     setError(response.data.message);
+    //     return;
+    //   }
+    //   localStorage.setItem("token", response.data.token);
+    //   login(email, role);
+    //   navigate(`/${role.toLowerCase()}`);
+    // } catch (error: any) {
+    //   if (error.response.data) setError(error.response.data.message);
+    //   else setError("Something went wrong");
+    // }
   };
 
   return (
@@ -54,9 +55,7 @@ export function Login() {
               <select
                 id="role"
                 value={role}
-                onChange={(e) =>
-                  setRole(e.target.value as "ADMIN" | "TEACHER" | "STUDENT")
-                }
+                onChange={(e) => setRole(e.target.value as UserRole)}
                 className="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
               >
                 <option value="ADMIN">Administrator</option>

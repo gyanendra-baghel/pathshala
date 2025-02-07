@@ -1,17 +1,19 @@
-import { useAuth } from "../../hooks/useAuth";
+import { useSelector } from "react-redux";
 import AccessDenied from "../AccessDenied";
 import { Sidebar } from "../Sidebar";
 import { Link, Outlet } from "react-router-dom";
+import { RootState } from "../../redux/store";
+import { UserRole } from "../../utils/types";
 
 export function TeacherDashboard() {
-  const { user } = useAuth();
+  const { user } = useSelector((state: RootState) => state.auth);
 
-  if (!user || user.role !== "teacher") {
+  if (!user || user.role !== UserRole.TEACHER) {
     return <AccessDenied />;
   }
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <Sidebar role="teacher" />
+      <Sidebar role={UserRole.TEACHER} />
       <div className="flex-1 p-8 bg-gray-50">
         <div className="flex items-center justify-between p-4 bg-white shadow-sm">
           <div className="flex items-center">

@@ -14,6 +14,8 @@ class AuthController {
       });
       loginSchema.parse(req.body);
 
+      console.log(req.body);
+
       const { email, password, role } = req.body;
 
       const token = await AuthService.authUser(email, password, role);

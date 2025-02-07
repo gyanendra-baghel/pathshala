@@ -1,5 +1,5 @@
 export enum UserRole {
-  MAIN_ADMIN = "ADMIN",
+  MAIN_ADMIN = "MAIN_ADMIN",
   TEACHER = "TEACHER",
   STUDENT = "STUDENT",
 }
@@ -83,7 +83,7 @@ export interface Announcement {
 
 export interface User {
   id: string;
-  role: "admin" | "teacher" | "student";
+  role: UserRole;
   name: string;
   email: string;
 }

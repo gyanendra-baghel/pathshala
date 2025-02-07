@@ -8,6 +8,13 @@ export class FeeStructureModel {
     });
   }
 
+  // Get fee structures for a school
+  static async getFeeStructuresBySchool(schoolId: number) {
+    return prisma.feeStructure.findMany({
+      where: { schoolId },
+    });
+  }
+
   // Get fee structures for a class
   static async getFeeStructuresByGrade(gradeId: number) {
     return prisma.feeStructure.findMany({

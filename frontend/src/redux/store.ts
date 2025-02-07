@@ -1,7 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
+import authReducer from "./features/authSlice";
+import gradeReducer from "./features/gradeSlice";
+import feeStructureReducer from "./features/feeStructureSlice";
 
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    auth: authReducer,
+    grade: gradeReducer,
+    feeStructure: feeStructureReducer,
+  },
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

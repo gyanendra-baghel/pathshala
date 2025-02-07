@@ -13,16 +13,17 @@ import {
   MessageSquareWarning,
   BarChart,
 } from "lucide-react";
-import { useAuth } from "../hooks/useAuth";
 import logo from "../assets/logo.png";
 import { UserRole } from "../utils/types";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 interface SidebarProps {
   role: UserRole;
 }
 
 export function Sidebar({ role }: SidebarProps) {
-  const { logout } = useAuth();
+  const { logout } = useSelector((state: RootState) => state.auth);
   const menuItems =
     role === UserRole.MAIN_ADMIN
       ? [

@@ -1,9 +1,7 @@
 import { JWTUser } from "./types";
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: JWTUser;
-    }
+declare module "express-serve-static-core" {
+  interface Request {
+    user?: JWTUser;
   }
 }

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { useAuth } from "../../hooks/useAuth";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 const StudentProfile: React.FC = () => {
-  const { user } = useAuth();
+  const { user } = useSelector((state: RootState) => state.auth);
   const student = {
     id: "1",
     name: "John Doe",
