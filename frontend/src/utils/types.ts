@@ -1,13 +1,31 @@
+export enum UserRole {
+  MAIN_ADMIN = "ADMIN",
+  TEACHER = "TEACHER",
+  STUDENT = "STUDENT",
+}
+
 export interface Student {
   id: string;
-  name: string;
-  class: string;
+  firstName: string;
+  lastName: string;
+  dob: string;
+  grade?: Grade;
   rollNumber: string;
   email: string;
   adhaarNumber: string;
   samagraId: string;
   photo: string;
-  fatherAdhaarNumber: string;
+  address: string;
+  fatherName: string;
+  motherName: string;
+  phoneNumber: string;
+}
+
+export interface Grade {
+  id: string;
+  name: string;
+  students: string[]; // student IDs
+  teacherId: string;
 }
 
 export interface Teacher {

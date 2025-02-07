@@ -15,15 +15,16 @@ import {
 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import logo from "../assets/logo.png";
+import { UserRole } from "../utils/types";
 
 interface SidebarProps {
-  role: "ADMIN" | "TEACHER" | "STUDENT";
+  role: UserRole;
 }
 
 export function Sidebar({ role }: SidebarProps) {
   const { logout } = useAuth();
   const menuItems =
-    role === "ADMIN"
+    role === UserRole.MAIN_ADMIN
       ? [
           { icon: LayoutDashboard, label: "Dashboard", value: "" },
           { icon: User, label: "Students", value: "students" },
@@ -47,7 +48,7 @@ export function Sidebar({ role }: SidebarProps) {
           },
           { icon: Settings, label: "Settings", value: "settings" },
         ]
-      : role === "TEACHER"
+      : role === UserRole.TEACHER
       ? [
           { icon: BookOpen, label: "My Classes", value: "classes" },
           { icon: Users, label: "Students", value: "students" },

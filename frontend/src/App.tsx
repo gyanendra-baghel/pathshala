@@ -29,6 +29,7 @@ import Reports from "./pages/admin/Reports";
 import ErrorPage from "./components/layouts/ErrorPage";
 import Register from "./pages/Register";
 import AddTeacherPage from "./pages/admin/teachers/AddTeacher";
+import { UserRole } from "./utils/types";
 
 function App() {
   return (
@@ -36,7 +37,10 @@ function App() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/admin" element={<Dashboard role="ADMIN" />}>
+      <Route
+        path="/admin"
+        element={<Dashboard roles={[UserRole.MAIN_ADMIN]} />}
+      >
         <Route index path="" element={<AdminDashboard />} />
         <Route path="students" element={<Students />} />
         <Route path="students/add" element={<AddStudent />} />
@@ -54,7 +58,7 @@ function App() {
         <Route path="analytics" element={<UnderProduction />} />
         <Route path="profile" element={<Profile />} />
       </Route>
-      <Route path="/teacher" element={<Dashboard role="TEACHER" />}>
+      <Route path="/teacher" element={<Dashboard roles={[UserRole.TEACHER]} />}>
         <Route index path="" element={<TeacherBoard />} />
         <Route path="classes" element={<TeacherClassroom />} />
         <Route path="students" element={<TeacherStudents />} />
@@ -62,7 +66,7 @@ function App() {
         <Route path="assignments" element={<Assignments />} />
         <Route path="classes/:classId" element={<ClassroomDetails />} />
       </Route>
-      <Route path="/student" element={<Dashboard role="STUDENT" />}>
+      <Route path="/student" element={<Dashboard roles={[UserRole.STUDENT]} />}>
         <Route index path="" element={<StudentAnnoncement />} />
         <Route path="announcements" element={<StudentAnnoncement />} />
         <Route path="classes" element={<StudentClassroom />} />

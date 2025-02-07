@@ -14,7 +14,7 @@ router.post(
 );
 
 // Route to get a all student in a school
-router.get("/school", authMiddleware, StudentController.getStudentsBySchool);
+router.get("/", authMiddleware, StudentController.getStudentsBySchool);
 
 // Route to get all students in a class
 router.get(

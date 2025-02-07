@@ -7,13 +7,16 @@ export const errorMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  console.error("Error:-----\n", err, "\n----"); // Log the error for debugging (use a logger in production)
-
   const statusCode = err.statusCode || 500;
   const message = "Internal Server Error";
 
   if (err.name === "ZodError") {
-    res.status(400).json({ errors: err.errors });
+    res
+      .status(400)
+      .json({ message: "Invalid Credientials", errors: err.errors });
+    return;
+  } else if (err.name === "ApiError") {
+    res.status(err.statusCode).json({ message: err.message });
     return;
   }
 

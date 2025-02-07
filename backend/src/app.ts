@@ -13,7 +13,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_URL, // Allow the client to connect
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
     allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
     credentials: true,
@@ -23,6 +23,9 @@ app.use(
 app.use(express.json());
 
 // Register routes
+app.get("/", (req, res) => {
+  res.send("Welcome to the School Management API");
+});
 app.use("/api/auth", authRoutes);
 app.use("/api/schools", schoolRoutes);
 app.use("/api/grades", gradeRoutes);

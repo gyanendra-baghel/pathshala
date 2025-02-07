@@ -1,12 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppContext } from "../../context/AppContext";
 import { Link } from "react-router-dom";
 import { ExternalLink } from "lucide-react";
+import API from "../../utils/api";
 
 const Students: React.FC = () => {
   const { students } = useAppContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [filterGrade, setFilterGrade] = useState("");
+  const [filteredStudents, setFilteredStudents] = useState(students);
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await API.get("/students");
+      if (response.status === 200) {
+        setFilteredStudents(response.data);
+      }
+    }
+    fetchData();
+  }, [searchQuery]);
 
   return (
     <div className="space-y-4">
@@ -39,7 +51,7 @@ const Students: React.FC = () => {
         </Link>
       </div>
       <div className="grid grid-cols-4 md:grid-cols-4 gap-4">
-        {students.map((student) => (
+        {filteredStudents.map((student) => (
           <div
             key={student.id}
             className="bg-white p-4 rounded shadow-sm border max-w-96"
@@ -52,7 +64,9 @@ const Students: React.FC = () => {
                   className="rounded-full w-12 h-12 mr-4"
                 />
                 <div>
-                  <h2 className="text-lg font-semibold">{student.name}</h2>
+                  <h2 className="text-lg font-semibold">
+                    {student.firstName + " " + student.lastName}
+                  </h2>
                   <p className="text-gray-500">ID: {student.id}</p>
                 </div>
               </div>
@@ -60,10 +74,12 @@ const Students: React.FC = () => {
                 <ExternalLink className="text-blue-600" />
               </Link>
             </div>
-            <div className="mb-4 flex items-center justify-between">
-              <p className="text-gray-500">Class:</p>
-              <p className="text-gray-700">{student.class}</p>
-            </div>
+            {student.grade && (
+              <div className="mb-4 flex items-center justify-between">
+                <p className="text-gray-500">Class:</p>
+                <p className="text-gray-700">{student.grade.name}</p>
+              </div>
+            )}
             <div className="mb-4 flex items-center justify-between">
               <p className="text-gray-500">Attendance:</p>
               <p className={` text-lg`}>A+</p>

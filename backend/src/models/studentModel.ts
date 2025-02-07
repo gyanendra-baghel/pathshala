@@ -27,6 +27,9 @@ export class StudentModel {
   static async getStudentsBySchool(schoolId: number) {
     return prisma.student.findMany({
       where: { schoolId },
+      include: {
+        grade: true,
+      },
     });
   }
 

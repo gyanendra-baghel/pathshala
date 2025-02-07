@@ -63,30 +63,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     { id: "2", grade: "11th", description: "Tuition Fee", amount: 600 },
     { id: "3", grade: "12th", description: "Tuition Fee", amount: 700 },
   ]);
-  const [students, setStudents] = useState<Student[]>([
-    {
-      id: "1",
-      name: "John Doe",
-      class: "10th",
-      rollNumber: "1001",
-      email: "john@example.com",
-      adhaarNumber: "123456789012",
-      samagraId: "1234567890",
-      photo: "https://randomuser.me/api/portraits",
-      fatherAdhaarNumber: "123456789012",
-    },
-    {
-      id: "2",
-      name: "Jane Smith",
-      class: "10th",
-      rollNumber: "1002",
-      email: "jane@example.com",
-      adhaarNumber: "123456789012",
-      samagraId: "1234567890",
-      photo: "https://randomuser.me/api/portraits",
-      fatherAdhaarNumber: "123456789012",
-    },
-  ]);
+  const [students, setStudents] = useState<Student[]>([]);
 
   const [teachers, setTeachers] = useState<Teacher[]>([
     {

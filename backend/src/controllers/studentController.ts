@@ -38,13 +38,10 @@ class StudentController {
     next: NextFunction
   ) {
     try {
-      let { schoolId } = req.body;
-      schoolId = parseInt(schoolId);
-
-      const schoolIdSchema = z.object({
-        schoolId: z.number(),
-      });
-      schoolIdSchema.parse({ schoolId });
+      if (!req.user) {
+        throw new ApiError(401, "Unauthorized");
+      }
+      const schoolId = req.user.schoolId;
 
       const students = await StudentService.getStudentsBySchool(schoolId);
       res.status(200).json(students);

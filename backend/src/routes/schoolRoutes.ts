@@ -18,7 +18,7 @@ router.get(
 
 // Route to get school details (Admin only)
 router.get(
-  "/:id",
+  "/",
   authMiddleware,
   roleMiddleware([UserRole.ADMIN]),
   SchoolController.getSchoolById

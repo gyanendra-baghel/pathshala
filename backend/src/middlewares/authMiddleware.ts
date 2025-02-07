@@ -14,14 +14,14 @@ export const authMiddleware = (
   const token = req.headers["authorization"]?.split(" ")[1]; // Assuming Bearer token format
 
   if (!token) {
-    next(new ApiError(401, "Unauthorized access. No token provided."));
+    next(new ApiError(401, "Unauthorized access. Token missing."));
     return;
   }
 
   try {
     const decoded = jwt.verify(token, config.app.jwtSecret) as {
       userId: number;
-      role: "STUDENT" | "TEACHER" | "ADMIN";
+      role: "STUDENT" | "TEACHER" | "ADMIN" | "MAIN_ADMIN";
       schoolId: number;
     };
     if (!decoded) {
