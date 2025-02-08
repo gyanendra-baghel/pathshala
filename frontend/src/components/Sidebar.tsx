@@ -15,15 +15,21 @@ import {
 } from "lucide-react";
 import logo from "../assets/logo.png";
 import { UserRole } from "../utils/types";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../redux/features/authSlice";
+import { AppDispatch } from "../redux/store";
 
 interface SidebarProps {
   role: UserRole;
 }
 
 export function Sidebar({ role }: SidebarProps) {
-  const { logout } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const logout = () => {
+    dispatch(logoutUser());
+  };
+
   const menuItems =
     role === UserRole.MAIN_ADMIN
       ? [
@@ -78,7 +84,7 @@ export function Sidebar({ role }: SidebarProps) {
           {menuItems.map((item) => (
             <Link
               key={item.value}
-              to={`/${role}/${item.value}`}
+              to={`/${item.value}`}
               className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-colors
               ${
                 window.location.pathname.includes(item.value)
@@ -93,16 +99,13 @@ export function Sidebar({ role }: SidebarProps) {
         </nav>
       </div>
       <div className="flex flex-col flex-end">
-        <Link
-          to="/admin/profile"
-          className="flex items-center gap-3 px-4 py-2 "
-        >
+        <Link to="/profile" className="flex items-center gap-3 px-4 py-2 ">
           <User />
           <span>Profile</span>
         </Link>
         <button
           className="flex items-center gap-3 px-4 py-2 text-red-300 hover:text-red-200"
-          onClick={logout}
+          onClick={() => logout()}
         >
           <LogOut className="w-5 h-5" />
           <span>Logout</span>

@@ -90,8 +90,8 @@ export interface User {
 
 export interface FeeStructure {
   id: string;
-  grade: string;
-  description: string;
+  gradeId: number;
+  description?: string;
   amount: number;
 }
 

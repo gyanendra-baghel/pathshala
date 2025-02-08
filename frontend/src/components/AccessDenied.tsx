@@ -10,10 +10,10 @@ const AccessDenied: React.FC = () => {
       </p>
       <div>
         <Link
-          to="/"
+          to="/login"
           className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
         >
-          Go to Home
+          Go to Login
         </Link>
       </div>
     </div>

@@ -32,7 +32,7 @@ app.use("/api/schools", schoolRoutes);
 app.use("/api/grades", gradeRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/fees", feeRoutes);
-app.use("/api/fees-structure", feeStructureRoutes);
+app.use("/api/fee-structures", feeStructureRoutes);
 app.use("/api/subjects", subjectRoutes);
 
 // Global error handling middleware

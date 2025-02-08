@@ -15,7 +15,7 @@ router.post(
 
 // Get all grades for a specific school
 router.get(
-  "/school/:sid",
+  "/",
   authMiddleware,
   roleMiddleware([UserRole.ADMIN, UserRole.TEACHER]),
   GradeController.getGradesBySchool

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import InputField from "../../../components/form/InputField";
@@ -6,12 +6,15 @@ import { Form, Formik } from "formik";
 import { DEFAULT_STUDENT_DETAILS } from "../../../utils/constatnt";
 import { Button } from "../../../components/ui/button";
 import API from "../../../utils/api";
+import SelectField from "../../../components/form/SelectField";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
 
 const StudentSchema = Yup.object().shape({
   firstName: Yup.string().required("First name is required"),
   lastName: Yup.string().required("Last name is required"),
   dob: Yup.date().required("Date of birth is required"),
-  grade: Yup.string().required("Grade is required"),
+  gradeId: Yup.number().required("Grade is required"),
   rollNumber: Yup.string(),
   email: Yup.string().email("Invalid email").required("Email is required"),
   adhaarNumber: Yup.string().matches(/^\d{12}$/, "Aadhaar must be 12 digits"),
@@ -22,11 +25,29 @@ const StudentSchema = Yup.object().shape({
 });
 
 const AddStudent: React.FC = () => {
+  const { grades } = useSelector((state: RootState) => state.grade);
+  const [selectionGrades, setSelectionGrades] = React.useState<
+    { value: string; label: string }[]
+  >([]);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (grades) {
+      setSelectionGrades(
+        grades.map((grade) => ({
+          value: grade.id,
+          label: grade.name,
+        }))
+      );
+    }
+  }, [grades]);
+
   const handleSubmit = async (values: typeof DEFAULT_STUDENT_DETAILS) => {
-    await API.post("/students", values);
-    navigate("/admin/students");
+    const response = await API.post("/students", values);
+    if (response.status === 201) {
+      console.log("Student added successfully");
+      navigate("/admin/students");
+    }
   };
 
   return (
@@ -50,7 +71,11 @@ const AddStudent: React.FC = () => {
               placeholder="Enter last name"
             />
             <InputField label="Date of Birth" name="dob" type="date" />
-            <InputField label="Grade" name="grade" placeholder="Enter grade" />
+            <SelectField
+              label="Grade"
+              name="gradeId"
+              options={selectionGrades}
+            />
             <InputField
               label="Roll Number"
               name="rollNumber"

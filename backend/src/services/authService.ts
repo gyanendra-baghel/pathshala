@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 
 class AuthService {
   static async authUser(email: string, password: string, role: string) {
-    if (role === "ADMIN") {
+    if (["ADMIN", "MAIN_ADMIN"].includes(role)) {
       const admin = await AdminService.getAdminByEmailAndPassword(
         email,
         password

@@ -27,11 +27,10 @@ class GradeController {
     next: NextFunction
   ) {
     try {
-      let { sid } = req.params;
-      const schoolId = parseInt(sid);
-      z.object({
-        schoolId: z.number(),
-      }).parse({ schoolId });
+      if (!req.user) {
+        throw new ApiError(401, "Unauthorized");
+      }
+      const schoolId = req.user.schoolId;
 
       const grades = await GradeService.getGradesBySchool(schoolId);
       res.status(200).json(grades);

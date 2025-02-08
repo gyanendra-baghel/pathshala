@@ -1,27 +1,25 @@
 import { Outlet } from "react-router-dom";
 import { Sidebar } from "../Sidebar";
 import AccessDenied from "../AccessDenied";
-import { useEffect } from "react";
 import { UserRole } from "../../utils/types";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../redux/store";
-import { authenticateUser } from "../../redux/features/authSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 interface DashboardProps {
   roles: UserRole[];
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ roles }) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, loading } = useSelector((state: RootState) => state.auth);
 
-  useEffect(() => {
-    dispatch(authenticateUser());
-  }, [dispatch]);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   if (!user || !roles.includes(user.role)) {
     return <AccessDenied />;
   }
+
   return (
     <div className="flex h-screen bg-gray-100">
       <Sidebar role={roles[0]} />

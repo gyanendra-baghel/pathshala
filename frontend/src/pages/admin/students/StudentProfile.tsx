@@ -10,12 +10,15 @@ import ImageUploadField from "../../../components/ImageUploadField";
 import ErrorPage from "../../../components/layouts/ErrorPage";
 import API from "../../../utils/api";
 import { DEFAULT_STUDENT_DETAILS } from "../../../utils/constatnt";
+import { useSelector } from "react-redux";
+import SelectField from "../../../components/form/SelectField";
+import { RootState } from "../../../redux/store";
 
 const StudentSchema = Yup.object().shape({
   firstName: Yup.string().required("First name is required"),
   lastName: Yup.string().required("Last name is required"),
   dob: Yup.date().required("Date of birth is required"),
-  grade: Yup.string().required("Grade is required"),
+  gradeId: Yup.number().required("Grade is required"),
   rollNumber: Yup.string(),
   email: Yup.string().email("Invalid email").required("Email is required"),
   adhaarNumber: Yup.string().matches(/^\d{12}$/, "Aadhaar must be 12 digits"),
@@ -27,11 +30,26 @@ const StudentSchema = Yup.object().shape({
 
 const StudentDetails: React.FC = () => {
   const { studentId } = useParams<{ studentId: string }>();
-  const navigate = useNavigate();
-
+  const { grades } = useSelector((state: RootState) => state.grade);
+  const [selectionGrades, setSelectionGrades] = React.useState<
+    { value: string; label: string }[]
+  >([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [student, setStudent] = useState<Student>(DEFAULT_STUDENT_DETAILS);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (grades) {
+      setSelectionGrades(
+        grades.map((grade) => ({
+          value: grade.id,
+          label: grade.name,
+        }))
+      );
+    }
+  }, [grades]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,7 +81,7 @@ const StudentDetails: React.FC = () => {
     },
   ];
 
-  if (!isLoaded) {
+  if (!isLoaded || selectionGrades.length === 0) {
     return <div>Loading...</div>;
   } else if (!studentId || !student) {
     return <ErrorPage message="Student Not Found" />;
@@ -113,10 +131,10 @@ const StudentDetails: React.FC = () => {
                 type="date"
                 readOnly={!isEditing}
               />
-              <InputField
+              <SelectField
                 label="Grade"
-                name="grade"
-                placeholder="Enter grade"
+                name="gradeId"
+                options={selectionGrades}
                 readOnly={!isEditing}
               />
               <InputField

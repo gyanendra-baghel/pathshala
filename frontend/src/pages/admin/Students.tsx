@@ -44,7 +44,7 @@ const Students: React.FC = () => {
           </select>
         </div>
         <Link
-          to="/admin/students/add"
+          to="/students/add"
           className="text-center mt-4 block bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
         >
           Add Student

@@ -30,7 +30,7 @@ export const loginUser = createAsyncThunk<
       role,
     });
     localStorage.setItem("token", response.data.token);
-    location.href = `/${role.toLowerCase()}`;
+    location.href = "/";
     return response.data;
   } catch (error: any) {
     console.log(error);
