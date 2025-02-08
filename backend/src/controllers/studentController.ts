@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { StudentService } from "../services/studentService";
 import { z } from "zod";
-import { parse } from "path";
 import ApiError from "../utils/ApiError";
 
 class StudentController {
@@ -58,18 +57,11 @@ class StudentController {
   ) {
     try {
       let { gradeId } = req.body;
-      console.log("Grade ID: ", gradeId);
-      console.log("Type: ", typeof gradeId);
-      console.log("-------------------");
-      // gradeId = parseInt(gradeId);
-      const gradeIdSchema = z.object({
-        gradeId: z.number(),
-      });
-      gradeIdSchema.parse({ gradeId });
+      z.number().positive().parse({ gradeId });
       const students = await StudentService.getStudentsGrade(gradeId);
       res.status(200).json(students);
     } catch (error) {
-      // next(error);
+      next(error);
     }
   }
 

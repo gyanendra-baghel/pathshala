@@ -70,7 +70,7 @@ const Students: React.FC = () => {
                   <p className="text-gray-500">ID: {student.id}</p>
                 </div>
               </div>
-              <Link to={`/admin/student/${student.id}`}>
+              <Link to={`/student/${student.id}`}>
                 <ExternalLink className="text-blue-600" />
               </Link>
             </div>

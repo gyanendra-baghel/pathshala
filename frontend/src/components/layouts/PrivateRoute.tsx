@@ -8,13 +8,12 @@ import { LandingPage } from "../../pages/Home";
 import { fetchFeeStructures } from "../../redux/features/feeStructureSlice";
 import { fetchGrades } from "../../redux/features/gradeSlice";
 import { UserRole } from "../../utils/types";
+import { fetchSubjects } from "../../redux/features/subjectSlice";
 
 const PrivateRoute: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
-  const { user, token, loading } = useSelector(
-    (state: RootState) => state.auth
-  );
+  const { user, loading } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     dispatch(authenticateUser());
@@ -24,10 +23,11 @@ const PrivateRoute: React.FC = () => {
     if (user && user.role === UserRole.MAIN_ADMIN) {
       dispatch(fetchFeeStructures());
       dispatch(fetchGrades());
+      dispatch(fetchSubjects());
     }
   }, [dispatch, user]);
 
-  if (!token && location.pathname == "/") {
+  if (!user && location.pathname == "/") {
     return <LandingPage />;
   }
 

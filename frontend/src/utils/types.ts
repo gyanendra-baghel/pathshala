@@ -4,6 +4,18 @@ export enum UserRole {
   STUDENT = "STUDENT",
 }
 
+export enum Gender {
+  MALE = "MALE",
+  FEMALE = "FEMALE",
+  OTHER = "OTHER",
+}
+
+export interface Subject {
+  id: string;
+  name: string;
+  description?: string;
+}
+
 export interface Student {
   id: string;
   firstName: string;
@@ -32,7 +44,10 @@ export interface Teacher {
   id: string;
   name: string;
   email: string;
-  subjects: string[];
+  address: string;
+  phone?: string;
+  gender?: Gender;
+  subjects: Subject[];
 }
 
 export interface Class {

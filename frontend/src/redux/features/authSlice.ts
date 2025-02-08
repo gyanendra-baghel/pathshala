@@ -33,7 +33,6 @@ export const loginUser = createAsyncThunk<
     location.href = "/";
     return response.data;
   } catch (error: any) {
-    console.log(error);
     return rejectWithValue(error.response?.data?.message || "Login failed");
   }
 });

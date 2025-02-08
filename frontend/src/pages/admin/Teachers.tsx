@@ -1,18 +1,26 @@
-import React, { useState } from "react";
-import { useAppContext } from "../../context/AppContext";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Teacher } from "../../utils/types";
+import API from "../../utils/api";
 
 const Teachers: React.FC = () => {
-  const { teachers } = useAppContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [filterSubject, setFilterSubject] = useState("");
+  const [filteredTeachers, setFilteredTeachers] = useState<Teacher[]>([]);
 
-  const filteredTeachers = teachers.filter((teacher) => {
-    return (
-      teacher.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      (filterSubject === "" || teacher.subjects.includes(filterSubject))
-    );
-  });
+  useEffect(() => {
+    const fetchTeachers = async () => {
+      try {
+        const response = await API.get("/teachers");
+        if (response.status === 200) {
+          setFilteredTeachers(response.data);
+        }
+      } catch (error) {
+        console.log("Error fetching teachers", error);
+      }
+    };
+    fetchTeachers();
+  }, [searchQuery, filterSubject]);
 
   return (
     <div className="space-y-4">
@@ -63,16 +71,18 @@ const Teachers: React.FC = () => {
               <div className="ml-auto">
                 <i className="fas fa-ellipsis-v text-gray-500"></i>
               </div>
-              <Link to={`/admin/teacher/${teacher.id}`}>
+              <Link to={`/teacher/${teacher.id}`}>
                 <button className="border border-blue-500 text-blue-500 px-4 py-2 rounded">
                   View Profile
                 </button>
               </Link>
             </div>
-            <div className="mb-4 flex items-center justify-between">
-              <p className="text-gray-500">Subject:</p>
-              <p className="text-gray-700">{teacher.subjects.join(", ")}</p>
-            </div>
+            {teacher.subjects && (
+              <div className="mb-4 flex items-center justify-between">
+                <p className="text-gray-500">Subject:</p>
+                <p className="text-gray-700">{teacher.subjects.join(", ")}</p>
+              </div>
+            )}
             <div className="mb-4 flex items-center justify-between">
               <p className="text-gray-500">Experience:</p>
               <p className={` text-lg`}>4+ years</p>

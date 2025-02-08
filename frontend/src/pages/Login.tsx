@@ -15,22 +15,6 @@ export function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(loginUser({ email, password, role }));
-    // try {
-    //   // TODO: Add validation
-
-    //   const response = await API.post("/auth/login", { email, password, role });
-    //   console.log(response);
-    //   if (response.status !== 200) {
-    //     setError(response.data.message);
-    //     return;
-    //   }
-    //   localStorage.setItem("token", response.data.token);
-    //   login(email, role);
-    //   navigate(`/${role.toLowerCase()}`);
-    // } catch (error: any) {
-    //   if (error.response.data) setError(error.response.data.message);
-    //   else setError("Something went wrong");
-    // }
   };
 
   return (

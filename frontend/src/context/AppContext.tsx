@@ -2,19 +2,16 @@ import React, { createContext, useState, ReactNode } from "react";
 import {
   Student,
   Teacher,
-  Class,
   ClassWork,
   Fee,
   Attendance,
   Announcement,
-  FeeStructure,
   Report,
 } from "../utils/types";
 
 interface AppContextProps {
   students: Student[];
   teachers: Teacher[];
-  classes: Class[];
   classWork: ClassWork[];
   fees: Fee[];
   attendance: Attendance[];
@@ -25,9 +22,6 @@ interface AppContextProps {
   addTeacher: (teacher: Teacher) => void;
   updateTeacher: (teacher: Teacher) => void;
   removeTeacher: (id: string) => void;
-  addClass: (class_: Class) => void;
-  updateClass: (class_: Class) => void;
-  removeClass: (id: string) => void;
   addClassWork: (classWork: ClassWork) => void;
   updateClassWork: (classWork: ClassWork) => void;
   removeClassWork: (id: string) => void;
@@ -42,13 +36,8 @@ interface AppContextProps {
   updateAnnouncement: (announcement: Announcement) => void;
   removeAnnouncement: (id: string) => void;
   getStudentAttendance: (studentId: string) => Attendance[];
-  getTeacherClasses: (teacherId: string) => Class[];
   getClassWork: (classId: string) => ClassWork[];
-  feeStructures: FeeStructure[];
-  addFeeStructure: (feeStructure: Omit<FeeStructure, "id">) => void;
   reports: Report[];
-  updateFeeStructure: (updatedFeeStructure: FeeStructure) => void;
-  removeFeeStructure: (id: string) => void;
 }
 
 const AppContext = createContext<AppContextProps | undefined>(undefined);
@@ -58,11 +47,6 @@ interface AppProviderProps {
 }
 
 export const AppProvider = ({ children }: AppProviderProps) => {
-  const [feeStructures, setFeeStructures] = useState<FeeStructure[]>([
-    { id: "1", grade: "10th", description: "Tuition Fee", amount: 500 },
-    { id: "2", grade: "11th", description: "Tuition Fee", amount: 600 },
-    { id: "3", grade: "12th", description: "Tuition Fee", amount: 700 },
-  ]);
   const [students, setStudents] = useState<Student[]>([]);
 
   const [teachers, setTeachers] = useState<Teacher[]>([
@@ -77,27 +61,6 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       name: "Mrs. Johnson",
       email: "johnson@school.com",
       subjects: ["English", "Literature"],
-    },
-  ]);
-
-  const [classes, setClasses] = useState<Class[]>([
-    {
-      id: "1",
-      name: "Mathematics 101",
-      subject: "Mathematics",
-      teacherId: "1",
-      grade: "10th",
-      description: "Basic algebra and geometry concepts",
-      students: ["1", "2"],
-    },
-    {
-      id: "2",
-      name: "English Literature",
-      subject: "English",
-      teacherId: "2",
-      grade: "10th",
-      description: "Classic literature and writing skills",
-      students: ["1"],
     },
   ]);
 
@@ -165,7 +128,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     },
   ]);
 
-  const [reports, setReports] = useState<Report[]>([
+  const reports: Report[] = [
     {
       id: "1",
       title: "Bullying Incident",
@@ -184,8 +147,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       studentName: "Tom Smith",
       grade: "6th",
     },
-    // Add more reports as needed
-  ]);
+  ];
 
   const addStudent = (student: Student) => setStudents([...students, student]);
   const updateStudent = (updatedStudent: Student) =>
@@ -206,16 +168,6 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     );
   const removeTeacher = (id: string) =>
     setTeachers(teachers.filter((teacher) => teacher.id !== id));
-
-  const addClass = (class_: Class) => setClasses([...classes, class_]);
-  const updateClass = (updatedClass: Class) =>
-    setClasses(
-      classes.map((class_) =>
-        class_.id === updatedClass.id ? updatedClass : class_
-      )
-    );
-  const removeClass = (id: string) =>
-    setClasses(classes.filter((class_) => class_.id !== id));
 
   const addClassWork = (cw: ClassWork) => setClassWork([...classWork, cw]);
   const updateClassWork = (updatedClassWork: ClassWork) =>
@@ -264,36 +216,14 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 
   const getStudentAttendance = (studentId: string) =>
     attendance.filter((a) => a.studentId === studentId);
-  const getTeacherClasses = (teacherId: string) =>
-    classes.filter((c) => c.teacherId === teacherId);
   const getClassWork = (classId: string) =>
     classWork.filter((cw) => cw.classId === classId);
-
-  const addFeeStructure = (feeStructure: Omit<FeeStructure, "id">) => {
-    setFeeStructures([
-      ...feeStructures,
-      { ...feeStructure, id: Date.now().toString() },
-    ]);
-  };
-
-  const updateFeeStructure = (updatedFeeStructure: FeeStructure) => {
-    setFeeStructures(
-      feeStructures.map((fs) =>
-        fs.id === updatedFeeStructure.id ? updatedFeeStructure : fs
-      )
-    );
-  };
-
-  const removeFeeStructure = (id: string) => {
-    setFeeStructures(feeStructures.filter((fs) => fs.id !== id));
-  };
 
   return (
     <AppContext.Provider
       value={{
         students,
         teachers,
-        classes,
         classWork,
         fees,
         attendance,
@@ -304,9 +234,6 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         addTeacher,
         updateTeacher,
         removeTeacher,
-        addClass,
-        updateClass,
-        removeClass,
         addClassWork,
         updateClassWork,
         removeClassWork,
@@ -321,13 +248,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         updateAnnouncement,
         removeAnnouncement,
         getStudentAttendance,
-        getTeacherClasses,
         getClassWork,
-        feeStructures,
-        addFeeStructure,
         reports,
-        updateFeeStructure,
-        removeFeeStructure,
       }}
     >
       {children}

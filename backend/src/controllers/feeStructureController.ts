@@ -61,7 +61,6 @@ class FeeStructureController {
       const feeStructures = await FeeStructureService.getFeeStructuresBySchool(
         req.user.schoolId
       );
-      console.log(feeStructures);
       res.status(200).json(feeStructures);
     } catch (error) {
       next(error);
