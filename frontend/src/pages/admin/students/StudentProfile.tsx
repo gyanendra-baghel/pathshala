@@ -9,7 +9,7 @@ import { Megaphone, PencilLine, Trash2 } from "lucide-react";
 import ImageUploadField from "../../../components/ImageUploadField";
 import ErrorPage from "../../../components/layouts/ErrorPage";
 import API from "../../../utils/api";
-import { DEFAULT_STUDENT_DETAILS } from "../../../utils/constatnt";
+import { DEFAULT_STUDENT_DETAILS } from "../../../utils/constants";
 import { useSelector } from "react-redux";
 import SelectField from "../../../components/form/SelectField";
 import { RootState } from "../../../redux/store";

@@ -3,7 +3,7 @@ import * as yup from "yup";
 import { Form, Formik } from "formik";
 import InputField from "../../../components/form/InputField";
 import SelectField from "../../../components/form/SelectField";
-import { DEFAULT_TEACHER_DETAILS } from "../../../utils/constatnt";
+import { DEFAULT_TEACHER_DETAILS } from "../../../utils/constants";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 

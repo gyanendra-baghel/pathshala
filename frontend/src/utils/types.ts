@@ -17,14 +17,14 @@ export interface Subject {
 }
 
 export interface Student {
-  id: string;
+  id?: string;
   firstName: string;
   lastName: string;
   dob: string;
   grade?: Grade;
   rollNumber: string;
   email: string;
-  adhaarNumber: string;
+  aadharNumber: string;
   samagraId: string;
   photo: string;
   address: string;

@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import InputField from "../../../components/form/InputField";
 import { Form, Formik } from "formik";
-import { DEFAULT_STUDENT_DETAILS } from "../../../utils/constatnt";
+import { DEFAULT_STUDENT_DETAILS } from "../../../utils/constants";
 import { Button } from "../../../components/ui/button";
 import API from "../../../utils/api";
 import SelectField from "../../../components/form/SelectField";
@@ -17,11 +17,15 @@ const StudentSchema = Yup.object().shape({
   gradeId: Yup.number().required("Grade is required"),
   rollNumber: Yup.string(),
   email: Yup.string().email("Invalid email").required("Email is required"),
-  adhaarNumber: Yup.string().matches(/^\d{12}$/, "Aadhaar must be 12 digits"),
+  password: Yup.string().min(6, "Password must be at least 6 characters"),
+  aadharNumber: Yup.string().matches(/^\d{12}$/, "Aadhaar must be 12 digits"),
   samagraId: Yup.string(),
   phoneNumber: Yup.string()
     .matches(/^\d{10}$/, "Phone number must be 10 digits")
     .required("Phone number is required"),
+  fatherName: Yup.string(),
+  motherName: Yup.string(),
+  address: Yup.string(),
 });
 
 const AddStudent: React.FC = () => {
@@ -43,10 +47,13 @@ const AddStudent: React.FC = () => {
   }, [grades]);
 
   const handleSubmit = async (values: typeof DEFAULT_STUDENT_DETAILS) => {
-    const response = await API.post("/students", values);
-    if (response.status === 201) {
-      console.log("Student added successfully");
-      navigate("/admin/students");
+    try {
+      const response = await API.post("/students", values);
+      if (response.status === 201) {
+        navigate("/students");
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -54,7 +61,7 @@ const AddStudent: React.FC = () => {
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-6">Add Student</h2>
       <Formik
-        initialValues={DEFAULT_STUDENT_DETAILS}
+        initialValues={{ ...DEFAULT_STUDENT_DETAILS, password: "" }}
         validationSchema={StudentSchema}
         onSubmit={handleSubmit}
       >
@@ -88,8 +95,14 @@ const AddStudent: React.FC = () => {
               placeholder="Enter email"
             />
             <InputField
+              label="Password"
+              name="password"
+              type="password"
+              placeholder="Enter password"
+            />
+            <InputField
               label="Aadhaar Number"
-              name="adhaarNumber"
+              name="aadharNumber"
               placeholder="Enter Aadhaar number"
             />
             <InputField
@@ -103,6 +116,9 @@ const AddStudent: React.FC = () => {
               type="tel"
               placeholder="Enter phone number"
             />
+            <InputField label="Father's Name" name="fatherName" />
+            <InputField label="Mother's Name" name="motherName" />
+            <InputField label="Address" name="address" />
             <div className="col-span-2 flex items-center justify-between">
               <Button type="reset" variant="destructive">
                 Clear

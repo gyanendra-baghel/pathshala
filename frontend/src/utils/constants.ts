@@ -1,14 +1,13 @@
 import { Gender, Student, Teacher } from "./types";
 
 export const DEFAULT_STUDENT_DETAILS: Student = {
-  id: "",
   firstName: "",
   lastName: "",
   dob: "",
   grade: undefined,
   rollNumber: "",
   email: "",
-  adhaarNumber: "",
+  aadharNumber: "",
   samagraId: "",
   photo: "",
   address: "",

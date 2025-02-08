@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import TeacherService from "../services/teacherService";
 import { z } from "zod";
+import ApiError from "../utils/ApiError";
 
 class TeacherController {
   static async createTeacher(req: Request, res: Response, next: NextFunction) {
@@ -53,8 +54,10 @@ class TeacherController {
     next: NextFunction
   ) {
     try {
-      const schoolId = parseInt(req.params.schoolId);
-      z.number().positive().parse(schoolId);
+      if (!req.user) {
+        throw new ApiError(401, "Unauthorized");
+      }
+      const schoolId = req.user.schoolId;
       const teachers = await TeacherService.getTeachersBySchool(schoolId);
       res.json(teachers);
     } catch (error) {

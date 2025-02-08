@@ -7,22 +7,32 @@ class StudentController {
   // Create a new student
   static async createStudent(req: Request, res: Response, next: NextFunction) {
     try {
-      const studentData = req.body;
+      if (!req.user) {
+        throw new ApiError(401, "Unauthorized");
+      }
+      req.body.gradeId = parseInt(req.body.gradeId);
+      req.body.schoolId = req.user.schoolId;
+
       const studentSchema = z.object({
-        firstName: z.string().nonempty(),
-        lastName: z.string().nonempty(),
-        dob: z.string(),
-        email: z.string().email(),
-        password: z.string().min(6),
-        phoneNumber: z.string().length(10),
-        aadharNumber: z.string(),
-        fatherName: z.string(),
-        motherName: z.string(),
-        address: z.string(),
-        gradeId: z.number(),
-        schoolId: z.number(),
+        firstName: z.string().nonempty("First name is required"),
+        lastName: z.string().nonempty("Last name is required"),
+        dob: z.string().nonempty("Date of birth is required"),
+        email: z.string().email("Invalid email format"),
+        password: z.string().min(6, "Password must be at least 6 characters"),
+        phoneNumber: z
+          .string()
+          .length(10, "Phone number must be exactly 10 digits"),
+        aadharNumber: z
+          .string()
+          .length(12, "Aadhar number must be exactly 12 digits"),
+        fatherName: z.string().nonempty("Father's name is required"),
+        motherName: z.string().nonempty("Mother's name is required"),
+        address: z.string().nonempty("Address is required"),
+        gradeId: z.number().min(1, "Grade ID is required"),
+        schoolId: z.number().min(1, "School ID is required"),
       });
-      studentSchema.parse(studentData);
+
+      const studentData = studentSchema.parse(req.body);
       const createdStudent = await StudentService.createStudent(studentData);
       res.status(201).json(createdStudent);
     } catch (error) {
@@ -56,8 +66,7 @@ class StudentController {
     next: NextFunction
   ) {
     try {
-      let { gradeId } = req.body;
-      z.number().positive().parse({ gradeId });
+      const gradeId = z.number().positive().parse(req.body.gradeId);
       const students = await StudentService.getStudentsGrade(gradeId);
       res.status(200).json(students);
     } catch (error) {
@@ -68,12 +77,7 @@ class StudentController {
   // Get a student by ID
   static async getStudentById(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params;
-      const studentId = parseInt(id);
-      const studentIdSchema = z.object({
-        id: z.number(),
-      });
-      studentIdSchema.parse({ id: studentId });
+      const studentId = z.number().parse(parseInt(req.params.id));
       const student = await StudentService.getStudentById(studentId);
       if (!student) {
         throw new ApiError(404, "Student not found");
@@ -88,8 +92,7 @@ class StudentController {
   static async updateStudent(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const studentId = parseInt(id);
-      const studentData = req.body;
+      const studentId = z.number().parse(parseInt(id));
       const studentSchema = z.object({
         firstName: z.string().nonempty().optional(),
         lastName: z.string().nonempty().optional(),
@@ -104,10 +107,7 @@ class StudentController {
         gradeId: z.number().optional(),
         schoolId: z.number().optional(),
       });
-      studentSchema.parse(studentData);
-      z.object({
-        id: z.number(),
-      }).parse({ id: studentId });
+      const studentData = studentSchema.parse(req.body);
 
       const updatedStudent = await StudentService.updateStudent(
         studentId,
@@ -126,11 +126,7 @@ class StudentController {
   static async deleteStudent(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const studentId = parseInt(id);
-      const studentIdSchema = z.object({
-        id: z.number(),
-      });
-      studentIdSchema.parse({ id: studentId });
+      const studentId = z.number().positive().parse(parseInt(id));
       await StudentService.deleteStudent(studentId);
       res.status(200).json({ message: "Student deleted successfully" });
     } catch (error) {

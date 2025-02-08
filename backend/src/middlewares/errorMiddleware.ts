@@ -11,9 +11,13 @@ export const errorMiddleware = (
   const message = "Internal Server Error";
 
   if (err.name === "ZodError") {
-    res
-      .status(400)
-      .json({ message: "Invalid Credientials", errors: err.errors });
+    res.status(400).json({
+      message: "Invalid Credientials",
+      errors: err.errors.map((er: any) => ({
+        field: er.path.join("."), // Shows the exact field that has an issue
+        message: er.message,
+      })),
+    });
     return;
   } else if (err.name === "ApiError") {
     res.status(err.statusCode).json({ message: err.message });
