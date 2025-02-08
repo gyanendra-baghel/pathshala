@@ -1,4 +1,4 @@
-import { Student } from "./types";
+import { Gender, Student, Teacher } from "./types";
 
 export const DEFAULT_STUDENT_DETAILS: Student = {
   id: "",
@@ -15,4 +15,14 @@ export const DEFAULT_STUDENT_DETAILS: Student = {
   fatherName: "",
   motherName: "",
   phoneNumber: "",
+};
+
+export const DEFAULT_TEACHER_DETAILS: Teacher = {
+  name: "",
+  email: "",
+  password: undefined,
+  phone: "",
+  address: "",
+  gender: Gender.MALE,
+  subjects: [],
 };
