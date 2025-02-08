@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useAppContext } from "../../context/AppContext";
 import { Link } from "react-router-dom";
 import { ExternalLink } from "lucide-react";
 import API from "../../utils/api";
+import { Student } from "../../utils/types";
 
 const Students: React.FC = () => {
-  const { students } = useAppContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [filterGrade, setFilterGrade] = useState("");
-  const [filteredStudents, setFilteredStudents] = useState(students);
+  const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
 
   useEffect(() => {
     async function fetchData() {

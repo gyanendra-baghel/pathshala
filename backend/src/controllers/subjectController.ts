@@ -35,13 +35,16 @@ class SubjectController {
   // Create a new subject
   static async createSubject(req: Request, res: Response, next: NextFunction) {
     try {
-      const subjectData = req.body;
+      if (!req.user) {
+        throw new ApiError(401, "Unauthorized");
+      }
+      req.body.schoolId = req.user.schoolId;
       const createSubjectSchema = z.object({
         name: z.string().min(1, "Subject name is required"),
         description: z.string().optional(),
         schoolId: z.number().positive("School ID must be a positive number"),
       });
-      createSubjectSchema.parse(subjectData);
+      const subjectData = createSubjectSchema.parse(req.body);
       const newSubject = await SubjectService.createSubject(subjectData);
       res.status(201).json(newSubject);
     } catch (error) {
@@ -52,6 +55,10 @@ class SubjectController {
   // Update a subject
   static async updateSubject(req: Request, res: Response, next: NextFunction) {
     try {
+      const subjectId = z
+        .number()
+        .positive()
+        .parse(parseInt(req.params.subjectId));
       const updateSubjectSchema = z.object({
         name: z.string().min(1, "Subject name is required").optional(),
         description: z.string().optional(),
@@ -60,9 +67,8 @@ class SubjectController {
           .positive("School ID must be a positive number")
           .optional(),
       });
-      updateSubjectSchema.parse(req.body);
-      const subjectId = parseInt(req.params.subjectId, 10);
-      const subjectData = req.body;
+      const subjectData = updateSubjectSchema.parse(req.body);
+
       const updatedSubject = await SubjectService.updateSubject(
         subjectId,
         subjectData
@@ -76,7 +82,10 @@ class SubjectController {
   // Delete a subject
   static async deleteSubject(req: Request, res: Response, next: NextFunction) {
     try {
-      const subjectId = parseInt(req.params.subjectId, 10);
+      const subjectId = z
+        .number()
+        .positive()
+        .parse(parseInt(req.params.subjectId));
       await SubjectService.deleteSubject(subjectId);
       res.status(204).send();
     } catch (error) {

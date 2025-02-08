@@ -30,6 +30,8 @@ import Register from "./pages/Register";
 import AddTeacherPage from "./pages/admin/teachers/AddTeacher";
 import { UserRole } from "./utils/types";
 import PrivateRoute from "./components/layouts/PrivateRoute";
+import AddGradePage from "./pages/grades/AddGrade";
+import AddSubjectPage from "./pages/grades/subjects/AddSubject";
 
 function App() {
   return (
@@ -51,23 +53,28 @@ function App() {
           <Route path="reports" element={<Reports />} />
           <Route path="timetable" element={<UnderProduction />} />
           <Route path="analytics" element={<UnderProduction />} />
-        </Route>
-        <Route
-          path="/"
-          element={
-            <Dashboard roles={[UserRole.TEACHER, UserRole.MAIN_ADMIN]} />
-          }
-        >
-          <Route index element={<TeacherBoard />} />
           <Route path="classes" element={<TeacherClassroom />} />
-          <Route path="students" element={<TeacherStudents />} />
-          <Route path="c/:classId" element={<ClassroomDetails />} />
+          <Route path="classes/add" element={<AddGradePage />} />
+          <Route path="classes/add-subject" element={<AddSubjectPage />} />
+          <Route path="c/:classId" element={<UnderProduction />} />
           <Route path="c/:classId/assignments" element={<Assignments />} />
           <Route path="c/:classId/attendance" element={<ClassAttendence />} />
           <Route path="attendance/:userId" element={<Attendance />} />
           <Route path="announcements" element={<AdminAnnouncement />} />
         </Route>
-        <Route path="/" element={<Dashboard roles={[UserRole.STUDENT]} />}>
+        <Route
+          path="/teacher"
+          element={<Dashboard roles={[UserRole.TEACHER]} />}
+        >
+          <Route index element={<TeacherBoard />} />
+          <Route path="students" element={<TeacherStudents />} />
+        </Route>
+        <Route
+          path="/student"
+          element={
+            <Dashboard roles={[UserRole.STUDENT, UserRole.MAIN_ADMIN]} />
+          }
+        >
           <Route index element={<StudentAnnoncement />} />
           <Route path="announcements" element={<StudentAnnoncement />} />
           <Route path="classes" element={<StudentClassroom />} />

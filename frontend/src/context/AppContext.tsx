@@ -1,7 +1,5 @@
 import React, { createContext, useState, ReactNode } from "react";
 import {
-  Student,
-  Teacher,
   ClassWork,
   Fee,
   Attendance,
@@ -10,18 +8,10 @@ import {
 } from "../utils/types";
 
 interface AppContextProps {
-  students: Student[];
-  teachers: Teacher[];
   classWork: ClassWork[];
   fees: Fee[];
   attendance: Attendance[];
   announcements: Announcement[];
-  addStudent: (student: Student) => void;
-  updateStudent: (student: Student) => void;
-  removeStudent: (id: string) => void;
-  addTeacher: (teacher: Teacher) => void;
-  updateTeacher: (teacher: Teacher) => void;
-  removeTeacher: (id: string) => void;
   addClassWork: (classWork: ClassWork) => void;
   updateClassWork: (classWork: ClassWork) => void;
   removeClassWork: (id: string) => void;
@@ -47,23 +37,6 @@ interface AppProviderProps {
 }
 
 export const AppProvider = ({ children }: AppProviderProps) => {
-  const [students, setStudents] = useState<Student[]>([]);
-
-  const [teachers, setTeachers] = useState<Teacher[]>([
-    {
-      id: "1",
-      name: "Dr. Smith",
-      email: "smith@school.com",
-      subjects: ["Mathematics", "Physics"],
-    },
-    {
-      id: "2",
-      name: "Mrs. Johnson",
-      email: "johnson@school.com",
-      subjects: ["English", "Literature"],
-    },
-  ]);
-
   const [classWork, setClassWork] = useState<ClassWork[]>([
     {
       id: "1",
@@ -149,26 +122,6 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     },
   ];
 
-  const addStudent = (student: Student) => setStudents([...students, student]);
-  const updateStudent = (updatedStudent: Student) =>
-    setStudents(
-      students.map((student) =>
-        student.id === updatedStudent.id ? updatedStudent : student
-      )
-    );
-  const removeStudent = (id: string) =>
-    setStudents(students.filter((student) => student.id !== id));
-
-  const addTeacher = (teacher: Teacher) => setTeachers([...teachers, teacher]);
-  const updateTeacher = (updatedTeacher: Teacher) =>
-    setTeachers(
-      teachers.map((teacher) =>
-        teacher.id === updatedTeacher.id ? updatedTeacher : teacher
-      )
-    );
-  const removeTeacher = (id: string) =>
-    setTeachers(teachers.filter((teacher) => teacher.id !== id));
-
   const addClassWork = (cw: ClassWork) => setClassWork([...classWork, cw]);
   const updateClassWork = (updatedClassWork: ClassWork) =>
     setClassWork(
@@ -222,18 +175,10 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   return (
     <AppContext.Provider
       value={{
-        students,
-        teachers,
         classWork,
         fees,
         attendance,
         announcements,
-        addStudent,
-        updateStudent,
-        removeStudent,
-        addTeacher,
-        updateTeacher,
-        removeTeacher,
         addClassWork,
         updateClassWork,
         removeClassWork,

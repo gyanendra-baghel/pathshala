@@ -36,6 +36,8 @@ export function Sidebar({ role }: SidebarProps) {
           { icon: LayoutDashboard, label: "Dashboard", value: "" },
           { icon: User, label: "Students", value: "students" },
           { icon: GraduationCap, label: "Teachers", value: "teachers" },
+          { icon: BookOpen, label: "My Classes", value: "classes" },
+          { icon: Calendar, label: "Attendance", value: "attendance" },
           {
             icon: DollarSign,
             label: "Fees Structure",
@@ -56,13 +58,7 @@ export function Sidebar({ role }: SidebarProps) {
           { icon: Settings, label: "Settings", value: "settings" },
         ]
       : role === UserRole.TEACHER
-      ? [
-          { icon: BookOpen, label: "My Classes", value: "classes" },
-          { icon: Users, label: "Students", value: "students" },
-          { icon: Calendar, label: "Attendance", value: "attendance" },
-          { icon: Bell, label: "Announcements", value: "announcements" },
-          { icon: Bell, label: "Assignments", value: "assignments" },
-        ]
+      ? [{ icon: Users, label: "Students", value: "students" }]
       : [
           { icon: User, label: "My Profile", value: "profile" },
           { icon: BookOpen, label: "My Classes", value: "classes" },

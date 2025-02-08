@@ -25,13 +25,13 @@ export const fetchSubjects = createAsyncThunk<Subject[]>(
 );
 
 // Add Subject
-export const addSubject = createAsyncThunk<Subject, { name: string }>(
-  "subject/addSubject",
-  async (grade) => {
-    const response = await API.post(`/subjects`, grade);
-    return response.data;
-  }
-);
+export const addSubject = createAsyncThunk<
+  Subject,
+  { name: string; description: string; gradeId: string }
+>("subject/addSubject", async (grade) => {
+  const response = await API.post(`/subjects`, grade);
+  return response.data;
+});
 
 // Update Subject
 export const updateSubject = createAsyncThunk<

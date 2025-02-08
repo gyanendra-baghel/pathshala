@@ -2,18 +2,21 @@ import { NextFunction, Request, Response } from "express";
 import GradeService from "../services/gradeService";
 import { z } from "zod";
 import ApiError from "../utils/ApiError";
-import { parse } from "path";
 
 class GradeController {
   // Create a new grade
   static async createGrade(req: Request, res: Response, next: NextFunction) {
     try {
+      if (!req.user) {
+        throw new ApiError(401, "Unauthorized");
+      }
+      req.body.schoolId = req.user.schoolId;
       const gradeSchema = z.object({
         name: z.string().nonempty(),
         schoolId: z.number(),
       });
-      gradeSchema.parse(req.body);
-      const grade = await GradeService.createGrade(req.body);
+      const gradeData = gradeSchema.parse(req.body);
+      const grade = await GradeService.createGrade(gradeData);
       res.status(201).json(grade);
     } catch (error) {
       next(error);
@@ -42,11 +45,7 @@ class GradeController {
   // Get a specific grade by ID
   static async getGradeById(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params;
-      const gradeId = parseInt(id);
-      z.object({
-        gradeId: z.number(),
-      }).parse({ gradeId });
+      const gradeId = z.number().positive().parse(parseInt(req.params.id));
       const grade = await GradeService.getGradeById(gradeId);
       if (!grade) {
         throw new ApiError(404, "Grade not found.");
@@ -60,17 +59,13 @@ class GradeController {
   // Update grade information
   static async updateGrade(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params;
-      const gradeId = parseInt(id);
-      z.object({
-        gradeId: z.number(),
-      }).parse({ gradeId });
+      const gradeId = z.number().positive().parse(parseInt(req.params.id));
       const gradeSchema = z.object({
         name: z.string().nonempty().optional(),
         schoolId: z.number().optional(),
       });
-      gradeSchema.parse(req.body);
-      const updatedGrade = await GradeService.updateGrade(gradeId, req.body);
+      const gradeData = gradeSchema.parse(req.body);
+      const updatedGrade = await GradeService.updateGrade(gradeId, gradeData);
       if (!updatedGrade) {
         throw new ApiError(404, "Grade not found.");
       }
@@ -83,12 +78,8 @@ class GradeController {
   // Delete a grade by ID
   static async deleteGrade(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params;
-      const gradeId = parseInt(id);
-      z.object({
-        gradeId: z.number(),
-      }).parse({ gradeId });
-      await GradeService.deleteGrade(Number(id));
+      const gradeId = z.number().positive().parse(parseInt(req.params.id));
+      await GradeService.deleteGrade(gradeId);
       res.status(204).send();
     } catch (error) {
       next(error);

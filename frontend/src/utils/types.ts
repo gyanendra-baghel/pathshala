@@ -14,6 +14,9 @@ export interface Subject {
   id: string;
   name: string;
   description?: string;
+  gradeId?: string;
+  teacherId?: string;
+  students?: string[]; // student IDs
 }
 
 export interface Student {
