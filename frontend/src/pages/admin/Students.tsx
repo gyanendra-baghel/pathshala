@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Plus } from "lucide-react";
 import API from "../../utils/api";
 import { Student } from "../../utils/types";
 
 const Students: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterGrade, setFilterGrade] = useState("");
+  // const [filterGrade, setFilterGrade] = useState("");
   const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
 
   useEffect(() => {
@@ -28,9 +28,9 @@ const Students: React.FC = () => {
             placeholder="Search by name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="max-w-96 px-4 py-2 border rounded-lg"
+            className="min-w-40 max-w-96 px-4 py-2 border rounded-lg"
           />
-          <select
+          {/* <select
             value={filterGrade}
             onChange={(e) => setFilterGrade(e.target.value)}
             className="p-2 border rounded-lg"
@@ -39,17 +39,16 @@ const Students: React.FC = () => {
             <option value="10th">10th</option>
             <option value="11th">11th</option>
             <option value="12th">12th</option>
-            {/* Add more grade options as needed */}
-          </select>
+          </select> */}
         </div>
         <Link
           to="/students/add"
-          className="text-center mt-4 block bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
+          className="fixed bottom-3 right-3 text-center block bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700"
         >
-          Add Student
+          <Plus className="w-8 h-8 inline-block" />
         </Link>
       </div>
-      <div className="grid grid-cols-4 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {filteredStudents.map((student) => (
           <div
             key={student.id}

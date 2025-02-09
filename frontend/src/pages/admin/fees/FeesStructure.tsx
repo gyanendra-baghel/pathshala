@@ -33,15 +33,19 @@ const FeesStructure: React.FC = () => {
     }
   }, [grades]);
 
+  const handleSubmit = (values: FeeStructure) => {
+    values.gradeId = parseInt(values.gradeId.toString());
+    values.amount = parseInt(values.amount.toString());
+    console.log("values", values);
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md space-y-4">
       <h2 className="text-2xl font-bold mb-6">Fee Structure</h2>
       <Formik
         initialValues={{ gradeId: "", description: "", amount: "" }}
         validationSchema={validationSchema}
-        onSubmit={(values) => {
-          console.log("values", values);
-        }}
+        onSubmit={handleSubmit}
       >
         {() => (
           <Form className="mx-auto">

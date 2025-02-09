@@ -12,7 +12,7 @@ const Testamonials: React.FC = () => {
           See what school administrators are saying about Pathashala
         </p>
       </div>
-      <div className="mt-10 flex items-center justify-center w-full">
+      <div className="mt-10 flex flex-col md:flex-row items-center justify-center w-full">
         <TestamonialCard />
         <TestamonialCard />
         <TestamonialCard />

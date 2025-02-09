@@ -109,10 +109,10 @@ export interface User {
 }
 
 export interface FeeStructure {
-  id: string;
-  gradeId: number;
+  id?: string;
+  gradeId: number | string;
   description?: string;
-  amount: number;
+  amount: number | string;
 }
 
 export interface Report {

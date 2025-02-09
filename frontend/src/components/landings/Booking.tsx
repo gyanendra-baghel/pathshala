@@ -73,7 +73,7 @@ const Booking: React.FC = () => {
             </button>
           </form>
         </div>
-        <div className="p-6 rounded shadow-lg m-4 max-w-lg">
+        <div className="p-6 rounded shadow-lg m-4 max-w-lg hidden md:block">
           <h2 className="text-xl font-bold mb-4">
             What You'll Learn in the Demo:
           </h2>

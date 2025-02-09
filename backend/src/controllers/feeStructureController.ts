@@ -11,16 +11,18 @@ class FeeStructureController {
     next: NextFunction
   ) {
     try {
-      const feeData = req.body;
+      if (!req.user) {
+        throw new ApiError(401, "Unauthorized");
+      }
+      req.body.schoolId = req.user.schoolId;
       const feeStructureSchema = z.object({
         schoolId: z.number().int().positive(),
         gradeId: z.number().int().positive(),
-        feeAmount: z.number().int().positive(),
         feeType: z.enum(["TUTION", "TRANSPORT", "EXTRACURRICULAR", "OTHER"]),
         FeeFrequency: z.enum(["YEARLY", "MONTHLY", "ONCE"]),
         amount: z.number().int().positive(),
       });
-      feeStructureSchema.parse(feeData);
+      const feeData = feeStructureSchema.parse(req.body);
       const createdFee = await FeeStructureService.createFeeStructure(feeData);
       res.status(201).json(createdFee);
     } catch (error) {

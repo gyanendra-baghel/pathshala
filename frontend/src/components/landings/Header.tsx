@@ -4,12 +4,12 @@ import logo from "../../assets/logo.png";
 
 const Header: React.FC = () => {
   return (
-    <nav className="fixed top-0 w-full flex justify-between items-center p-6 bg-gray-900 text-white">
+    <nav className="fixed top-0 w-screen flex justify-between items-center p-6 bg-gray-900 text-white z-50">
       <Link to="/" className="flex items-center text-2xl font-bold ml-2">
         <img src={logo} alt="Pathshala" className="w-8 h-8" />
         <p className="ml-2">Pathashala</p>
       </Link>
-      <div className="space-x-6">
+      <div className="space-x-6 hidden lg:flex">
         <a href="#" className="text-white">
           Home
         </a>

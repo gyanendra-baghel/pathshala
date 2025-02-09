@@ -148,7 +148,7 @@ model FeeStructure {
   feeType       FeeType
   amount        Float
   frequency     FeeFrequency
-  dueDate       DateTime
+  description   String?
 
   school        School         @relation(fields: [schoolId], references: [id])
   fees          Fee[]

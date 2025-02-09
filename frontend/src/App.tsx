@@ -59,6 +59,7 @@ function App() {
           <Route path="c/:classId" element={<ClassroomDetails />} />
           <Route path="c/:classId/assignments" element={<Assignments />} />
           <Route path="c/:classId/attendance" element={<ClassAttendence />} />
+          <Route path="attendance" element={<StudentAttendence />} />
           <Route path="attendance/:userId" element={<Attendance />} />
           <Route path="announcements" element={<AdminAnnouncement />} />
         </Route>
@@ -78,7 +79,6 @@ function App() {
           <Route index element={<StudentAnnoncement />} />
           <Route path="announcements" element={<StudentAnnoncement />} />
           <Route path="classes" element={<StudentClassroom />} />
-          <Route path="attendance" element={<StudentAttendence />} />
           <Route path="fees" element={<StudentFees />} />
         </Route>
         <Route path="profile" element={<Profile />} />

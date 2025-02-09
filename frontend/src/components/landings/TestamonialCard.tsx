@@ -2,7 +2,7 @@ import React from "react";
 
 const TestamonialCard: React.FC = () => {
   return (
-    <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-md mx-4">
+    <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-md m-4">
       <div className="flex items-center mb-4">
         <div className="bg-green-100 p-2 rounded-full">
           <i className="fas fa-quote-left text-green-500"></i>

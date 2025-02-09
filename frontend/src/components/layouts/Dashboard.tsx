@@ -23,7 +23,7 @@ const Dashboard: React.FC<DashboardProps> = ({ roles }) => {
   return (
     <div className="flex h-screen bg-gray-100">
       <Sidebar role={roles[0]} />
-      <div className="flex-1 p-8 bg-gray-50 overflow-y-scroll">
+      <div className="flex-1 p-2 bg-gray-50 overflow-y-scroll">
         <Outlet />
       </div>
     </div>

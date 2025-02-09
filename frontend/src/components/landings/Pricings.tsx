@@ -1,7 +1,20 @@
-import React from "react";
+import React, { useRef } from "react";
 import PricingCard from "./PricingCard";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const Pricings: React.FC = () => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const { current } = scrollRef;
+      const scrollAmount = 300; // Adjust scroll amount as needed
+      current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
   const plans = [
     {
       plan: "Basic",
@@ -45,14 +58,37 @@ const Pricings: React.FC = () => {
   ];
   return (
     <div className="flex flex-col items-center justify-center py-12">
-      <h1 className="text-3xl font-bold mb-2">Simple, Transparent Pricing</h1>
+      <h1 className="text-3xl font-bold mb-2 text-center">
+        Simple, Transparent Pricing
+      </h1>
       <p className="text-gray-400 mb-8">
         Choose the perfect plan for your school
       </p>
-      <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6">
-        {plans.map((plan, index) => (
-          <PricingCard key={index} {...plan} />
-        ))}
+      <div className="relative flex items-center space-x-4 w-full max-w-4xl mx-auto">
+        {/* Left Scroll Button */}
+        <button
+          onClick={() => scroll("left")}
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 shadow-lg rounded-full"
+        >
+          <ChevronLeft size={24} />
+        </button>
+        {/* Pricing Cards */}
+        <div
+          className="flex space-x-2 overflow-x-auto scrollbar-hide scroll-smooth"
+          ref={scrollRef}
+          style={{ scrollBehavior: "smooth", scrollbarWidth: "none" }}
+        >
+          {plans.map((plan, index) => (
+            <PricingCard key={index} {...plan} />
+          ))}
+        </div>
+        {/* Right Scroll Button */}
+        <button
+          onClick={() => scroll("right")}
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 shadow-lg rounded-full"
+        >
+          <ChevronRight size={24} />
+        </button>
       </div>
       <div className="mt-8 text-gray-400 text-center">
         <p>All plans include:</p>

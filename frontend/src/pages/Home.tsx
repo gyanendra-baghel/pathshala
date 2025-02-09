@@ -12,8 +12,8 @@ export function LandingPage() {
     <div className="">
       <Header />
       <div className="bg-gray-900 text-white">
-        <div className="flex justify-center items-center h-screen p-40">
-          <div className="w-1/2 p-5">
+        <div className="flex justify-center items-center h-screen pt-20">
+          <div className="md:w-1/2 p-5">
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6">
               Transform Your School Management with{" "}
               <span className="text-blue-500">Pathashala</span>
@@ -26,23 +26,23 @@ export function LandingPage() {
             <div className="flex space-x-4 mb-6">
               <Link to="/register">
                 <button className="bg-blue-600 text-white px-6 py-3 rounded text-lg">
-                  Get Started Free
+                  Get Started
                 </button>
               </Link>
               <button className="bg-gray-800 text-white px-6 py-3 rounded text-lg">
                 Learn More
               </button>
             </div>
-            <div className="flex items-center space-x-2 text-green-500 mb-6">
+            <div className="hidden items-center space-x-2 text-green-500 mb-6 md:flex">
               <i className="fas fa-check"></i>
               <span>No Credit Card Required</span>
             </div>
-            <div className="flex items-center space-x-2 text-green-500">
+            <div className="hidden items-center space-x-2 text-green-500 md:flex">
               <i className="fas fa-check"></i>
               <span>14-Day Free Trial</span>
             </div>
           </div>
-          <div className="mt-12 bg-gray-900 p-6 rounded-lg shadow-lg">
+          <div className="mt-12 bg-gray-900 p-6 rounded-lg shadow-lg hidden md:block">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-gray-800 p-8 rounded w-80">
                 <span className="text-blue-500 text-3xl font-bold">98%</span>
