@@ -56,7 +56,7 @@ function App() {
           <Route path="classes" element={<TeacherClassroom />} />
           <Route path="classes/add" element={<AddGradePage />} />
           <Route path="classes/add-subject" element={<AddSubjectPage />} />
-          <Route path="c/:classId" element={<UnderProduction />} />
+          <Route path="c/:classId" element={<ClassroomDetails />} />
           <Route path="c/:classId/assignments" element={<Assignments />} />
           <Route path="c/:classId/attendance" element={<ClassAttendence />} />
           <Route path="attendance/:userId" element={<Attendance />} />

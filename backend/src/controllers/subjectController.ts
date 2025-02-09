@@ -21,7 +21,7 @@ class SubjectController {
   // Get a single subject by ID
   static async getSubjectById(req: Request, res: Response, next: NextFunction) {
     try {
-      const subjectId = parseInt(req.params.subjectId, 10);
+      const subjectId = z.number().positive().parse(parseInt(req.params.id));
       const subject = await SubjectService.getSubjectById(subjectId);
       if (!subject) {
         throw new ApiError(404, "Subject not found.");

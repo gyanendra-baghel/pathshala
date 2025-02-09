@@ -6,6 +6,9 @@ import SelectField from "../../../components/form/SelectField";
 import { DEFAULT_TEACHER_DETAILS } from "../../../utils/constants";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
+import API from "../../../utils/api";
+import { Teacher } from "../../../utils/types";
+import { useNavigate } from "react-router-dom";
 
 // Validation schema
 const teacherSchema = yup.object().shape({
@@ -26,6 +29,7 @@ const AddTeacherPage: React.FC = () => {
   const [selectedSubjects, setSelectedSubjects] = React.useState<
     { label: string; value: string }[]
   >([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setSelectedSubjects(
@@ -36,6 +40,16 @@ const AddTeacherPage: React.FC = () => {
     );
   }, [subjects]);
 
+  const handleSubmit = async (values: Teacher) => {
+    values.subjects = values.subjects.map((subject) =>
+      parseInt(subject.toString())
+    );
+    const response = await API.post("/teachers", values);
+    if (response.status === 201) {
+      navigate("/teachers");
+    }
+  };
+
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <div className="justify-between items-center mb-6">
@@ -43,7 +57,7 @@ const AddTeacherPage: React.FC = () => {
         <Formik
           initialValues={{ ...DEFAULT_TEACHER_DETAILS, subjects: [] }}
           validationSchema={teacherSchema}
-          onSubmit={() => {}}
+          onSubmit={handleSubmit}
         >
           {({ values, setFieldValue, errors, touched }) => (
             <Form>

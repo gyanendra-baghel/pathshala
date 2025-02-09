@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
-import { ClassWork } from "../../utils/types";
+import { ClassWork, Subject } from "../../utils/types";
 import { Calendar, Clock, Paperclip } from "lucide-react";
+import API from "../../utils/api";
 
 const ClassroomDetails: React.FC = () => {
   const { classId } = useParams<{ classId: string }>();
-  const { classes, students, classWork, addClassWork } = useAppContext();
-  const classroom = classes.find((c) => c.id === classId);
+  const { classWork, addClassWork } = useAppContext();
+  const [classroom, setClassroom] = useState<Subject | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [type, setType] = useState<"assignment" | "material">("assignment");
@@ -15,7 +16,17 @@ const ClassroomDetails: React.FC = () => {
   const [points, setPoints] = useState<number | undefined>(undefined);
   const [attachments, setAttachments] = useState<string[]>([]);
 
-  if (!classroom) {
+  useEffect(() => {
+    const fetchClassroom = async () => {
+      const response = await API.get(`/subjects/${classId}`);
+      if (response.status === 200) {
+        setClassroom(response.data);
+      }
+    };
+    fetchClassroom();
+  }, [classId]);
+
+  if (!classId || !classroom) {
     return <div>Classroom not found</div>;
   }
 
@@ -23,7 +34,7 @@ const ClassroomDetails: React.FC = () => {
     e.preventDefault();
     const newClassWork: ClassWork = {
       id: Date.now().toString(),
-      classId: classroom.id,
+      classId: classId,
       title,
       description,
       type,
@@ -41,26 +52,24 @@ const ClassroomDetails: React.FC = () => {
     setAttachments([]);
   };
 
-  const classStudents = students.filter((student) =>
-    classroom.students.includes(student.id)
-  );
-
   const classWorks = classWork.filter((cw) => cw.classId === classroom.id);
 
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">{classroom.name}</h2>
       <p className="text-gray-600">{classroom.description}</p>
-      <div>
-        <h3 className="text-xl font-semibold mb-4">Students</h3>
-        <ul className="space-y-2">
-          {classStudents.map((student) => (
-            <li key={student.id} className="p-4 border rounded-lg bg-white">
-              {student.name}
-            </li>
-          ))}
-        </ul>
-      </div>
+      {classroom.students && (
+        <div>
+          <h3 className="text-xl font-semibold mb-4">Students</h3>
+          <ul className="space-y-2">
+            {classroom.students.map((studentId) => (
+              <li key={studentId} className="p-4 border rounded-lg bg-white">
+                {studentId}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <div>
         <h3 className="text-xl font-semibold mb-4">Add Work/Task</h3>
         <form onSubmit={handleAddClassWork} className="space-y-4">

@@ -46,12 +46,13 @@ export interface Grade {
 export interface Teacher {
   id?: string;
   name: string;
+  dob?: string;
   email: string;
   password?: string;
   address: string;
   phone?: string;
   gender?: Gender;
-  subjects: Subject[];
+  subjects: number[];
 }
 
 export interface Class {

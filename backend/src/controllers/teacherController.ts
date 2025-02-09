@@ -6,6 +6,10 @@ import ApiError from "../utils/ApiError";
 class TeacherController {
   static async createTeacher(req: Request, res: Response, next: NextFunction) {
     try {
+      if (!req.user) {
+        throw new ApiError(401, "Unauthorized");
+      }
+      req.body.schoolId = req.user.schoolId;
       const createTeacherSchema = z.object({
         name: z.string().min(3, "Name must be at least 3 characters long"),
         email: z.string().email("Invalid email format"),
