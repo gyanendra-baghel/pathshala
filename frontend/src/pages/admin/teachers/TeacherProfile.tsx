@@ -48,6 +48,14 @@ const TeacherProfile: React.FC = () => {
               label="Date of Birth"
               readOnly={!isEditing}
             />
+            <div className={`flex justify-end ${isEditing ? "" : "hidden"}`}>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-500 text-white rounded"
+              >
+                Save
+              </button>
+            </div>
           </Form>
         )}
       </Formik>

@@ -24,10 +24,13 @@ export const errorMiddleware = (
     return;
   }
 
+  if (process.env.NODE_ENV === "development") {
+    console.log(err);
+  }
+
   res.status(statusCode).json({
     success: false,
     message,
-    ...(process.env.NODE_ENV === "development" && { stack: err.stack }), // Optionally show stack trace in dev mode
   });
   return;
 };

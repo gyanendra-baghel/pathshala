@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { Form, Formik } from "formik";
 import InputField from "../../../components/form/InputField";
 import SelectField from "../../../components/form/SelectField";
+import API from "../../../utils/api";
 
 const validationSchema = Yup.object().shape({
   gradeId: Yup.number().required("Grade is required"),
@@ -33,17 +34,30 @@ const FeesStructure: React.FC = () => {
     }
   }, [grades]);
 
-  const handleSubmit = (values: FeeStructure) => {
+  const handleSubmit = async (values: FeeStructure) => {
     values.gradeId = parseInt(values.gradeId.toString());
     values.amount = parseInt(values.amount.toString());
-    console.log("values", values);
+    try {
+      const response = await API.post("/fee-structures", values);
+      if (response.status === 201) {
+        console.log("Fee structure created successfully");
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md space-y-4">
       <h2 className="text-2xl font-bold mb-6">Fee Structure</h2>
       <Formik
-        initialValues={{ gradeId: "", description: "", amount: "" }}
+        initialValues={{
+          gradeId: "",
+          description: "",
+          amount: "",
+          feeType: "",
+          frequency: "",
+        }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
@@ -58,6 +72,25 @@ const FeesStructure: React.FC = () => {
               label="Description"
               name="description"
               placeholder="Enter description"
+            />
+            <SelectField
+              label="Fee Type"
+              name="feeType"
+              options={[
+                { value: "TUTION", label: "Tution" },
+                { value: "TRANSPORT", label: "Transport" },
+                { value: "EXTRACURRICULAR", label: "Extracurricular" },
+                { value: "OTHER", label: "Other" },
+              ]}
+            />
+            <SelectField
+              label="Fee Frequency"
+              name="frequency"
+              options={[
+                { value: "YEARLY", label: "Yearly" },
+                { value: "MONTHLY", label: "Monthly" },
+                { value: "ONCE", label: "Once" },
+              ]}
             />
             <InputField
               label="Amount"

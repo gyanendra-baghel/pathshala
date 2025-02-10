@@ -48,10 +48,11 @@ model Teacher {
   address       String
   schoolId      Int
   joinDate      DateTime          @default(now())
+  photo         String?
 
   school        School           @relation(fields: [schoolId], references: [id])
   grades        Grade[]
-  subjects      SubjectGrade[]
+  subjects      SubjectTeacher[]
 }
 
 model Student {
@@ -66,6 +67,7 @@ model Student {
   fatherName    String
   motherName    String
   address       String
+  photo         String?
   gradeId       Int
   schoolId      Int
   enrollmentDate DateTime      @default(now())
@@ -74,6 +76,7 @@ model Student {
   grade         Grade          @relation(fields: [gradeId], references: [id])
   fees          Fee[]
   attendance    Attendance[]
+  subjects      SubjectStudent[]
 }
 
 // Grade(Class) management
@@ -86,23 +89,29 @@ model Grade {
   schedule     Json          // Store structured schedule data
 
   students     Student[]
-  subjects     SubjectGrade[] // Subjects in this grade
+  subjects     Subject[]      // Subjects in this grade
+  subjectStudents SubjectStudent[]
+  teachers     SubjectTeacher[]
 
   school        School         @relation(fields: [schoolId], references: [id])
   classTeacher  Teacher?       @relation(fields: [classTeacherId], references: [id])
-  attendance    Attendance[]
 }
 
 model Subject {
   id          Int       @id @default(autoincrement())
+  gradeId     Int?
   name        String    @unique
   description String?
   schoolId    Int
 
-  subjectGrades SubjectGrade[]
+  teachers    SubjectTeacher[]
+  students    SubjectStudent[]
+  attendance  Attendance[]
+  grade       Grade?     @relation(fields: [gradeId], references: [id])
 }
 
-model SubjectGrade {
+// Subject-Teacher mapping
+model SubjectTeacher {
   id        Int       @id @default(autoincrement())
   subjectId Int
   gradeId   Int
@@ -113,17 +122,29 @@ model SubjectGrade {
   teacher   Teacher  @relation(fields: [teacherId], references: [id])
 }
 
+// Subject-Student mapping
+model SubjectStudent {
+  id        Int       @id @default(autoincrement())
+  subjectId Int
+  gradeId   Int
+  studentId Int      // Assigned student for this subject and grade
+
+  subject   Subject   @relation(fields: [subjectId], references: [id])
+  grade     Grade     @relation(fields: [gradeId], references: [id])
+  student   Student  @relation(fields: [studentId], references: [id])
+}
+
 // Attendance Management
 
 model Attendance {
   id            Int            @id @default(autoincrement())
-  gradeId       Int?
+  subjectId     Int
   studentId     Int
   date          DateTime       @default(now())
   status        AttendanceStatus
   reason        String?        // Optional reason for absence or lateness
 
-  grade         Grade?          @relation(fields: [gradeId], references: [id])
+  subject       Subject          @relation(fields: [subjectId], references: [id])
   student       Student        @relation(fields: [studentId], references: [id])
 }
 
@@ -135,6 +156,8 @@ model Fee {
   feeStructureId Int
   status        FeeStatus
   amount        Float
+  description   String?
+  schoolId      Int
   createdAt      DateTime         @default(now())
 
   student       Student        @relation(fields: [studentId], references: [id])

@@ -6,14 +6,6 @@ class SubjectModel {
   static async getSubjectsBySchool(schoolId: number) {
     return prisma.subject.findMany({
       where: { schoolId },
-      include: {
-        subjectGrades: {
-          include: {
-            grade: true,
-            teacher: true,
-          },
-        },
-      },
     });
   }
 
@@ -21,14 +13,6 @@ class SubjectModel {
   static async getSubjectById(subjectId: number) {
     return prisma.subject.findUnique({
       where: { id: subjectId },
-      include: {
-        subjectGrades: {
-          include: {
-            grade: true,
-            teacher: true,
-          },
-        },
-      },
     });
   }
 

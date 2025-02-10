@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   LogOut,
   User,
@@ -26,10 +26,12 @@ interface SidebarProps {
 
 export function Sidebar({ role }: SidebarProps) {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
   const logout = () => {
     dispatch(logoutUser());
+    navigate("/login");
   };
 
   const menuItems =

@@ -19,8 +19,9 @@ class FeeStructureController {
         schoolId: z.number().int().positive(),
         gradeId: z.number().int().positive(),
         feeType: z.enum(["TUTION", "TRANSPORT", "EXTRACURRICULAR", "OTHER"]),
-        FeeFrequency: z.enum(["YEARLY", "MONTHLY", "ONCE"]),
+        frequency: z.enum(["YEARLY", "MONTHLY", "ONCE"]),
         amount: z.number().int().positive(),
+        description: z.string(),
       });
       const feeData = feeStructureSchema.parse(req.body);
       const createdFee = await FeeStructureService.createFeeStructure(feeData);
