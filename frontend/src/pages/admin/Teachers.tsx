@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Teacher } from "../../utils/types";
 import API from "../../utils/api";
-import { Plus } from "lucide-react";
+import { ExternalLink, Plus } from "lucide-react";
 
 const Teachers: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -72,9 +72,7 @@ const Teachers: React.FC = () => {
                 <i className="fas fa-ellipsis-v text-gray-500"></i>
               </div>
               <Link to={`/teacher/${teacher.id}`}>
-                <button className="border border-blue-500 text-blue-500 px-4 py-2 rounded">
-                  View Profile
-                </button>
+                <ExternalLink className="text-blue-600" />
               </Link>
             </div>
             {teacher.subjects && (

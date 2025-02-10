@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
 import { ClassWork, Subject } from "../../utils/types";
 import { Calendar, Clock, Paperclip } from "lucide-react";
 import API from "../../utils/api";
+import CollapsibleCard from "../../components/ui/CollapsibleCard";
 
 const ClassroomDetails: React.FC = () => {
   const { classId } = useParams<{ classId: string }>();
@@ -56,22 +57,16 @@ const ClassroomDetails: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold">{classroom.name}</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold">{classroom.name}</h2>
+        <Link to={`/c/${classroom.id}/attendance`}>
+          <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+            Attendance
+          </button>
+        </Link>
+      </div>
       <p className="text-gray-600">{classroom.description}</p>
-      {classroom.students && (
-        <div>
-          <h3 className="text-xl font-semibold mb-4">Students</h3>
-          <ul className="space-y-2">
-            {classroom.students.map((studentId) => (
-              <li key={studentId} className="p-4 border rounded-lg bg-white">
-                {studentId}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      <div>
-        <h3 className="text-xl font-semibold mb-4">Add Work/Task</h3>
+      <CollapsibleCard title="Add Work/Task">
         <form onSubmit={handleAddClassWork} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -165,7 +160,7 @@ const ClassroomDetails: React.FC = () => {
             </button>
           </div>
         </form>
-      </div>
+      </CollapsibleCard>
       <div>
         <h3 className="text-xl font-semibold mb-4">Classwork</h3>
         <div className="grid gap-4">

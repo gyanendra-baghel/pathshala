@@ -32,6 +32,7 @@ import { UserRole } from "./utils/types";
 import PrivateRoute from "./components/layouts/PrivateRoute";
 import AddGradePage from "./pages/grades/AddGrade";
 import AddSubjectPage from "./pages/grades/subjects/AddSubject";
+import ManageStudent from "./pages/admin/classroom/ManageStudents";
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
           <Route path="c/:classId" element={<ClassroomDetails />} />
           <Route path="c/:classId/assignments" element={<Assignments />} />
           <Route path="c/:classId/attendance" element={<ClassAttendence />} />
+          <Route path="c/:classId/students" element={<ManageStudent />} />
           <Route path="attendance" element={<StudentAttendence />} />
           <Route path="attendance/:userId" element={<Attendance />} />
           <Route path="announcements" element={<AdminAnnouncement />} />

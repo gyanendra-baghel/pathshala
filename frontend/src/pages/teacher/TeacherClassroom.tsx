@@ -63,9 +63,11 @@ const TeacherClassroom: React.FC = () => {
                     View Details
                   </button>
                 </Link>
-                <button className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
-                  Manage Students
-                </button>
+                <Link to={`/c/${subject.id}/students`}>
+                  <button className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                    Manage Students
+                  </button>
+                </Link>
               </div>
             </div>
           </div>

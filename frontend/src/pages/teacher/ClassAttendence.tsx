@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAppContext } from "../../context/AppContext";
 import { Check, X } from "lucide-react";
+import { Student } from "../../utils/types";
 
 const ClassAttendence: React.FC = () => {
-  const { students, attendance, toggleAttendance } = useAppContext();
+  const { attendance, toggleAttendance } = useAppContext();
+  const [students, setStudents] = useState<Student[]>([]);
   const today = new Date().toISOString().split("T")[0];
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      // Fetch students from API
+      setStudents([]);
+    };
+    fetchStudents();
+  }, []);
 
   return (
     <div className="space-y-4">

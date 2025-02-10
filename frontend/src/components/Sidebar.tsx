@@ -41,7 +41,6 @@ export function Sidebar({ role }: SidebarProps) {
           { icon: User, label: "Students", value: "students" },
           { icon: GraduationCap, label: "Teachers", value: "teachers" },
           { icon: BookOpen, label: "My Classes", value: "classes" },
-          { icon: Calendar, label: "Attendance", value: "attendance" },
           {
             icon: DollarSign,
             label: "Fees Structure",
