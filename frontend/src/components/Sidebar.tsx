@@ -11,7 +11,6 @@ import {
   LayoutDashboard,
   Settings,
   MessageSquareWarning,
-  BarChart,
 } from "lucide-react";
 import logo from "../assets/logo.png";
 import { UserRole } from "../utils/types";
@@ -41,17 +40,12 @@ export function Sidebar({ role }: SidebarProps) {
           { icon: User, label: "Students", value: "students" },
           { icon: GraduationCap, label: "Teachers", value: "teachers" },
           { icon: BookOpen, label: "My Classes", value: "classes" },
-          {
-            icon: DollarSign,
-            label: "Fees Structure",
-            value: "fees-structure",
-          },
           { icon: Calendar, label: "TimeTable", value: "timetable" },
-          {
-            icon: BarChart,
-            label: "Analytics",
-            value: "analytics",
-          },
+          // {
+          //   icon: BarChart,
+          //   label: "Analytics",
+          //   value: "analytics",
+          // },
           { icon: Bell, label: "Announcements", value: "announcements" },
           {
             icon: MessageSquareWarning,

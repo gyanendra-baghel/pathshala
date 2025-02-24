@@ -17,11 +17,12 @@ class FeeStructureController {
       req.body.schoolId = req.user.schoolId;
       const feeStructureSchema = z.object({
         schoolId: z.number().int().positive(),
-        gradeId: z.number().int().positive(),
-        feeType: z.enum(["TUTION", "TRANSPORT", "EXTRACURRICULAR", "OTHER"]),
+        studentId: z.number().int().positive(),
+        tutionFee: z.number().int().positive(),
+        transportFee: z.number().int().positive(),
+        mealFee: z.number().int().positive(),
+        libraryFee: z.number().int().positive(),
         frequency: z.enum(["YEARLY", "MONTHLY", "ONCE"]),
-        amount: z.number().int().positive(),
-        description: z.string(),
       });
       const feeData = feeStructureSchema.parse(req.body);
       const createdFee = await FeeStructureService.createFeeStructure(feeData);

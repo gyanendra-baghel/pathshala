@@ -4,16 +4,20 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 interface CollapsibleCardProps {
   title: string;
   children: React.ReactNode;
+  className?: string;
 }
 
 const CollapsibleCard: React.FC<CollapsibleCardProps> = ({
   title,
   children,
+  className,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="w-full mx-auto bg-white rounded-lg shadow-lg p-4">
+    <div
+      className={`w-full mx-auto bg-white rounded-lg shadow-lg p-4 ${className}`}
+    >
       {/* Header Section */}
       <div
         className="flex justify-between items-center cursor-pointer"

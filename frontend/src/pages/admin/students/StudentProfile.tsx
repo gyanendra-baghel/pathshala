@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
-import { MenuCard, MenuItem } from "@/components/ui/MenuCard";
+import { MenuCard, MenuItem } from "../../../components/ui/MenuCard";
 import InputField from "../../../components/form/InputField";
 import { Student } from "../../../utils/types";
-import { Megaphone, PencilLine, Trash2 } from "lucide-react";
+import { HandCoins, Megaphone, PencilLine, Trash2 } from "lucide-react";
 import ImageUploadField from "../../../components/ImageUploadField";
 import ErrorPage from "../../../components/layouts/ErrorPage";
 import API from "../../../utils/api";
@@ -13,6 +13,9 @@ import { DEFAULT_STUDENT_DETAILS } from "../../../utils/constants";
 import { useSelector } from "react-redux";
 import SelectField from "../../../components/form/SelectField";
 import { RootState } from "../../../redux/store";
+import CollapsibleCard from "../../../components/ui/CollapsibleCard";
+import FeeTable from "../../../components/FeeTable";
+import FeePayment from "../fees/FeePayment";
 
 const StudentSchema = Yup.object().shape({
   firstName: Yup.string().required("First name is required"),
@@ -28,6 +31,14 @@ const StudentSchema = Yup.object().shape({
     .required("Phone number is required"),
 });
 
+const FeeStructureSchema = Yup.object().shape({
+  tutionFee: Yup.number().required("Tution fee is required"),
+  transportFee: Yup.number().required("Transport fee is required"),
+  mealFee: Yup.number().required("Meal fee is required"),
+  libraryFee: Yup.number().required("Library fee is required"),
+  frequency: Yup.string().required("Frequency is required"),
+});
+
 const StudentDetails: React.FC = () => {
   const { studentId } = useParams<{ studentId: string }>();
   const { grades } = useSelector((state: RootState) => state.grade);
@@ -37,6 +48,7 @@ const StudentDetails: React.FC = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [student, setStudent] = useState<Student>(DEFAULT_STUDENT_DETAILS);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [showFeePayment, setShowFeePayment] = useState<boolean>(true);
 
   const navigate = useNavigate();
 
@@ -78,6 +90,11 @@ const StudentDetails: React.FC = () => {
       icon: <Trash2 className="text-red-500 mr-2" />,
       onClick: () => handleRemoveStudent(),
       className: "text-red-500",
+    },
+    {
+      label: "Pay Fee",
+      icon: <HandCoins className="mr-2" />,
+      onClick: () => setShowFeePayment(true),
     },
   ];
 
@@ -190,6 +207,64 @@ const StudentDetails: React.FC = () => {
           )}
         </Formik>
       </MenuCard>
+      <CollapsibleCard title="Fee Structure" className="mt-4">
+        <Formik
+          initialValues={{
+            tutionFee: 0,
+            transportFee: 0,
+            mealFee: 0,
+            libraryFee: 0,
+          }}
+          validationSchema={FeeStructureSchema}
+          onSubmit={(values) => console.log(values)}
+        >
+          {() => (
+            <Form className="mx-auto md:grid md:grid-cols-2 md:gap-4">
+              <InputField label="Tution Fee" name="tutionFee" type="number" />
+              <InputField
+                label="Transport Fee"
+                name="transportFee"
+                type="number"
+              />
+              <InputField label="Meal Fee" name="mealFee" type="number" />
+              <InputField label="Library Fee" name="libraryFee" type="number" />
+              <SelectField
+                label="Frequency"
+                name="frequency"
+                options={[
+                  { value: "ONCE", label: "Once" },
+                  { value: "MONTHLY", label: "Monthly" },
+                  { value: "ANNUALLY", label: "Annually" },
+                ]}
+              />
+              <div className="col-span-2 grid grid-cols-2 gap-4">
+                <InputField label="Start Date" name="startDate" type="date" />
+                <InputField label="End Date" name="endDate" type="date" />
+              </div>
+              <div className="col-span-2 flex items-center justify-between">
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md"
+                >
+                  Submit
+                </button>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </CollapsibleCard>
+      <FeeTable fees={[]} classname="mt-4" />
+      <FeePayment
+        studentId={studentId}
+        showFeePaymant={showFeePayment}
+        setShowFeePayment={setShowFeePayment}
+      />
     </div>
   );
 };

@@ -24,6 +24,8 @@ model School {
   students       Student[]
   feeStructures  FeeStructure[]
   grades         Grade[]
+  announcements  Annoncements[]
+  reports        Reports[]
 }
  
 model Admin {
@@ -77,6 +79,8 @@ model Student {
   fees          Fee[]
   attendance    Attendance[]
   subjects      SubjectStudent[]
+  fee_structures FeeStructure?
+  reports       Reports[]
 }
 
 // Grade(Class) management
@@ -152,7 +156,7 @@ model Attendance {
 
 model Fee {
   id            Int            @id @default(autoincrement())
-  studentId     Int
+  studentId     Int     
   feeStructureId Int
   status        FeeStatus
   amount        Float
@@ -166,17 +170,19 @@ model Fee {
 
 model FeeStructure {
   id            Int            @id @default(autoincrement())
+  studentId     Int            @unique
   schoolId      Int
-  gradeId       Int?
-  feeType       FeeType
-  amount        Float
   frequency     FeeFrequency
-  description   String?
-
-  school        School         @relation(fields: [schoolId], references: [id])
-  fees          Fee[]
+  tuitionFee    Decimal         @default(0.00)
+  transportFee  Decimal         @default(0.00)
+  mealFee       Decimal         @default(0.00)
+  libraryFee    Decimal         @default(0.00)
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
+
+  school        School         @relation(fields: [schoolId], references: [id])
+  student       Student        @relation(fields: [studentId], references: [id])
+  fees          Fee[]
 }
 
 enum FeeType {
@@ -217,4 +223,28 @@ enum SchoolBoard {
   ICSE
   STATE_BOARD
   OTHER
+}
+
+model Annoncements {
+  id            Int            @id @default(autoincrement())
+  schoolId      Int
+  title         String
+  description   String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  school        School         @relation(fields: [schoolId], references: [id])
+}
+
+model Reports {
+  id            Int            @id @default(autoincrement())
+  schoolId      Int
+  title         String
+  description   String
+  studentId     Int
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  school        School         @relation(fields: [schoolId], references: [id])
+  student       Student        @relation(fields: [studentId], references: [id])
 }

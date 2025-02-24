@@ -4,16 +4,6 @@ import { FeeStructureModel } from "../models/feeStructureModel";
 class FeeStructureService {
   // Create a new fee structure
   static async createFeeStructure(data: any) {
-    if (data.feeType === "TUTION") {
-      data.feeType = FeeType.TUITION;
-    } else if (data.feeType === "TRANSPORT") {
-      data.feeType = FeeType.TRANSPORT;
-    } else if (data.feeType === "EXTRACURRICULAR") {
-      data.feeType = FeeType.EXTRACURRICULAR;
-    } else {
-      data.feeType = FeeType.OTHER;
-    }
-
     if (data.frequency === "YEARLY") {
       data.frequency = FeeFrequency.YEARLY;
     } else if (data.frequency === "MONTHLY") {

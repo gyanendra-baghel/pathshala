@@ -78,11 +78,11 @@ export interface ClassWork {
 }
 
 export interface Fee {
-  id: string;
-  studentId: string;
+  id?: number;
+  studentId: number | string;
+  feeStructureId: number | string;
   amount: number;
-  dueDate: string;
-  status: "paid" | "pending" | "unpaid";
+  status: "PAID" | "PENDING" | "UNPAID";
   description: string;
 }
 

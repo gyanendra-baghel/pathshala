@@ -37,6 +37,13 @@ export class StudentModel {
   static async getStudentById(id: number) {
     return prisma.student.findUnique({
       where: { id },
+      include: {
+        attendance: true,
+        fee_structures: true,
+        fees: true,
+        grade: true,
+        subjects: true,
+      },
     });
   }
 

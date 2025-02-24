@@ -4,7 +4,6 @@ import Dashboard from "./components/layouts/Dashboard";
 import TeacherClassroom from "./pages/teacher/TeacherClassroom";
 import Teachers from "./pages/admin/Teachers";
 import Students from "./pages/admin/Students";
-import FeesStructure from "./pages/admin/fees/FeesStructure";
 import ClassAttendence from "./pages/teacher/ClassAttendence";
 import StudentAnnoncement from "./pages/student/StudentAnnoncement";
 import StudentAttendence from "./pages/student/StudentAttendence";
@@ -18,7 +17,6 @@ import Assignments from "./pages/teacher/Assignments";
 import TeacherStudents from "./pages/teacher/TeacherStudents";
 import Profile from "./pages/Profile";
 import StudentProfile from "./pages/admin/students/StudentProfile";
-import FeePayment from "./pages/admin/fees/FeePayment";
 import AddStudent from "./pages/admin/students/AddStudent";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import TeacherProfile from "./pages/admin/teachers/TeacherProfile";
@@ -48,8 +46,6 @@ function App() {
           <Route path="teachers" element={<Teachers />} />
           <Route path="teacher/:teacherId" element={<TeacherProfile />} />
           <Route path="teachers/add" element={<AddTeacherPage />} />
-          <Route path="fees-structure" element={<FeesStructure />} />
-          <Route path="pay-fee/:studentId" element={<FeePayment />} />
           <Route path="settings" element={<Settings />} />
           <Route path="reports" element={<Reports />} />
           <Route path="timetable" element={<UnderProduction />} />

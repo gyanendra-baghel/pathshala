@@ -49,9 +49,8 @@ export const authenticateUser = createAsyncThunk<User, void>(
       return response.data.user;
     } catch (error: any) {
       localStorage.removeItem("token");
-      return rejectWithValue(
-        error.response?.data?.message || "Authentication failed"
-      );
+      // error.response?.data?.message ||
+      return rejectWithValue("");
     }
   }
 );

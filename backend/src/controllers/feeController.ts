@@ -39,14 +39,20 @@ class FeeController {
   // Create a fee
   static async createFee(req: Request, res: Response, next: NextFunction) {
     try {
-      const feeData = req.body;
+      if (!req.user) {
+        throw new ApiError(401, "Unauthorized access. No token provided.");
+      }
+      req.body.schoolId = req.user.schoolId;
       const feeSchema = z.object({
         studentId: z.number().positive(),
         feeStructureId: z.number().positive(),
         status: z.enum(["PAID", "UNPAID", "PARTIAL"]),
         amount: z.number().positive(),
+        description: z.string().optional(),
+        schoolId: z.number().positive(),
       });
-      feeSchema.parse(feeData);
+      const feeData = feeSchema.parse(req.body);
+      console.log(feeData);
       const fee = await FeeService.addFee(feeData);
       res.status(201).json(fee);
     } catch (error) {
