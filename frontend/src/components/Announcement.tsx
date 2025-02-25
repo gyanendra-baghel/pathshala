@@ -1,19 +1,40 @@
-import React from "react";
-import { useAppContext } from "../context/AppContext";
+import React, { useEffect } from "react";
+import { Announcement } from "../utils/types";
+import API from "../utils/api";
 
-const Announcement: React.FC = () => {
-  const { announcements } = useAppContext();
+const AnnouncementSection: React.FC = () => {
+  const [announcements, setAnnouncements] = React.useState<Announcement[]>([]);
 
-  // Sort announcements by date in descending order and get the newest 5
-  const newestAnnouncements = announcements
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 5);
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      try {
+        const response = await API.get("/announcements");
+        if (response.status === 200) {
+          const data = response.data;
+          if (typeof data == "object") {
+            setAnnouncements(
+              data
+                .sort(
+                  (a: Announcement, b: Announcement) =>
+                    new Date(b.createdAt).getTime() -
+                    new Date(a.createdAt).getTime()
+                )
+                .slice(0, 2)
+            );
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchAnnouncements();
+  }, []);
 
   return (
     <div className="space-y-4 bg-white p-4 rounded-lg shadow">
       <h2 className="text-xl font-bold">Latest Announcements</h2>
       <div className="grid gap-4">
-        {newestAnnouncements.map((announcement) => (
+        {announcements.map((announcement) => (
           <div key={announcement.id} className="bg-gray-50 p-4">
             <div className="flex items-center gap-2">
               <h3 className="font-semibold">{announcement.title}</h3>
@@ -23,10 +44,7 @@ const Announcement: React.FC = () => {
                 </span>
               )}
             </div>
-            <p className="text-gray-600 mt-2">{announcement.content}</p>
-            <p className="text-gray-500 text-sm mt-2">
-              Posted on: {announcement.date}
-            </p>
+            <p className="text-gray-600 mt-2">{announcement.description}</p>
           </div>
         ))}
       </div>
@@ -34,4 +52,4 @@ const Announcement: React.FC = () => {
   );
 };
 
-export default Announcement;
+export default AnnouncementSection;

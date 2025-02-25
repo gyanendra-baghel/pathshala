@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useAppContext } from "../../context/AppContext";
 import { Check, X } from "lucide-react";
-import { Student } from "../../utils/types";
+import { Attendance, Student } from "../../utils/types";
 
 const ClassAttendence: React.FC = () => {
-  const { attendance, toggleAttendance } = useAppContext();
   const [students, setStudents] = useState<Student[]>([]);
   const today = new Date().toISOString().split("T")[0];
+  const attendance: Attendance[] = [];
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -45,7 +44,7 @@ const ClassAttendence: React.FC = () => {
               return (
                 <tr key={student.id}>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {student.name}
+                    {/* {student.name} */}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {student.rollNumber}
@@ -65,7 +64,7 @@ const ClassAttendence: React.FC = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <button
-                      onClick={() => toggleAttendance(student.id)}
+                      // onClick={() => toggleAttendance(student.id)}
                       className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                       {todayRecord?.status === "present" ? (

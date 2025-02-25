@@ -1,8 +1,8 @@
 import React from "react";
-import { useAppContext } from "../../context/AppContext";
+import { Fee } from "../../utils/types";
 
 const StudentFees: React.FC = () => {
-  const { fees } = useAppContext();
+  const fees: Fee[] = [];
   return (
     <div className="space-y-4">
       <h2 className="text-2xl font-bold">Fees</h2>
@@ -13,7 +13,7 @@ const StudentFees: React.FC = () => {
               <h3 className="font-semibold">{fee.description}</h3>
               <span
                 className={`px-2 py-1 rounded text-sm ${
-                  fee.status === "paid"
+                  fee.status === "PAID"
                     ? "bg-green-100 text-green-800"
                     : "bg-yellow-100 text-yellow-800"
                 }`}
@@ -22,7 +22,7 @@ const StudentFees: React.FC = () => {
               </span>
             </div>
             <p className="text-gray-600">Amount: ${fee.amount}</p>
-            <p className="text-gray-600">Due Date: {fee.dueDate}</p>
+            {/* <p className="text-gray-600">Due Date: {fee.dueDate}</p> */}
           </div>
         ))}
       </div>

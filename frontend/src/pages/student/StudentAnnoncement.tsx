@@ -1,8 +1,8 @@
 import React from "react";
-import { useAppContext } from "../../context/AppContext";
+import { Announcement } from "../../utils/types";
 
 const StudentAnnoncement: React.FC = () => {
-  const { announcements } = useAppContext();
+  const announcements: Announcement[] = [];
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -19,7 +19,7 @@ const StudentAnnoncement: React.FC = () => {
                 </span>
               )}
             </div>
-            <p className="text-gray-600 mt-2">{announcement.content}</p>
+            <p className="text-gray-600 mt-2">{announcement.description}</p>
             <p className="text-gray-500 text-sm mt-2">
               Posted on: {announcement.date}
             </p>

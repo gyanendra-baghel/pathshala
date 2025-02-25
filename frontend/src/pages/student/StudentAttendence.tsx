@@ -1,9 +1,11 @@
 import React from "react";
-import { useAppContext } from "../../context/AppContext";
 
 const StudentAttendence: React.FC = () => {
-  const { getStudentAttendance } = useAppContext();
-  const studentAttendance = getStudentAttendance("1"); // Using mock student ID
+  const studentAttendance = [
+    { id: "1", studentId: "1", date: "2024-03-10", status: "present" },
+    { id: "2", studentId: "1", date: "2024-03-11", status: "absent" },
+  ]; // Using mock student ID
+
   return (
     <div className="space-y-4">
       <h2 className="text-2xl font-bold">My Attendance</h2>

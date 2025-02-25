@@ -1,16 +1,11 @@
-import { Calendar, Clock, Paperclip, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import React from "react";
-import { useAppContext } from "../../context/AppContext";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 
 const TeacherClassroom: React.FC = () => {
-  const { classWork } = useAppContext();
   const { subjects } = useSelector((state: RootState) => state.subject);
-  const getClassWork = (classId: string) => {
-    return classWork.filter((cw) => cw.classId === classId);
-  };
 
   return (
     <div className="space-y-6">

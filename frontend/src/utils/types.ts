@@ -96,9 +96,10 @@ export interface Attendance {
 export interface Announcement {
   id: string;
   title: string;
-  content: string;
+  description: string;
   date: string;
   important: boolean;
+  createdAt: string;
 }
 
 export interface User {
@@ -116,7 +117,7 @@ export interface FeeStructure {
 }
 
 export interface Report {
-  id: string;
+  id?: string;
   title: string;
   description: string;
   date: string;

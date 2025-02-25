@@ -1,8 +1,27 @@
 import React from "react";
-import { useAppContext } from "../../context/AppContext";
+import { Report } from "../../utils/types";
 
 const Reports: React.FC = () => {
-  const { reports } = useAppContext();
+  const reports: Report[] = [
+    {
+      id: "1",
+      title: "Bullying Incident",
+      description: "My child was bullied in the playground.",
+      date: "2023-10-01",
+      parentName: "John Doe",
+      studentName: "Jane Doe",
+      grade: "5th",
+    },
+    {
+      id: "2",
+      title: "Homework Issue",
+      description: "The homework assigned is too difficult.",
+      date: "2023-10-02",
+      parentName: "Mary Smith",
+      studentName: "Tom Smith",
+      grade: "6th",
+    },
+  ];
 
   return (
     <div className="max-w-6xl mx-auto p-6">

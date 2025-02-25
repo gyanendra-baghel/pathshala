@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useAppContext } from "../../context/AppContext";
 import { ClassWork, Subject } from "../../utils/types";
 import { Calendar, Clock, Paperclip } from "lucide-react";
 import API from "../../utils/api";
@@ -8,7 +7,6 @@ import CollapsibleCard from "../../components/ui/CollapsibleCard";
 
 const ClassroomDetails: React.FC = () => {
   const { classId } = useParams<{ classId: string }>();
-  const { classWork, addClassWork } = useAppContext();
   const [classroom, setClassroom] = useState<Subject | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -16,6 +14,8 @@ const ClassroomDetails: React.FC = () => {
   const [dueDate, setDueDate] = useState("");
   const [points, setPoints] = useState<number | undefined>(undefined);
   const [attachments, setAttachments] = useState<string[]>([]);
+
+  const classWork: ClassWork[] = [];
 
   useEffect(() => {
     const fetchClassroom = async () => {
@@ -44,7 +44,7 @@ const ClassroomDetails: React.FC = () => {
       attachments,
       createdAt: new Date().toISOString(),
     };
-    addClassWork(newClassWork);
+    console.log(newClassWork);
     setTitle("");
     setDescription("");
     setType("assignment");

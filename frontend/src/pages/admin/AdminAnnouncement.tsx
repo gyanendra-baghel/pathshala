@@ -1,25 +1,43 @@
-import React, { useState } from "react";
-import { useAppContext } from "../../context/AppContext";
+import React, { useEffect, useState } from "react";
+import { Announcement } from "../../utils/types";
+import API from "../../utils/api";
 
 const AdminAnnouncement: React.FC = () => {
-  const { announcements, addAnnouncement } = useAppContext();
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [important, setImportant] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      try {
+        const response = await API.get("/announcements");
+        if (response.status === 200) {
+          console.log(response.data);
+          setAnnouncements(response.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchAnnouncements();
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const newAnnouncement = {
-      id: Date.now().toString(),
       title,
-      content,
-      date: new Date().toISOString().split("T")[0],
+      description: content,
       important,
     };
-    addAnnouncement(newAnnouncement);
-    setTitle("");
-    setContent("");
-    setImportant(false);
+
+    const response = await API.post("/announcements", newAnnouncement);
+    if (response.status === 201) {
+      setAnnouncements([...announcements, response.data]);
+      setTitle("");
+      setContent("");
+      setImportant(false);
+    }
   };
 
   return (
@@ -85,9 +103,9 @@ const AdminAnnouncement: React.FC = () => {
                 </span>
               )}
             </div>
-            <p className="text-gray-700 mt-2">{announcement.content}</p>
+            <p className="text-gray-700 mt-2">{announcement.description}</p>
             <p className="text-gray-500 text-sm mt-2">
-              Posted on: {announcement.date}
+              Posted on: {announcement.createdAt}
             </p>
           </div>
         ))}

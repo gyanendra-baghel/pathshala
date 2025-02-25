@@ -10,11 +10,10 @@ import StudentAttendence from "./pages/student/StudentAttendence";
 import StudentClassroom from "./pages/student/StudentClassroom";
 import StudentFees from "./pages/student/StudentFees";
 import AdminAnnouncement from "./pages/admin/AdminAnnouncement";
-import Attendance from "./pages/admin/Attendance";
+// import Attendance from "./pages/admin/Attendance";
 import ClassroomDetails from "./pages/teacher/ClassroomDetails";
 import TeacherBoard from "./pages/teacher/TeacherBoard";
 import Assignments from "./pages/teacher/Assignments";
-import TeacherStudents from "./pages/teacher/TeacherStudents";
 import Profile from "./pages/Profile";
 import StudentProfile from "./pages/admin/students/StudentProfile";
 import AddStudent from "./pages/admin/students/AddStudent";
@@ -58,7 +57,7 @@ function App() {
           <Route path="c/:classId/attendance" element={<ClassAttendence />} />
           <Route path="c/:classId/students" element={<ManageStudent />} />
           <Route path="attendance" element={<StudentAttendence />} />
-          <Route path="attendance/:userId" element={<Attendance />} />
+          {/* <Route path="attendance/:studentId" element={<Attendance />} /> */}
           <Route path="announcements" element={<AdminAnnouncement />} />
         </Route>
         <Route
@@ -66,7 +65,6 @@ function App() {
           element={<Dashboard roles={[UserRole.TEACHER]} />}
         >
           <Route index element={<TeacherBoard />} />
-          <Route path="students" element={<TeacherStudents />} />
         </Route>
         <Route
           path="/student"
