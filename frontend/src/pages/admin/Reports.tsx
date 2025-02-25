@@ -1,27 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Report } from "../../utils/types";
+import API from "../../utils/api";
 
 const Reports: React.FC = () => {
-  const reports: Report[] = [
-    {
-      id: "1",
-      title: "Bullying Incident",
-      description: "My child was bullied in the playground.",
-      date: "2023-10-01",
-      parentName: "John Doe",
-      studentName: "Jane Doe",
-      grade: "5th",
-    },
-    {
-      id: "2",
-      title: "Homework Issue",
-      description: "The homework assigned is too difficult.",
-      date: "2023-10-02",
-      parentName: "Mary Smith",
-      studentName: "Tom Smith",
-      grade: "6th",
-    },
-  ];
+  const [reports, setReports] = React.useState<Report[]>([]);
+
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const response = await API.get("/reports");
+        if (response.status === 200) {
+          setReports(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching reports", error);
+      }
+    };
+    fetchReports();
+  }, []);
 
   return (
     <div className="max-w-6xl mx-auto p-6">

@@ -44,6 +44,7 @@ class ReportController {
         studentId: z.number().positive(),
       });
       const reportData = reportSchema.parse(req.body);
+      console.log(reportData);
       const report = await ReportService.createReport(reportData);
       res.status(201).json(report);
     } catch (error) {
