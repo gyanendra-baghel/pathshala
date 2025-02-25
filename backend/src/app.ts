@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/authRoutes";
+import announcementRoutes from "./routes/announcementRoutes";
 import schoolRoutes from "./routes/schoolRoutes";
 import gradeRoutes from "./routes/gradeRoutes";
 import studentRoutes from "./routes/studentRoutes";
@@ -36,6 +37,7 @@ app.use("/api/teachers", teacherRoutes);
 app.use("/api/fees", feeRoutes);
 app.use("/api/fee-structures", feeStructureRoutes);
 app.use("/api/subjects", subjectRoutes);
+app.use("/api/announcements", announcementRoutes);
 
 // Global error handling middleware
 app.use(errorMiddleware);
