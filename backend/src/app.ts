@@ -8,6 +8,7 @@ import studentRoutes from "./routes/studentRoutes";
 import teacherRoutes from "./routes/teacherRoutes";
 import feeRoutes from "./routes/feeRoutes";
 import feeStructureRoutes from "./routes/feeStructureRoutes";
+import reportRoutes from "./routes/reportRoutes";
 import subjectRoutes from "./routes/subjectRoutes";
 import { errorMiddleware } from "./middlewares/errorMiddleware";
 import config from "./config/config";
@@ -38,6 +39,7 @@ app.use("/api/fees", feeRoutes);
 app.use("/api/fee-structures", feeStructureRoutes);
 app.use("/api/subjects", subjectRoutes);
 app.use("/api/announcements", announcementRoutes);
+app.use("/api/reports", reportRoutes);
 
 // Global error handling middleware
 app.use(errorMiddleware);
