@@ -15,13 +15,6 @@ export class FeeStructureModel {
     });
   }
 
-  // Get fee structures for a class
-  static async getFeeStructuresByGrade(gradeId: number) {
-    return prisma.feeStructure.findMany({
-      where: { gradeId },
-    });
-  }
-
   // Get fee structure by ID
   static async getFeeStructureById(id: number) {
     return prisma.feeStructure.findUnique({

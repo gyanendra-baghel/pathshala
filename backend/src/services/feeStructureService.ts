@@ -18,11 +18,6 @@ class FeeStructureService {
     return FeeStructureModel.getFeeStructuresBySchool(schoolId);
   }
 
-  // Get fee structures for a specific grade
-  static async getFeeStructuresByGrade(gradeId: number) {
-    return FeeStructureModel.getFeeStructuresByGrade(gradeId);
-  }
-
   // Get a fee structure by ID
   static async getFeeStructureById(id: number) {
     return FeeStructureModel.getFeeStructureById(id);

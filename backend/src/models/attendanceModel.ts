@@ -8,10 +8,10 @@ export class AttendanceModel {
     });
   }
 
-  // Get all attendance records for a class
-  static async getAttendanceByGrade(gradeId: number) {
+  // Get all attendance records for a subject
+  static async getAttendanceBySubject(subjectId: number) {
     return prisma.attendance.findMany({
-      where: { gradeId },
+      where: { subjectId },
     });
   }
 

@@ -32,27 +32,6 @@ class FeeStructureController {
     }
   }
 
-  // Get fee structures for a specific class
-  static async getFeeStructuresByGrade(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    try {
-      const { id } = req.params;
-      const gradeId = parseInt(id);
-      z.object({
-        gradeId: z.number().int().positive(),
-      }).parse({ gradeId });
-      const feeStructures = await FeeStructureService.getFeeStructuresByGrade(
-        gradeId
-      );
-      res.status(200).json(feeStructures);
-    } catch (error) {
-      next(error);
-    }
-  }
-
   static async getFeeStructuresBySchool(
     req: Request,
     res: Response,

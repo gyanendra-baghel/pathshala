@@ -20,13 +20,6 @@ router.get(
   FeeStructureController.getFeeStructuresBySchool
 );
 
-// Route to get the fee structure for a specific class
-router.get(
-  "/:gradeId",
-  authMiddleware,
-  FeeStructureController.getFeeStructuresByGrade
-);
-
 // Route to update fee structure details (Admin only)
 router.put(
   "/:id",
