@@ -9,12 +9,10 @@ class AuthController {
       // Check if email and password are provided
       const loginSchema = z.object({
         email: z.string().email(),
-        role: z.enum(["MAIN_ADMIN", "TEACHER", "USER"]),
+        role: z.enum(["MAIN_ADMIN", "TEACHER", "STUDENT"]),
         password: z.string().min(6),
       });
-      loginSchema.parse(req.body);
-
-      const { email, password, role } = req.body;
+      const { email, password, role } = loginSchema.parse(req.body);
 
       const token = await AuthService.authUser(email, password, role);
 

@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import AccessDenied from "../AccessDenied";
+import AccessDenied from "../utils/AccessDenied";
 import { Sidebar } from "../Sidebar";
 import { Link, Outlet } from "react-router-dom";
 import { RootState } from "../../redux/store";

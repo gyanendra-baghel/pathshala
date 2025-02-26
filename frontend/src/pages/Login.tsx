@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { School } from "lucide-react";
 import { UserRole } from "../utils/types";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,9 +8,22 @@ import { loginUser } from "../redux/features/authSlice";
 export function Login() {
   const dispatch = useDispatch<AppDispatch>();
   const { error } = useSelector((state: RootState) => state.auth);
-  const [email, setEmail] = useState("rahul.sharma@greenwoodschool.com");
-  const [password, setPassword] = useState("SecurePass@123");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [role, setRole] = useState<UserRole>(UserRole.MAIN_ADMIN);
+
+  useEffect(() => {
+    if (role === UserRole.STUDENT) {
+      setEmail("amit.sharma@example.com");
+      setPassword("securePass123");
+    } else if (role === UserRole.TEACHER) {
+      setEmail("durgesh.tripathiec2021@indoreinstitute.com");
+      setPassword("Gyanendra12@");
+    } else {
+      setEmail("rahul.sharma@greenwoodschool.com");
+      setPassword("SecurePass@123");
+    }
+  }, [role]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,7 +55,7 @@ export function Login() {
                 onChange={(e) => setRole(e.target.value as UserRole)}
                 className="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
               >
-                <option value="ADMIN">Administrator</option>
+                <option value="MAIN_ADMIN">Administrator</option>
                 <option value="STUDENT">Student</option>
                 <option value="TEACHER">Teacher</option>
               </select>

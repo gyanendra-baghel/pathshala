@@ -13,29 +13,29 @@ class AuthService {
         password
       );
 
-      return AuthService.generateToken(admin);
+      return AuthService.generateToken(admin, role);
     } else if (role === "TEACHER") {
       const teacher = await TeacherService.getTeacherByEmailAndPassword(
         email,
         password
       );
-      return AuthService.generateToken(teacher);
+      return AuthService.generateToken(teacher, role);
     } else if (role == "STUDENT") {
       const student = await StudentService.getStudentByEmailAndPassword(
         email,
         password
       );
-      return AuthService.generateToken(student);
+      return AuthService.generateToken(student, role);
     } else {
       throw new ApiError(400, "Invalid Role");
     }
   }
 
-  static async generateToken(user: any) {
+  static async generateToken(user: any, role: string) {
     return jwt.sign(
       {
         userId: user.id,
-        role: user.role,
+        role,
         schoolId: user.schoolId,
       },
       config.app.jwtSecret,

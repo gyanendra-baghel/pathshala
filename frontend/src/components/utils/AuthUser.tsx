@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
-import AccessDenied from "../AccessDenied";
-import { useEffect } from "react";
+import AccessDenied from "./AccessDenied";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { authenticateUser } from "../../redux/features/authSlice";
@@ -10,7 +10,11 @@ import { fetchGrades } from "../../redux/features/gradeSlice";
 import { UserRole } from "../../utils/types";
 import { fetchSubjects } from "../../redux/features/subjectSlice";
 
-const PrivateRoute: React.FC = () => {
+interface AuthUserProps {
+  element: React.ReactNode;
+}
+
+const AuthUser: React.FC<AuthUserProps> = ({ element }) => {
   const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
   const { user, loading } = useSelector((state: RootState) => state.auth);
@@ -38,7 +42,7 @@ const PrivateRoute: React.FC = () => {
   if (!user) {
     return <AccessDenied />;
   }
-  return <Outlet />;
+  return React.cloneElement(element as React.ReactElement, {}, <Outlet />);
 };
 
-export default PrivateRoute;
+export default AuthUser;

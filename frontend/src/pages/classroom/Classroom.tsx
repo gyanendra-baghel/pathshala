@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 
-const TeacherClassroom: React.FC = () => {
+const Classroom: React.FC = () => {
   const { subjects } = useSelector((state: RootState) => state.subject);
 
   return (
@@ -72,4 +72,4 @@ const TeacherClassroom: React.FC = () => {
   );
 };
 
-export default TeacherClassroom;
+export default Classroom;

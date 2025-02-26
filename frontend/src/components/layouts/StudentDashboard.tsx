@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { Sidebar } from "../Sidebar";
-import AccessDenied from "../AccessDenied";
+import AccessDenied from "../utils/AccessDenied";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { UserRole } from "../../utils/types";
