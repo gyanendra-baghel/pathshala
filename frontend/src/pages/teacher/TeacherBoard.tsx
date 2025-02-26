@@ -1,9 +1,29 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const TeacherBoard: React.FC = () => {
   return (
     <div className="p-6">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+      <div className="flex items-center justify-between p-4 bg-white shadow-sm">
+        <div className="flex items-center">
+          <input
+            type="text"
+            placeholder="Search..."
+            className="px-4 py-2 border rounded-full text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300"
+          />
+        </div>
+        <div className="flex items-center space-x-4">
+          <i className="fas fa-bell text-gray-500"></i>
+          <Link to="/profile" className="text-gray-500">
+            <img
+              src="https://placehold.co/40x40"
+              alt="User avatar"
+              className="w-10 h-10 rounded-full"
+            />
+          </Link>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6 mt-4">
         <div className="bg-white p-4 rounded-lg shadow-md flex items-center justify-between">
           <div>
             <h2 className="text-gray-600">Total Students</h2>

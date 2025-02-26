@@ -7,7 +7,7 @@ import Students from "./pages/admin/Students";
 import ClassAttendence from "./pages/classroom/ClassAttendence";
 import StudentAttendence from "./pages/student/StudentAttendence";
 import StudentFees from "./pages/student/StudentFees";
-import AdminAnnouncement from "./pages/admin/AdminAnnouncement";
+import Announcements from "./pages/Announcements";
 // import Attendance from "./pages/admin/Attendance";
 import ClassroomDetails from "./pages/classroom/ClassroomDetails";
 import Assignments from "./pages/classroom/Assignments";
@@ -72,7 +72,7 @@ function App() {
           <Route path="c/:classId/students" element={<ManageStudent />} />
           <Route path="classes" element={<TeacherClassroom />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="announcements" element={<AdminAnnouncement />} />
+          <Route path="announcements" element={<Announcements />} />
         </Route>
       </Route>
       <Route path="*" element={<ErrorPage />} />
