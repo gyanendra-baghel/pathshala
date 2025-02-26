@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
 import AuthService from "../services/authService";
 import ApiError from "../utils/ApiError";
@@ -25,11 +25,20 @@ class AuthController {
     }
   }
 
-  static async getMe(req: Request, res: Response) {
-    res.status(200).json({
-      message: "Authenticated",
-      user: req.user,
-    });
+  static async getMe(req: Request, res: Response, next: NextFunction) {
+    try {
+      if (!req.user) {
+        throw new ApiError(401, "Unauthorized");
+      }
+
+      const user = await AuthService.getUserByIdAndRole(
+        req.user.userId,
+        req.user.role
+      );
+      res.status(200).json({ ...user, password: "****", role: req.user.role });
+    } catch (error) {
+      next(error);
+    }
   }
 }
 

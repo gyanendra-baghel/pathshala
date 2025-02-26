@@ -46,7 +46,7 @@ class AuthService {
   }
 
   static async getUserByIdAndRole(userId: number, role: string) {
-    if (role === "ADMIN") {
+    if (["ADMIN", "MAIN_ADMIN"].includes(role)) {
       return AdminService.getAdminById(userId);
     } else if (role === "TEACHER") {
       return TeacherService.getTeacherById(userId);

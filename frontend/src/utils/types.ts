@@ -19,14 +19,21 @@ export interface Subject {
   students?: string[]; // student IDs
 }
 
-export interface Student {
+export interface User {
   id?: string;
+  role: UserRole;
+  name: string;
+  email: string;
+  password?: string;
+}
+
+export interface Student extends User {
   firstName: string;
   lastName: string;
+  role: UserRole.STUDENT;
   dob: string;
   grade?: Grade;
   rollNumber: string;
-  email: string;
   aadharNumber: string;
   samagraId: string;
   photo: string;
@@ -36,23 +43,20 @@ export interface Student {
   phoneNumber: string;
 }
 
+export interface Teacher extends User {
+  dob?: string;
+  role: UserRole.TEACHER;
+  address: string;
+  phone?: string;
+  gender?: Gender;
+  subjects: number[];
+}
+
 export interface Grade {
   id: string;
   name: string;
   students: string[]; // student IDs
   teacherId: string;
-}
-
-export interface Teacher {
-  id?: string;
-  name: string;
-  dob?: string;
-  email: string;
-  password?: string;
-  address: string;
-  phone?: string;
-  gender?: Gender;
-  subjects: number[];
 }
 
 export interface Class {
@@ -100,13 +104,6 @@ export interface Announcement {
   date: string;
   important: boolean;
   createdAt: string;
-}
-
-export interface User {
-  id: string;
-  role: UserRole;
-  name: string;
-  email: string;
 }
 
 export interface FeeStructure {

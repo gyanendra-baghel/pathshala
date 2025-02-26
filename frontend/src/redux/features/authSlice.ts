@@ -46,7 +46,7 @@ export const authenticateUser = createAsyncThunk<User, void>(
       if (!token) throw new Error("No token found");
 
       const response = await API.get(`/auth`);
-      return response.data.user;
+      return response.data;
     } catch (error: any) {
       localStorage.removeItem("token");
       // error.response?.data?.message ||

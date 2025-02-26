@@ -1,117 +1,72 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { Form, Formik } from "formik";
+import InputField from "../components/form/InputField";
+import AccessDenied from "../components/utils/AccessDenied";
+import { User } from "../utils/types";
+import { MenuCard } from "../components/ui/MenuCard";
+import { EditIcon } from "lucide-react";
 
 const Profile: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
-  const student = {
-    id: "1",
-    name: "John Doe",
-    age: 20,
-    grade: "10th",
-    rollNumber: "1001",
-    email: "gyan@gmail.com",
-  };
-  const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState(student.name);
-  const [grade, setGrade] = useState(student.grade);
-  const [rollNumber, setRollNumber] = useState(student.rollNumber);
-  const [email, setEmail] = useState(user?.email);
+  const [isEditing, setIsEditing] = React.useState(false);
 
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
-
-  const handleSave = () => {
-    setIsEditing(false);
+  const handleSave = (values: User) => {
     // You can add API call here to update the student data
-    console.log("Updated student data:", {
-      id: student.id,
-      name,
-      grade,
-      rollNumber,
-      email,
-    });
+    console.log("Updated student data:", values);
   };
+
+  const menuItems = [
+    {
+      label: "Edit",
+      icon: <EditIcon />,
+      onClick: () => setIsEditing(true),
+    },
+  ];
+
+  if (!user) return <AccessDenied />;
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6">Profile</h2>
-      <div className="space-y-4">
-        <div className="flex items-center gap-4">
-          <label className="w-32 font-medium">Name:</label>
-          {isEditing ? (
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="flex-1 px-4 py-2 border rounded-lg"
-            />
-          ) : (
-            <span className="flex-1">{name}</span>
-          )}
+    <div className="max-w-4xl mx-auto">
+      <MenuCard title="Profile" menuItems={menuItems}>
+        <div className="space-y-4">
+          <Formik initialValues={user} onSubmit={handleSave}>
+            {() => (
+              <Form>
+                <InputField name="email" label="Email" readOnly={true} />
+                <InputField
+                  name="phoneNumber"
+                  label="Phone"
+                  readOnly={!isEditing}
+                />
+                <InputField
+                  name="password"
+                  label="Password"
+                  type="password"
+                  readOnly={!isEditing}
+                />
+                {isEditing && (
+                  <div className="flex justify-between">
+                    <button
+                      onClick={() => setIsEditing(false)}
+                      className="bg-gray-300 text-white px-4 py-2 rounded mt-4"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
+                    >
+                      Save
+                    </button>
+                  </div>
+                )}
+              </Form>
+            )}
+          </Formik>
         </div>
-        <div className="flex items-center gap-4">
-          <label className="w-32 font-medium">Grade:</label>
-          {isEditing ? (
-            <input
-              type="text"
-              value={grade}
-              onChange={(e) => setGrade(e.target.value)}
-              className="flex-1 px-4 py-2 border rounded-lg"
-            />
-          ) : (
-            <span className="flex-1">{grade}</span>
-          )}
-        </div>
-        <div className="flex items-center gap-4">
-          <label className="w-32 font-medium">Roll Number:</label>
-          {isEditing ? (
-            <input
-              type="text"
-              value={rollNumber}
-              onChange={(e) => setRollNumber(e.target.value)}
-              className="flex-1 px-4 py-2 border rounded-lg"
-            />
-          ) : (
-            <span className="flex-1">{rollNumber}</span>
-          )}
-        </div>
-        <div className="flex items-center gap-4">
-          <label className="w-32 font-medium">Email:</label>
-          {isEditing ? (
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="flex-1 px-4 py-2 border rounded-lg"
-            />
-          ) : (
-            <span className="flex-1">{email}</span>
-          )}
-        </div>
-        <div className="flex items-center gap-4">
-          <label className="w-32 font-medium">Age:</label>
-          <span className="flex-1">{student.age}</span>
-        </div>
-        <div className="flex justify-end gap-4 mt-6">
-          {isEditing ? (
-            <button
-              onClick={handleSave}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-            >
-              Save
-            </button>
-          ) : (
-            <button
-              onClick={handleEdit}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-            >
-              Edit
-            </button>
-          )}
-        </div>
-      </div>
+      </MenuCard>
     </div>
   );
 };

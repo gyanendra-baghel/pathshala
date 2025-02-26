@@ -38,7 +38,6 @@ const AuthUser: React.FC<AuthUserProps> = ({ element }) => {
   if (loading) {
     return <div>Loading...</div>;
   }
-
   if (!user) {
     return <AccessDenied />;
   }
