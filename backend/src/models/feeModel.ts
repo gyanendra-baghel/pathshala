@@ -18,6 +18,11 @@ class FeeModel {
       where: { id },
     });
   }
+  static async getStudentFees(studentId: number) {
+    return prisma.fee.findMany({
+      where: { studentId },
+    });
+  }
   // update fee
   static async updateFee(id: number, data: any) {
     return prisma.fee.update({

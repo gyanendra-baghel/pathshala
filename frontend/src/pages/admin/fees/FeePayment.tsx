@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { Form, Formik } from "formik";
 import InputField from "../../../components/form/InputField";
 import * as Yup from "yup";
@@ -7,9 +6,8 @@ import { Fee } from "../../../utils/types";
 import API from "../../../utils/api";
 
 const feeSchema = Yup.object().shape({
-  feeStructureId: Yup.number().required("Fee Structure is required"),
   amount: Yup.number().required("Amount is required"),
-  status: Yup.string().required("Status is required"),
+  description: Yup.string().optional(),
 });
 
 interface FeePaymentProps {
@@ -23,19 +21,16 @@ const FeePayment: React.FC<FeePaymentProps> = ({
   showFeePaymant,
   setShowFeePayment,
 }) => {
-  const navigate = useNavigate();
-
   if (!studentId) {
     return <div>Student not found</div>;
   }
 
   const handleSubmit = async (values: Fee) => {
     values.studentId = parseInt(studentId.toString());
-    values.feeStructureId = parseInt(values.feeStructureId.toString());
     console.log(values);
     const response = await API.post("/fees", values);
     if (response.status === 201) {
-      navigate(`/student/${studentId}`);
+      setShowFeePayment(false);
     }
   };
 
@@ -50,8 +45,6 @@ const FeePayment: React.FC<FeePaymentProps> = ({
           initialValues={{
             studentId,
             amount: 0,
-            status: "PENDING",
-            feeStructureId: "",
             description: "",
           }}
           onSubmit={handleSubmit}

@@ -11,6 +11,9 @@ class FeeService {
   static async getFeeById(id: number) {
     return FeeModel.getFeeById(id);
   }
+  static async getStudentFees(studentId: number) {
+    return FeeModel.getStudentFees(studentId);
+  }
   static async updateFee(id: number, data: any) {
     const fee = await FeeModel.getFeeById(id);
     if (!fee) {

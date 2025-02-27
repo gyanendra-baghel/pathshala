@@ -10,6 +10,9 @@ router.get("/", authMiddleware, FeeController.getAllSchoolFee);
 // Route to get fee by id
 router.get("/:id", authMiddleware, FeeController.getFeeById);
 
+// Route to get all fees of a student
+router.get("/student/:studentId", authMiddleware, FeeController.getStudentFees);
+
 // Route to create a fee
 router.post("/", authMiddleware, FeeController.createFee);
 

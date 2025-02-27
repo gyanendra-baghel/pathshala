@@ -40,6 +40,23 @@ class FeeController {
     }
   }
 
+  // Get all fees of a student
+  static async getStudentFees(req: Request, res: Response, next: NextFunction) {
+    try {
+      if (!req.user) {
+        throw new ApiError(401, "Unauthorized access");
+      }
+      const studentId = z
+        .number()
+        .positive()
+        .parse(parseInt(req.params.studentId));
+      const fees = await FeeService.getStudentFees(studentId);
+      res.status(200).json(fees);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   // Create a fee
   static async createFee(req: Request, res: Response, next: NextFunction) {
     try {

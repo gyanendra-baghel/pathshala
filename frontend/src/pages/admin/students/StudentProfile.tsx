@@ -13,7 +13,6 @@ import { DEFAULT_STUDENT_DETAILS } from "../../../utils/constants";
 import { useSelector } from "react-redux";
 import SelectField from "../../../components/form/SelectField";
 import { RootState } from "../../../redux/store";
-import FeeTable from "../../../components/FeeTable";
 import FeePayment from "../fees/FeePayment";
 import StudentFeeStructure from "../../../components/StudentFeeStructure";
 
@@ -204,7 +203,6 @@ const StudentDetails: React.FC = () => {
         </Formik>
       </MenuCard>
       <StudentFeeStructure studentId={studentId} />
-      <FeeTable fees={[]} classname="mt-4" />
       <FeePayment
         studentId={studentId}
         showFeePaymant={showFeePayment}

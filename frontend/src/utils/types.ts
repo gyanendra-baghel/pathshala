@@ -84,10 +84,11 @@ export interface ClassWork {
 export interface Fee {
   id?: number;
   studentId: number | string;
-  feeStructureId: number | string;
+  feeStructureId?: number | string;
   amount: number;
-  status: "PAID" | "PENDING" | "UNPAID";
   description: string;
+  status?: string;
+  createdAt?: string;
 }
 
 export interface Attendance {

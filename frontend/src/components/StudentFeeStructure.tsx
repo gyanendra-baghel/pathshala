@@ -3,10 +3,13 @@ import CollapsibleCard from "./ui/CollapsibleCard";
 import { Form, Formik } from "formik";
 import { DEFAULT_FEE_STRUCTURE } from "../utils/constants";
 import InputField from "./form/InputField";
-import { FeeStructure } from "../utils/types";
+import { Fee, FeeStructure } from "../utils/types";
 import * as Yup from "yup";
 import API from "../utils/api";
 import SelectField from "./form/SelectField";
+import FeeTable from "./FeeTable";
+import FeeTransactionTable from "./FeeTransactionTable";
+import { MenuCard } from "./ui/MenuCard";
 
 const FeeStructureSchema = Yup.object().shape({
   tuitionFee: Yup.number().required("Tution fee is required"),
@@ -27,6 +30,7 @@ const StudentFeeStructure: React.FC<StudentFeeStructureProps> = ({
   studentId,
 }) => {
   const [feeStructure, setFeeStructure] = useState<FeeStructure | null>(null);
+  const [feeRecords, setFeeRecords] = useState<Fee[]>([]);
   const [message, setMessage] = useState<string>("");
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -49,13 +53,21 @@ const StudentFeeStructure: React.FC<StudentFeeStructureProps> = ({
         setMessage("Fee structure not found");
         console.log(error);
       }
+
+      try {
+        const response = await API.get(`/fees/student/${studentId}`);
+        if (response.status === 200) {
+          setFeeRecords(response.data as Fee[]);
+        }
+      } catch (error) {
+        console.log(error);
+      }
       setIsLoading(false);
     };
     fetchData();
   }, [studentId]);
 
   const handleFeeStructureSubmit = async (values: FeeStructure) => {
-    console.log(values);
     if (!feeStructure) {
       // Create new fee structure
       try {
@@ -97,106 +109,118 @@ const StudentFeeStructure: React.FC<StudentFeeStructureProps> = ({
   };
 
   return (
-    <CollapsibleCard title="Fee Structure" className="mt-4">
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : (
-        <Formik
-          initialValues={feeStructure || DEFAULT_FEE_STRUCTURE}
-          validationSchema={FeeStructureSchema}
-          onSubmit={handleFeeStructureSubmit}
-        >
-          {({ errors, touched }) => (
-            <Form className="mx-auto md:grid md:grid-cols-2 md:gap-4">
-              <InputField
-                label="Tuition Fee"
-                name="tuitionFee"
-                type="number"
-                readOnly={!isEditing}
-              />
-              <InputField
-                label="Transport Fee"
-                name="transportFee"
-                type="number"
-                readOnly={!isEditing}
-              />
-              <InputField
-                label="Meal Fee"
-                name="mealFee"
-                type="number"
-                readOnly={!isEditing}
-              />
-              <InputField
-                label="Library Fee"
-                name="libraryFee"
-                type="number"
-                readOnly={!isEditing}
-              />
-              <SelectField
-                label="Frequency"
-                name="frequency"
-                options={[
-                  { value: "ONCE", label: "Once" },
-                  { value: "MONTHLY", label: "Monthly" },
-                  { value: "ANNUALLY", label: "Annually" },
-                ]}
-                readOnly={!isEditing}
-              />
-              <div className="col-span-2 grid grid-cols-1 gap-4">
+    <MenuCard title="Manage Fees" className="mt-4" menuItems={[]}>
+      <CollapsibleCard title="Fee Structure" className="mt-4">
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : (
+          <Formik
+            initialValues={feeStructure || DEFAULT_FEE_STRUCTURE}
+            validationSchema={FeeStructureSchema}
+            onSubmit={handleFeeStructureSubmit}
+          >
+            {({ errors, touched }) => (
+              <Form className="mx-auto md:grid md:grid-cols-2 md:gap-4">
                 <InputField
-                  label="Description"
-                  name="description"
-                  type="textarea"
-                  readOnly={!isEditing}
-                />
-              </div>
-              <div className="col-span-2 grid grid-cols-2 gap-4">
-                <InputField
-                  label="Start Date"
-                  name="startDate"
-                  type="date"
+                  label="Tuition Fee"
+                  name="tuitionFee"
+                  type="number"
                   readOnly={!isEditing}
                 />
                 <InputField
-                  label="End Date"
-                  name="endDate"
-                  type="date"
+                  label="Transport Fee"
+                  name="transportFee"
+                  type="number"
                   readOnly={!isEditing}
                 />
-              </div>
-              {Object.keys(errors).length > 0 && touched && (
-                <div className="error-summary">
-                  <h4>Validation Errors:</h4>
-                  <ul>
-                    {Object.values(errors).map((err, index) => (
-                      <li key={index}>{err}</li>
-                    ))}
-                  </ul>
+                <InputField
+                  label="Meal Fee"
+                  name="mealFee"
+                  type="number"
+                  readOnly={!isEditing}
+                />
+                <InputField
+                  label="Library Fee"
+                  name="libraryFee"
+                  type="number"
+                  readOnly={!isEditing}
+                />
+                <SelectField
+                  label="Frequency"
+                  name="frequency"
+                  options={[
+                    { value: "ONCE", label: "Once" },
+                    { value: "MONTHLY", label: "Monthly" },
+                    { value: "ANNUALLY", label: "Annually" },
+                  ]}
+                  readOnly={!isEditing}
+                />
+                <div className="col-span-2 grid grid-cols-1 gap-4">
+                  <InputField
+                    label="Description"
+                    name="description"
+                    type="textarea"
+                    readOnly={!isEditing}
+                  />
                 </div>
-              )}
-              <p className="col-span-2 text-center text-green-500">{message}</p>
-              <div className="col-span-2 flex items-center justify-between">
-                <button
-                  type="button"
-                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
-                  onClick={() => setIsEditing((prev) => !prev)}
-                >
-                  {isEditing ? "Cancel" : "Edit"}
-                </button>
-                {isEditing && (
-                  <button
-                    type="submit"
-                    className="bg-blue-600 text-white px-4 py-2 rounded-md"
-                  >
-                    Submit
-                  </button>
+                <div className="col-span-2 grid grid-cols-2 gap-4">
+                  <InputField
+                    label="Start Date"
+                    name="startDate"
+                    type="date"
+                    readOnly={!isEditing}
+                  />
+                  <InputField
+                    label="End Date"
+                    name="endDate"
+                    type="date"
+                    readOnly={!isEditing}
+                  />
+                </div>
+                {Object.keys(errors).length > 0 && touched && (
+                  <div className="error-summary">
+                    <h4>Validation Errors:</h4>
+                    <ul>
+                      {Object.values(errors).map((err, index) => (
+                        <li key={index}>{err}</li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
-              </div>
-            </Form>
-          )}
-        </Formik>
-      )}
-    </CollapsibleCard>
+                <p className="col-span-2 text-center text-green-500">
+                  {message}
+                </p>
+                <div className="col-span-2 flex items-center justify-between">
+                  <button
+                    type="button"
+                    className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+                    onClick={() => setIsEditing((prev) => !prev)}
+                  >
+                    {isEditing ? "Cancel" : "Edit"}
+                  </button>
+                  {isEditing && (
+                    <button
+                      type="submit"
+                      className="bg-blue-600 text-white px-4 py-2 rounded-md"
+                    >
+                      Submit
+                    </button>
+                  )}
+                </div>
+              </Form>
+            )}
+          </Formik>
+        )}
+      </CollapsibleCard>
+      <CollapsibleCard title="Fee Summary" className="mt-4">
+        {feeStructure && (
+          <FeeTable feeStructure={feeStructure} fees={feeRecords} />
+        )}
+      </CollapsibleCard>
+      <CollapsibleCard title="Fee Transactions" className="mt-4">
+        <FeeTransactionTable transactions={feeRecords} />
+      </CollapsibleCard>
+    </MenuCard>
   );
 };
 

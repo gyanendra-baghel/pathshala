@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { Fee, FeeStructure } from "../utils/types";
 
 interface FeeRecord {
   month: string;
@@ -10,11 +11,64 @@ interface FeeRecord {
 }
 
 interface FeeTableProps {
-  fees: FeeRecord[];
+  feeStructure: FeeStructure;
+  fees: Fee[];
   classname?: string;
 }
 
-const FeeTable: React.FC<FeeTableProps> = ({ fees, classname }) => {
+const FeeTable: React.FC<FeeTableProps> = ({
+  feeStructure,
+  fees,
+  classname,
+}) => {
+  const [feesRecords, setFeesRecords] = React.useState<FeeRecord[]>([]);
+
+  useEffect(() => {
+    setFeesRecords(generateFeeRecords(feeStructure, fees));
+  }, [fees]);
+
+  const generateFeeRecords = (
+    feeStructure: FeeStructure,
+    transactions: Fee[]
+  ) => {
+    const startDate = new Date(feeStructure.startDate);
+    const endDate = new Date(feeStructure.endDate);
+    const records = [];
+
+    for (
+      let date = new Date(startDate);
+      date <= endDate;
+      date.setMonth(date.getMonth() + 1) // Move month by month
+    ) {
+      const monthName = date.toLocaleString("default", { month: "long" });
+      const year = date.getFullYear();
+      const formattedMonth = `${monthName} ${year}`;
+
+      // Calculate total fee
+      const tuitionFee = Number(feeStructure.tuitionFee);
+      const transportFee = Number(feeStructure.transportFee);
+      const totalFee = tuitionFee + transportFee;
+
+      // Check if this month's fee has been paid
+      const paidTransaction = transactions.find((tx) =>
+        tx.description.includes(monthName)
+      );
+      const paidAmount = paidTransaction ? paidTransaction.amount : 0;
+      const status = paidTransaction ? "PAID" : "PENDING";
+
+      records.push({
+        month: formattedMonth,
+        tuitionFee,
+        transportFee,
+        totalFee,
+        paid: paidAmount,
+        status,
+      });
+    }
+
+    return records;
+  };
+
   return (
     <div className={`overflow-x-auto ${classname}`}>
       <table className="min-w-full border border-gray-200 rounded-lg shadow-md">
@@ -29,7 +83,7 @@ const FeeTable: React.FC<FeeTableProps> = ({ fees, classname }) => {
           </tr>
         </thead>
         <tbody>
-          {fees.map((fee, index) => (
+          {feesRecords.map((fee, index) => (
             <tr key={index} className="border-b hover:bg-gray-50 transition">
               <td className="px-4 py-2">{fee.month}</td>
               <td className="px-4 py-2">${fee.tuitionFee}</td>
