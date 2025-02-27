@@ -22,10 +22,25 @@ export class FeeStructureModel {
     });
   }
 
+  // Get fee structure by student ID
+  static async getFeeStructureByStudent(studentId: number) {
+    return prisma.feeStructure.findFirst({
+      where: { studentId },
+    });
+  }
+
   // Update fee structure
   static async updateFeeStructure(id: number, data: any) {
     return prisma.feeStructure.update({
       where: { id },
+      data,
+    });
+  }
+
+  // Update fee structure by student ID
+  static async updateFeeStructureByStudent(studentId: number, data: any) {
+    return prisma.feeStructure.update({
+      where: { studentId },
       data,
     });
   }

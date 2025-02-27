@@ -177,6 +177,10 @@ model FeeStructure {
   transportFee  Decimal         @default(0.00)
   mealFee       Decimal         @default(0.00)
   libraryFee    Decimal         @default(0.00)
+  otherFee      Decimal         @default(0.00)
+  description   String? 
+  startDate     DateTime        @default(now())
+  endDate       DateTime        @default(now())
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
 

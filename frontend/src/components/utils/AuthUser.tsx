@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { authenticateUser } from "../../redux/features/authSlice";
 import { LandingPage } from "../../pages/Home";
-import { fetchFeeStructures } from "../../redux/features/feeStructureSlice";
 import { fetchGrades } from "../../redux/features/gradeSlice";
 import { UserRole } from "../../utils/types";
 import { fetchSubjects } from "../../redux/features/subjectSlice";
@@ -25,7 +24,6 @@ const AuthUser: React.FC<AuthUserProps> = ({ element }) => {
 
   useEffect(() => {
     if (user && user.role === UserRole.MAIN_ADMIN) {
-      dispatch(fetchFeeStructures());
       dispatch(fetchGrades());
       dispatch(fetchSubjects());
     }

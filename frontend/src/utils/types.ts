@@ -108,9 +108,14 @@ export interface Announcement {
 
 export interface FeeStructure {
   id?: string;
-  gradeId: number | string;
-  description?: string;
-  amount: number | string;
+  tuitionFee: number;
+  transportFee: number;
+  mealFee: number;
+  libraryFee: number;
+  frequency: "YEARLY" | "MONTHLY" | "ONCE";
+  description: string;
+  startDate: string;
+  endDate: string;
 }
 
 export interface Report {

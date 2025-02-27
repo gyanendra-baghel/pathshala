@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import FeeService from "../services/feeService";
 import { z } from "zod";
 import ApiError from "../utils/ApiError";
+import FeeStructureService from "../services/feeStructureService";
 
 class FeeController {
   // Get all fees of the school
@@ -12,7 +13,7 @@ class FeeController {
   ) {
     try {
       if (!req.user) {
-        throw new ApiError(401, "Unauthorized access. No token provided.");
+        throw new ApiError(401, "Unauthorized access");
       }
       const { schoolId } = req.user;
       z.number().positive().parse(schoolId);
@@ -26,6 +27,9 @@ class FeeController {
   // Get fee by id
   static async getFeeById(req: Request, res: Response, next: NextFunction) {
     try {
+      if (!req.user) {
+        throw new ApiError(401, "Unauthorized access");
+      }
       const { id } = req.params;
       const feeId = parseInt(id);
       z.number().positive().parse(feeId);
@@ -40,9 +44,19 @@ class FeeController {
   static async createFee(req: Request, res: Response, next: NextFunction) {
     try {
       if (!req.user) {
-        throw new ApiError(401, "Unauthorized access. No token provided.");
+        throw new ApiError(401, "Unauthorized access");
       }
       req.body.schoolId = req.user.schoolId;
+      req.body.status = "PAID";
+      const studentId = z.number().positive().parse(req.body.studentId);
+      // Check if fee structure exists for the student
+      const feeStructure = await FeeStructureService.getFeeStructureByStudent(
+        studentId
+      );
+      if (!feeStructure) {
+        throw new ApiError(404, "Fee structure not defined for the student");
+      }
+      req.body.feeStructureId = feeStructure.id;
       const feeSchema = z.object({
         studentId: z.number().positive(),
         feeStructureId: z.number().positive(),
@@ -63,6 +77,9 @@ class FeeController {
   // Update a fee
   static async updateFee(req: Request, res: Response, next: NextFunction) {
     try {
+      if (!req.user) {
+        throw new ApiError(401, "Unauthorized access");
+      }
       const { id } = req.params;
       const feeId = parseInt(id);
       z.number().positive().parse(feeId);
@@ -84,6 +101,9 @@ class FeeController {
   // Delete a fee
   static async deleteFee(req: Request, res: Response, next: NextFunction) {
     try {
+      if (!req.user) {
+        throw new ApiError(401, "Unauthorized access");
+      }
       const { id } = req.params;
       const feeId = parseInt(id);
       z.number().positive().parse(feeId);

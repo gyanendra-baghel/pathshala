@@ -13,19 +13,34 @@ router.post(
   FeeStructureController.createFeeStructure
 );
 
-// Route to get the fee structure for a specific school
+// Route to get the fee structure
+router.get("/:id", authMiddleware, FeeStructureController.getFeeStructureById);
+
+// Route to get fee structure by student ID
 router.get(
-  "/",
+  "/student/:studentId",
   authMiddleware,
-  FeeStructureController.getFeeStructuresBySchool
+  roleMiddleware([UserRole.ADMIN]),
+  FeeStructureController.getFeeStructureByStudent
 );
 
 // Route to update fee structure details (Admin only)
+router.put("/:id", authMiddleware, roleMiddleware([UserRole.ADMIN]));
+
+// Route to update fee structure by student ID (Admin only)
 router.put(
+  "/student/:studentId",
+  authMiddleware,
+  roleMiddleware([UserRole.ADMIN]),
+  FeeStructureController.updateFeeStructureByStudent
+);
+
+// Route to delete a fee structure (Admin only)
+router.delete(
   "/:id",
   authMiddleware,
   roleMiddleware([UserRole.ADMIN]),
-  FeeStructureController.updateFeeStructure
+  FeeStructureController.deleteFeeStructure
 );
 
 export default router;

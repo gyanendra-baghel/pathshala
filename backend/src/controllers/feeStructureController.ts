@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import FeeStructureService from "../services/feeStructureService";
 import ApiError from "../utils/ApiError";
-import { z } from "zod";
+import { optional, z } from "zod";
 
 class FeeStructureController {
   // Create a new fee structure
@@ -15,16 +15,21 @@ class FeeStructureController {
         throw new ApiError(401, "Unauthorized");
       }
       req.body.schoolId = req.user.schoolId;
+      req.body.studentId = parseInt(req.body.studentId);
       const feeStructureSchema = z.object({
         schoolId: z.number().int().positive(),
         studentId: z.number().int().positive(),
-        tutionFee: z.number().int().positive(),
-        transportFee: z.number().int().positive(),
-        mealFee: z.number().int().positive(),
-        libraryFee: z.number().int().positive(),
+        tuitionFee: z.number().int().nonnegative(),
+        transportFee: z.number().int().nonnegative(),
+        mealFee: z.number().int().nonnegative(),
+        libraryFee: z.number().int().nonnegative(),
         frequency: z.enum(["YEARLY", "MONTHLY", "ONCE"]),
+        startDate: z.coerce.date(),
+        endDate: z.coerce.date(),
+        description: z.string().optional(),
       });
       const feeData = feeStructureSchema.parse(req.body);
+      console.log(feeData);
       const createdFee = await FeeStructureService.createFeeStructure(feeData);
       res.status(201).json(createdFee);
     } catch (error) {
@@ -57,11 +62,10 @@ class FeeStructureController {
     next: NextFunction
   ) {
     try {
-      const { id } = req.params;
-      const feeStructureId = parseInt(id);
-      z.object({
-        feeStructureId: z.number().int().positive(),
-      }).parse({ feeStructureId });
+      const feeStructureId = z
+        .number()
+        .positive()
+        .parse(parseInt(req.params.id));
       const feeStructure = await FeeStructureService.getFeeStructureById(
         feeStructureId
       );
@@ -74,29 +78,59 @@ class FeeStructureController {
     }
   }
 
-  // Update fee structure
-  static async updateFeeStructure(
+  // Get a fee structure by student ID
+  static async getFeeStructureByStudent(
     req: Request,
     res: Response,
     next: NextFunction
   ) {
     try {
-      const { id } = req.params;
-      const feeStructureId = parseInt(id);
-      const feeData = req.body;
-      z.object({
-        feeStructureId: z.number().int().positive(),
-        schoolId: z.number().int().positive().optional(),
-        gradeId: z.number().int().positive().optional(),
-        feeAmount: z.number().int().positive().optional(),
-        feeType: z
-          .enum(["TUTION", "TRANSPORT", "EXTRACURRICULAR", "OTHER"])
-          .optional(),
-        FeeFrequency: z.enum(["YEARLY", "MONTHLY", "ONCE"]).optional(),
-        amount: z.number().int().positive().optional(),
-      }).parse({ feeStructureId, ...feeData });
-      const updatedFee = await FeeStructureService.updateFeeStructure(
-        feeStructureId,
+      const studentId = z
+        .number()
+        .positive()
+        .parse(parseInt(req.params.studentId));
+      const feeStructure = await FeeStructureService.getFeeStructureByStudent(
+        studentId
+      );
+      if (!feeStructure) {
+        throw new ApiError(404, "Fee structure not found");
+      }
+      res.status(200).json(feeStructure);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // Update fee structure by student ID
+  static async updateFeeStructureByStudent(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      if (!req.user) {
+        throw new ApiError(401, "Unauthorized");
+      }
+      const studentId = z
+        .number()
+        .int()
+        .positive()
+        .parse(parseInt(req.params.studentId));
+      req.body.schoolId = req.user.schoolId;
+      const feeStructureSchema = z.object({
+        schoolId: z.number().int().positive(),
+        tuitionFee: z.number().int().nonnegative(),
+        transportFee: z.number().int().nonnegative(),
+        mealFee: z.number().int().nonnegative(),
+        libraryFee: z.number().int().nonnegative(),
+        frequency: z.enum(["YEARLY", "MONTHLY", "ONCE"]),
+        startDate: z.coerce.date().optional(),
+        endDate: z.coerce.date().optional(),
+        description: z.string().optional(),
+      });
+      const feeData = feeStructureSchema.parse(req.body);
+      const updatedFee = await FeeStructureService.updateFeeStructureByStudent(
+        studentId,
         feeData
       );
       if (!updatedFee) {

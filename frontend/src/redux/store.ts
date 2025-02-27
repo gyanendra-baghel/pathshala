@@ -1,14 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./features/authSlice";
 import gradeReducer from "./features/gradeSlice";
-import feeStructureReducer from "./features/feeStructureSlice";
 import subjectReducer from "./features/subjectSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     grade: gradeReducer,
-    feeStructure: feeStructureReducer,
     subject: subjectReducer,
   },
 });
