@@ -37,6 +37,40 @@ class SubjectModel {
       where: { id: subjectId },
     });
   }
+
+  // Get All students in a subject.
+  static async getStudents(subjectId: number) {
+    return prisma.subjectStudent.findMany({
+      where: { subjectId },
+      include: { student: true },
+    });
+  }
+
+  // Add students to a subject.
+  static async addStudent(
+    subjectId: number,
+    studentId: number,
+    gradeId: number
+  ) {
+    return prisma.subjectStudent.create({
+      data: {
+        subjectId,
+        studentId,
+        gradeId,
+      },
+      include: { student: true },
+    });
+  }
+
+  // Remove student from a subject.
+  static async removeStudent(subjectId: number, studentId: number) {
+    return prisma.subjectStudent.deleteMany({
+      where: {
+        subjectId,
+        studentId,
+      },
+    });
+  }
 }
 
 export default SubjectModel;

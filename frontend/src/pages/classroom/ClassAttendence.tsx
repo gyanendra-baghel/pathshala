@@ -1,19 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { Check, X } from "lucide-react";
-import { Attendance, Student } from "../../utils/types";
+import { Attendance, Student, SubjectStudent } from "../../utils/types";
+import API from "../../utils/api";
+import { useParams } from "react-router-dom";
 
 const ClassAttendence: React.FC = () => {
+  const { classId } = useParams<{ classId: string }>();
   const [students, setStudents] = useState<Student[]>([]);
   const today = new Date().toISOString().split("T")[0];
   const attendance: Attendance[] = [];
 
   useEffect(() => {
     const fetchStudents = async () => {
-      // Fetch students from API
-      setStudents([]);
+      if (!classId) return;
+      try {
+        const response = await API.get(`/subjects/${classId}/students`);
+        if (response.status == 200) {
+          if (response.data.length > 0) {
+            const students = response.data.map(
+              (data: SubjectStudent) => data.student
+            );
+            console.log("Students", students);
+            setStudents(students);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching students", error);
+      }
     };
     fetchStudents();
-  }, []);
+  }, [classId]);
 
   return (
     <div className="space-y-4">
@@ -44,7 +60,7 @@ const ClassAttendence: React.FC = () => {
               return (
                 <tr key={student.id}>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {/* {student.name} */}
+                    {student.firstName} {student.lastName}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {student.rollNumber}

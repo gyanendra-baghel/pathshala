@@ -16,7 +16,13 @@ export interface Subject {
   description?: string;
   gradeId?: string;
   teacherId?: string;
-  students?: string[]; // student IDs
+  students?: Student[]; // student IDs
+}
+
+export interface SubjectStudent {
+  id: string;
+  subjectId: string;
+  student: Student;
 }
 
 export interface User {

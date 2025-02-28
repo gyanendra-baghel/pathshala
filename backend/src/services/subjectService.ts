@@ -1,4 +1,5 @@
 import SubjectModel from "../models/subjectModel";
+import ApiError from "../utils/ApiError";
 
 class SubjectService {
   static async getSubjectsBySchool(schoolId: number) {
@@ -19,6 +20,25 @@ class SubjectService {
 
   static async deleteSubject(subjectId: number) {
     return SubjectModel.deleteSubject(subjectId);
+  }
+
+  static async getStudents(subjectId: number) {
+    return SubjectModel.getStudents(subjectId);
+  }
+
+  static async addStudent(subjectId: number, studentIds: number) {
+    const subject = await SubjectModel.getSubjectById(subjectId);
+    if (!subject) {
+      throw new ApiError(400, "Subject not found");
+    }
+    if (subject.gradeId === null) {
+      subject.gradeId = 1;
+    }
+    return SubjectModel.addStudent(subjectId, studentIds, subject.gradeId);
+  }
+
+  static async removeStudent(subjectId: number, studentId: number) {
+    return SubjectModel.removeStudent(subjectId, studentId);
   }
 }
 

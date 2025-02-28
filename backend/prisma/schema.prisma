@@ -136,6 +136,8 @@ model SubjectStudent {
   subject   Subject   @relation(fields: [subjectId], references: [id])
   grade     Grade     @relation(fields: [gradeId], references: [id])
   student   Student  @relation(fields: [studentId], references: [id])
+  // add primary key for subjectId, studentId
+  // @@unique([subjectId, studentId])
 }
 
 // Attendance Management

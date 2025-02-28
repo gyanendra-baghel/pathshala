@@ -19,4 +19,25 @@ router.put("/:id", authMiddleware, SubjectController.updateSubject);
 // Delete a subject by ID
 router.delete("/:id", authMiddleware, SubjectController.deleteSubject);
 
+// Add Students to a subject
+router.post(
+  "/:subjectId/students",
+  authMiddleware,
+  SubjectController.addStudent
+);
+
+// Get Students in a subject
+router.get(
+  "/:subjectId/students",
+  authMiddleware,
+  SubjectController.getStudents
+);
+
+// Remove a student from a subject
+router.delete(
+  "/:subjectId/students/:studentId",
+  authMiddleware,
+  SubjectController.removeStudent
+);
+
 export default router;
