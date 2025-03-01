@@ -2,10 +2,16 @@ import prisma from "../config/database";
 
 class FeeModel {
   // Gee all fees of the school
-  static async getAllSchoolFee(schoolId: number) {
-    return prisma.fee.findMany();
-    // {where: { schoolId },}
+  static async getAllSchoolFee(filters: any) {
+    return prisma.fee.findMany({
+      where: filters,
+      include: {
+        student: { select: { firstName: true, lastName: true, email: true } },
+        feeStructure: { select: { frequency: true, tuitionFee: true } },
+      },
+    });
   }
+
   // add a new fee to the student
   static async addFee(data: any) {
     return prisma.fee.create({

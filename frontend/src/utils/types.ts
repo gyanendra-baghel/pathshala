@@ -38,6 +38,7 @@ export interface Student extends User {
   lastName: string;
   role: UserRole.STUDENT;
   dob: string;
+  gradeId: string;
   grade?: Grade;
   rollNumber: string;
   aadharNumber: string;
@@ -94,7 +95,9 @@ export interface Fee {
   amount: number;
   description: string;
   status?: string;
-  createdAt?: string;
+  createdAt: string;
+  student?: Student;
+  feeStructure?: FeeStructure;
 }
 
 export interface Attendance {

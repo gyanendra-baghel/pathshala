@@ -15,9 +15,8 @@ class FeeController {
       if (!req.user) {
         throw new ApiError(401, "Unauthorized access");
       }
-      const { schoolId } = req.user;
-      z.number().positive().parse(schoolId);
-      const fees = await FeeService.getAllSchoolFee(schoolId);
+      const schoolId = req.user.schoolId;
+      const fees = await FeeService.getAllSchoolFee(schoolId, req.params);
       res.status(200).json(fees);
     } catch (error) {
       next(error);
@@ -30,9 +29,7 @@ class FeeController {
       if (!req.user) {
         throw new ApiError(401, "Unauthorized access");
       }
-      const { id } = req.params;
-      const feeId = parseInt(id);
-      z.number().positive().parse(feeId);
+      const feeId = z.coerce.number().positive().parse(req.params.id);
       const fee = await FeeService.getFeeById(feeId);
       res.status(200).json(fee);
     } catch (error) {
@@ -46,10 +43,10 @@ class FeeController {
       if (!req.user) {
         throw new ApiError(401, "Unauthorized access");
       }
-      const studentId = z
+      const studentId = z.coerce
         .number()
         .positive()
-        .parse(parseInt(req.params.studentId));
+        .parse(req.params.studentId);
       const fees = await FeeService.getStudentFees(studentId);
       res.status(200).json(fees);
     } catch (error) {

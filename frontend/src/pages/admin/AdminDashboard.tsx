@@ -1,6 +1,7 @@
 import React from "react";
 import FinanceChart from "../../components/FinanceChart";
 import Announcement from "../../components/Announcement";
+import RecentTransactions from "../../components/RecentTransactions";
 
 const AdminDashboard: React.FC = () => {
   return (
@@ -70,56 +71,7 @@ const AdminDashboard: React.FC = () => {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 w-full">
         <FinanceChart />
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-4">Recent Transactions</h2>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <div className="bg-blue-100 p-3 rounded-full">
-                  <span className="text-blue-500 font-semibold">RS</span>
-                </div>
-                <div className="ml-4">
-                  <p className="font-semibold">Rahul Singh</p>
-                  <p className="text-gray-500">Class X-B</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="font-semibold">₹25,000</p>
-                <p className="text-gray-500">2 hours ago</p>
-              </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <div className="bg-green-100 p-3 rounded-full">
-                  <span className="text-green-500 font-semibold">AP</span>
-                </div>
-                <div className="ml-4">
-                  <p className="font-semibold">Anita Patel</p>
-                  <p className="text-gray-500">Class IX-A</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="font-semibold">₹15,000</p>
-                <p className="text-gray-500">5 hours ago</p>
-              </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <div className="bg-purple-100 p-3 rounded-full">
-                  <span className="text-purple-500 font-semibold">MK</span>
-                </div>
-                <div className="ml-4">
-                  <p className="font-semibold">Mohan Kumar</p>
-                  <p className="text-gray-500">Class XI-C</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="font-semibold">₹30,000</p>
-                <p className="text-gray-500">1 day ago</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <RecentTransactions />
         <div className="bg-white p-4 rounded-lg shadow">
           <h2 className="text-lg font-semibold mb-4">Pending Due Payments</h2>
           <div className="space-y-4">
