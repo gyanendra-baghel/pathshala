@@ -80,7 +80,7 @@ export interface ClassWork {
   classId: string;
   title: string;
   description: string;
-  type: "assignment" | "material" | "question";
+  type: "ASSIGNMENT" | "MATERIAL";
   dueDate?: string;
   points?: number;
   attachments: string[];

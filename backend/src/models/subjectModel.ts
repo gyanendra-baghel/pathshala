@@ -13,6 +13,10 @@ class SubjectModel {
   static async getSubjectById(subjectId: number) {
     return prisma.subject.findUnique({
       where: { id: subjectId },
+      include: {
+        students: true,
+        sobjectWorks: true,
+      },
     });
   }
 
@@ -69,6 +73,42 @@ class SubjectModel {
         subjectId,
         studentId,
       },
+    });
+  }
+
+  // Add subjectwork
+  static async addSubjectwork(data: any) {
+    return prisma.subjectWork.create({
+      data,
+    });
+  }
+
+  // Get all subjectworks for a subject
+  static async getSubjectworks(subjectId: number) {
+    return prisma.subjectWork.findMany({
+      where: { subjectId },
+    });
+  }
+
+  // Get a specific subjectwork by ID
+  static async getSubjectwork(id: number) {
+    return prisma.subjectWork.findUnique({
+      where: { id },
+    });
+  }
+
+  // Update subjectwork information
+  static async updateSubjectwork(id: number, data: any) {
+    return prisma.subjectWork.update({
+      where: { id },
+      data,
+    });
+  }
+
+  // Delete a subjectwork by ID
+  static async deleteSubjectwork(id: number) {
+    return prisma.subjectWork.delete({
+      where: { id },
     });
   }
 }

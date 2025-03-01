@@ -40,6 +40,31 @@ class SubjectService {
   static async removeStudent(subjectId: number, studentId: number) {
     return SubjectModel.removeStudent(subjectId, studentId);
   }
+
+  // Get all subjectworks for a subject.
+  static async getSubjectworks(subjectId: number) {
+    return SubjectModel.getSubjectworks(subjectId);
+  }
+
+  // Get subjectwork by ID.
+  static async getSubjectwork(subjectworkId: number) {
+    return SubjectModel.getSubjectwork(subjectworkId);
+  }
+
+  // Add subjectwork.
+  static async addSubjectwork(subjectworkData: any) {
+    return SubjectModel.addSubjectwork(subjectworkData);
+  }
+
+  // Update subjectwork.
+  static async updateSubjectwork(subjectworkId: number, subjectworkData: any) {
+    return SubjectModel.updateSubjectwork(subjectworkId, subjectworkData);
+  }
+
+  // Delete subjectwork.
+  static async deleteSubjectwork(subjectworkId: number) {
+    return SubjectModel.deleteSubjectwork(subjectworkId);
+  }
 }
 
 export default SubjectService;

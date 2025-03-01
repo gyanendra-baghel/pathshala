@@ -8,20 +8,19 @@ import CollapsibleCard from "../../components/ui/CollapsibleCard";
 const ClassroomDetails: React.FC = () => {
   const { classId } = useParams<{ classId: string }>();
   const [classroom, setClassroom] = useState<Subject | null>(null);
+  const [classWorks, setClassWorks] = useState<ClassWork[]>([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [type, setType] = useState<"assignment" | "material">("assignment");
+  const [type, setType] = useState<"ASSIGNMENT" | "MATERIAL">("ASSIGNMENT");
   const [dueDate, setDueDate] = useState("");
-  const [points, setPoints] = useState<number | undefined>(undefined);
-  const [attachments, setAttachments] = useState<string[]>([]);
-
-  const classWork: ClassWork[] = [];
+  const [attachments, setAttachments] = useState<FileList | null>(null);
 
   useEffect(() => {
     const fetchClassroom = async () => {
       const response = await API.get(`/subjects/${classId}`);
       if (response.status === 200) {
         setClassroom(response.data);
+        setClassWorks(response.data.sobjectWorks);
       }
     };
     fetchClassroom();
@@ -31,29 +30,51 @@ const ClassroomDetails: React.FC = () => {
     return <div>Classroom not found</div>;
   }
 
-  const handleAddClassWork = (e: React.FormEvent) => {
+  const handleAddClassWork = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newClassWork: ClassWork = {
-      id: Date.now().toString(),
-      classId: classId,
-      title,
-      description,
-      type,
-      dueDate,
-      points,
-      attachments,
-      createdAt: new Date().toISOString(),
-    };
-    console.log(newClassWork);
-    setTitle("");
-    setDescription("");
-    setType("assignment");
-    setDueDate("");
-    setPoints(undefined);
-    setAttachments([]);
-  };
+    if (!classId) return;
 
-  const classWorks = classWork.filter((cw) => cw.classId === classroom.id);
+    // Create a FormData object
+    const formData = new FormData();
+    formData.append("classId", classId);
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("type", type);
+
+    if (type === "ASSIGNMENT") {
+      formData.append("dueDate", dueDate);
+    }
+
+    // Append files to FormData
+    if (attachments) {
+      Array.from(attachments).forEach((file) => {
+        formData.append("attachments", file);
+      });
+    }
+
+    try {
+      const response = await API.post(
+        `/subjects/${classId}/subjectworks`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        setClassWorks([...classWorks, response.data]);
+        setTitle("");
+        setDescription("");
+        setType("ASSIGNMENT");
+        setDueDate("");
+        setAttachments(null);
+      }
+    } catch (error) {
+      console.error("Error adding classwork:", error);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -99,42 +120,28 @@ const ClassroomDetails: React.FC = () => {
             <select
               value={type}
               onChange={(e) =>
-                setType(e.target.value as "assignment" | "material")
+                setType(e.target.value as "ASSIGNMENT" | "MATERIAL")
               }
               className="mt-1 block w-full px-4 py-2 border rounded-lg"
               required
             >
-              <option value="assignment">Assignment</option>
-              <option value="material">Material</option>
+              <option value="ASSIGNMENT">Assignment</option>
+              <option value="MATERIAL">Material</option>
             </select>
           </div>
-          {type === "assignment" && (
-            <>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Due Date
-                </label>
-                <input
-                  type="date"
-                  value={dueDate}
-                  onChange={(e) => setDueDate(e.target.value)}
-                  className="mt-1 block w-full px-4 py-2 border rounded-lg"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Points
-                </label>
-                <input
-                  type="number"
-                  value={points}
-                  onChange={(e) => setPoints(parseInt(e.target.value))}
-                  className="mt-1 block w-full px-4 py-2 border rounded-lg"
-                  required
-                />
-              </div>
-            </>
+          {type === "ASSIGNMENT" && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Due Date
+              </label>
+              <input
+                type="date"
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+                className="mt-1 block w-full px-4 py-2 border rounded-lg"
+                required
+              />
+            </div>
           )}
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -143,11 +150,7 @@ const ClassroomDetails: React.FC = () => {
             <input
               type="file"
               multiple
-              onChange={(e) =>
-                setAttachments(
-                  Array.from(e.target.files || []).map((file) => file.name)
-                )
-              }
+              onChange={(e) => setAttachments(e.target.files)}
               className="mt-1 block w-full px-4 py-2 border rounded-lg"
             />
           </div>
@@ -170,7 +173,7 @@ const ClassroomDetails: React.FC = () => {
                 <div>
                   <h4 className="font-medium">{work.title}</h4>
                   <p className="text-gray-600 mt-1">{work.description}</p>
-                  {work.type === "assignment" && (
+                  {work.type === "ASSIGNMENT" && (
                     <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
                       <span className="flex items-center">
                         <Calendar className="w-4 h-4 mr-1" />
@@ -178,28 +181,37 @@ const ClassroomDetails: React.FC = () => {
                       </span>
                       <span className="flex items-center">
                         <Clock className="w-4 h-4 mr-1" />
-                        {work.points} points
+                        {work.points || 0} points
                       </span>
                     </div>
                   )}
                   {work.attachments.length > 0 && (
                     <div className="flex items-center gap-2 mt-2">
-                      <Paperclip className="w-4 h-4 text-gray-400" />
-                      <span className="text-sm text-gray-500">
-                        {work.attachments.length} attachment
-                        {work.attachments.length !== 1 ? "s" : ""}
-                      </span>
+                      {work.attachments.map((attachment, index) => (
+                        <a
+                          href={attachment}
+                          key={attachment}
+                          target="_blank"
+                          className="flex items-center gap-1 text-blue-500 hover:text-blue-700"
+                          download
+                        >
+                          <Paperclip className="w-4 h-4" />
+                          <span className="text-sm">
+                            attachment {index + 1}
+                          </span>
+                        </a>
+                      ))}
                     </div>
                   )}
                 </div>
                 <span
                   className={`px-2 py-1 rounded text-sm ${
-                    work.type === "assignment"
+                    work.type === "ASSIGNMENT"
                       ? "bg-blue-100 text-blue-800"
                       : "bg-green-100 text-green-800"
                   }`}
                 >
-                  {work.type === "assignment" ? "Assignment" : "Material"}
+                  {work.type === "ASSIGNMENT" ? "Assignment" : "Material"}
                 </span>
               </div>
             </div>

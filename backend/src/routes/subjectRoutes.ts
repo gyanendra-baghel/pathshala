@@ -1,6 +1,7 @@
 import { Router } from "express";
 import SubjectController from "../controllers/subjectController";
 import { authMiddleware } from "../middlewares/authMiddleware";
+import upload from "../middlewares/uploadMiddleware";
 
 const router = Router();
 
@@ -38,6 +39,42 @@ router.delete(
   "/:subjectId/students/:studentId",
   authMiddleware,
   SubjectController.removeStudent
+);
+
+// Get all subjectworks for a subject
+router.get(
+  "/:subjectId/subjectworks",
+  authMiddleware,
+  SubjectController.getSubjectworks
+);
+
+// Get a specific subjectwork by ID
+router.get(
+  "/:subjectId/subjectworks/:subjectworkId",
+  authMiddleware,
+  SubjectController.getSubjectwork
+);
+
+// Add a subjectwork
+router.post(
+  "/:subjectId/subjectworks",
+  authMiddleware,
+  upload.array("attachments"),
+  SubjectController.addSubjectwork
+);
+
+// Update a subjectwork
+router.put(
+  "/:subjectId/subjectworks/:subjectworkId",
+  authMiddleware,
+  SubjectController.updateSubjectwork
+);
+
+// Delete a subjectwork
+router.delete(
+  "/:subjectId/subjectworks/:subjectworkId",
+  authMiddleware,
+  SubjectController.deleteSubjectwork
 );
 
 export default router;

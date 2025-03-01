@@ -145,6 +145,110 @@ class SubjectController {
       next(error);
     }
   }
+
+  // Get all subjectworks for a subject
+  static async getSubjectworks(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const subjectId = z
+        .number()
+        .positive()
+        .parse(parseInt(req.params.subjectId));
+      const subjectworks = await SubjectService.getSubjectworks(subjectId);
+      res.status(200).json(subjectworks);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // Get a single subjectwork by ID
+  static async getSubjectwork(req: Request, res: Response, next: NextFunction) {
+    try {
+      const subjectworkId = z
+        .number()
+        .positive()
+        .parse(parseInt(req.params.subjectworkId));
+      const subjectwork = await SubjectService.getSubjectwork(subjectworkId);
+      res.status(200).json(subjectwork);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // Add a new subjectwork
+  static async addSubjectwork(req: Request, res: Response, next: NextFunction) {
+    try {
+      const subjectId = z.coerce.number().parse(req.params.subjectId);
+      const addSubjectworkSchema = z.object({
+        title: z.string().min(3, "Title must be at least 3 characters"),
+        description: z
+          .string()
+          .min(10, "Description must be at least 10 characters"),
+        type: z.enum(["ASSIGNMENT", "MATERIAL"]),
+        dueDate: z.coerce.date().optional(), // Only required for assignments
+      });
+      const files = req.files as Express.Multer.File[];
+      const attachments = files.map((file) => file.path); // Cloudinary URL
+      const subjectworkData = addSubjectworkSchema.parse(req.body);
+      const newSubjectwork = await SubjectService.addSubjectwork({
+        subjectId,
+        ...subjectworkData,
+        attachments,
+      });
+      res.status(201).json(newSubjectwork);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // Update a subjectwork
+  static async updateSubjectwork(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const subjectworkId = z
+        .number()
+        .positive()
+        .parse(parseInt(req.params.subjectworkId));
+      const updateSubjectworkSchema = z.object({
+        title: z.string().min(1, "Title is required").optional(),
+        description: z.string().optional(),
+        dueDate: z.string().optional(),
+        subjectId: z.number().positive().optional(),
+      });
+      const subjectworkData = updateSubjectworkSchema.parse(req.body);
+      const updatedSubjectwork = await SubjectService.updateSubjectwork(
+        subjectworkId,
+        subjectworkData
+      );
+      res.status(200).json(updatedSubjectwork);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // Delete a subjectwork
+  static async deleteSubjectwork(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const subjectworkId = z
+        .number()
+        .positive()
+        .parse(parseInt(req.params.subjectworkId));
+      await SubjectService.deleteSubjectwork(subjectworkId);
+      res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default SubjectController;

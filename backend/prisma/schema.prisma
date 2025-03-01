@@ -111,6 +111,8 @@ model Subject {
   teachers    SubjectTeacher[]
   students    SubjectStudent[]
   attendance  Attendance[]
+  sobjectWorks SubjectWork[]
+  // change to subjectWork
   grade       Grade?     @relation(fields: [gradeId], references: [id])
 }
 
@@ -136,12 +138,24 @@ model SubjectStudent {
   subject   Subject   @relation(fields: [subjectId], references: [id])
   grade     Grade     @relation(fields: [gradeId], references: [id])
   student   Student  @relation(fields: [studentId], references: [id])
-  // add primary key for subjectId, studentId
-  // @@unique([subjectId, studentId])
+  @@unique([subjectId, studentId])
+}
+
+model SubjectWork {
+  id            Int            @id @default(autoincrement())
+  subjectId     Int
+  title         String
+  description   String
+  type          SubjectWorkType
+  dueDate       DateTime? 
+  attachments   String[]
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  subject       Subject          @relation(fields: [subjectId], references: [id])
 }
 
 // Attendance Management
-
 model Attendance {
   id            Int            @id @default(autoincrement())
   subjectId     Int
@@ -229,6 +243,11 @@ enum SchoolBoard {
   ICSE
   STATE_BOARD
   OTHER
+}
+
+enum SubjectWorkType {
+  ASSIGNMENT
+  MATERIAL
 }
 
 model Annoncements {

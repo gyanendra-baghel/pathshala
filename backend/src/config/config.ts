@@ -19,6 +19,12 @@ const config = {
   logging: {
     level: process.env.LOG_LEVEL || "info", // Default log level
   },
+  cloudinary: {
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME || "dvyt2zexg",
+    apiKey: process.env.CLOUDINARY_API_KEY || "481397721463527",
+    apiSecret:
+      process.env.CLOUDINARY_API_SECRET || "A-LPFsgvs4sDxEbitCCWheeH1Ck",
+  },
 };
 
 export default config;
