@@ -80,7 +80,6 @@ class FeeController {
         schoolId: z.number().positive(),
       });
       const feeData = feeSchema.parse(req.body);
-      console.log(feeData);
       const fee = await FeeService.addFee(feeData);
       res.status(201).json(fee);
     } catch (error) {

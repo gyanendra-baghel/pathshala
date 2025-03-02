@@ -23,7 +23,12 @@ class SubjectService {
   }
 
   static async getStudents(subjectId: number) {
-    return SubjectModel.getStudents(subjectId);
+    const subjectStudents = await SubjectModel.getStudents(subjectId);
+    if (!subjectStudents) {
+      throw new ApiError(404, "Subject not found");
+    }
+    const students = subjectStudents.map((s) => s.student);
+    return students;
   }
 
   static async getSubjectByTeacher(teacherId: number) {
@@ -59,7 +64,12 @@ class SubjectService {
 
   // Get all teachers for a subject.
   static async getTeachers(subjectId: number) {
-    return SubjectModel.getTeachers(subjectId);
+    const studentTeachers = await SubjectModel.getTeachers(subjectId);
+    if (!studentTeachers) {
+      throw new ApiError(404, "Subject not found");
+    }
+    const teachers = studentTeachers.map((t) => t.teacher);
+    return teachers;
   }
 
   // Add teacher to a subject.

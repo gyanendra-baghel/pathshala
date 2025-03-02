@@ -16,10 +16,7 @@ const ManageTeacher = () => {
       try {
         const response = await API.get(`/subjects/${classId}/teachers`);
         if (response.status == 200) {
-          if (response.data.length > 0) {
-            const teachers = response.data.map((data: any) => data.teacher);
-            setTeachers(teachers);
-          }
+          setTeachers(response.data);
         }
       } catch (error) {
         console.error("Error fetching students", error);

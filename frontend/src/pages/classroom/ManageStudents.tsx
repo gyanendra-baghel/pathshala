@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Trash2, UserPlus } from "lucide-react";
 import { useParams } from "react-router-dom";
 import API from "../../utils/api";
-import { Student, SubjectStudent } from "../../utils/types";
+import { Student } from "../../utils/types";
 
 const ManageStudent = () => {
   const { classId } = useParams<{ classId: string }>();
@@ -17,13 +17,7 @@ const ManageStudent = () => {
       try {
         const response = await API.get(`/subjects/${classId}/students`);
         if (response.status == 200) {
-          if (response.data.length > 0) {
-            const students = response.data.map(
-              (data: SubjectStudent) => data.student
-            );
-            console.log("Students", students);
-            setStudents(students);
-          }
+          setStudents(response.data as Student[]);
         }
       } catch (error) {
         console.error("Error fetching students", error);
@@ -41,7 +35,6 @@ const ManageStudent = () => {
 
       if (response.status === 201) {
         const student = response.data.student as Student;
-        console.log("Students", student);
         setStudents([...students, student]);
         setStudentId("");
       }

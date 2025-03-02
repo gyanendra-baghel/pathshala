@@ -29,7 +29,6 @@ class FeeStructureController {
         description: z.string().optional(),
       });
       const feeData = feeStructureSchema.parse(req.body);
-      console.log(feeData);
       const createdFee = await FeeStructureService.createFeeStructure(feeData);
       res.status(201).json(createdFee);
     } catch (error) {
