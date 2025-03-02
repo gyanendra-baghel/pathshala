@@ -146,6 +146,59 @@ class SubjectController {
     }
   }
 
+  // Get all teachers
+  static async getTeachers(req: Request, res: Response, next: NextFunction) {
+    try {
+      const subjectId = z.coerce
+        .number()
+        .positive()
+        .parse(req.params.subjectId);
+      const teachers = await SubjectService.getTeachers(subjectId);
+      res.status(200).json(teachers);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // Add teacher to a subject
+  static async addTeacher(req: Request, res: Response, next: NextFunction) {
+    try {
+      const subjectId = z.coerce
+        .number()
+        .positive()
+        .parse(req.params.subjectId);
+      const addTeacherSchema = z.object({
+        teacherId: z.number().positive(),
+      });
+      const teacherData = addTeacherSchema.parse(req.body);
+      const teachers = await SubjectService.addTeacher(
+        subjectId,
+        teacherData.teacherId
+      );
+      res.status(201).json(teachers);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // Remove teacher from a subject
+  static async removeTeacher(req: Request, res: Response, next: NextFunction) {
+    try {
+      const subjectId = z.coerce
+        .number()
+        .positive()
+        .parse(req.params.subjectId);
+      const teacherId = z.coerce
+        .number()
+        .positive()
+        .parse(req.params.teacherId);
+      await SubjectService.removeTeacher(subjectId, teacherId);
+      res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  }
+
   // Get all subjectworks for a subject
   static async getSubjectworks(
     req: Request,

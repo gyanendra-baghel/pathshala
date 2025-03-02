@@ -25,9 +25,10 @@ import AddTeacherPage from "./pages/admin/teachers/AddTeacher";
 import { UserRole } from "./utils/types";
 import AuthUser from "./components/utils/AuthUser";
 import AddGradePage from "./pages/grades/AddGrade";
-import AddSubjectPage from "./pages/grades/subjects/AddSubject";
+import AddSubjectPage from "./pages/grades/AddSubject";
 import ManageStudent from "./pages/classroom/ManageStudents";
 import AuthRole from "./components/utils/AuthRole";
+import ManageTeacher from "./pages/classroom/ManageTeachers";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
           <Route path="teacher/:teacherId" element={<TeacherProfile />} />
           <Route path="teachers/add" element={<AddTeacherPage />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="c/:classId/teachers" element={<ManageTeacher />} />
           <Route path="reports" element={<Reports />} />
           <Route path="timetable" element={<UnderProduction />} />
           <Route path="analytics" element={<UnderProduction />} />
@@ -52,6 +54,7 @@ function App() {
           <Route path="student/:studentId" element={<StudentProfile />} />
           <Route path="classes/add" element={<AddGradePage />} />
           <Route path="classes/add-subject" element={<AddSubjectPage />} />
+          <Route path="c/:classId/students" element={<ManageStudent />} />
           <Route path="attendance" element={<StudentAttendence />} />
           {/* <Route path="attendance/:studentId" element={<Attendance />} /> */}
         </Route>
@@ -69,7 +72,6 @@ function App() {
           <Route path="c/:classId" element={<ClassroomDetails />} />
           <Route path="c/:classId/assignments" element={<Assignments />} />
           <Route path="c/:classId/attendance" element={<ClassAttendence />} />
-          <Route path="c/:classId/students" element={<ManageStudent />} />
           <Route path="classes" element={<TeacherClassroom />} />
           <Route path="profile" element={<Profile />} />
           <Route path="announcements" element={<Announcements />} />

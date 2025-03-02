@@ -77,4 +77,25 @@ router.delete(
   SubjectController.deleteSubjectwork
 );
 
+// Get all teachers for a subject
+router.get(
+  "/:subjectId/teachers",
+  authMiddleware,
+  SubjectController.getTeachers
+);
+
+// Add teachers to a subject
+router.post(
+  "/:subjectId/teachers",
+  authMiddleware,
+  SubjectController.addTeacher
+);
+
+// Delete a teacher from a subject
+router.delete(
+  "/:subjectId/teachers/:teacherId",
+  authMiddleware,
+  SubjectController.removeTeacher
+);
+
 export default router;

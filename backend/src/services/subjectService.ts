@@ -41,6 +41,21 @@ class SubjectService {
     return SubjectModel.removeStudent(subjectId, studentId);
   }
 
+  // Get all teachers for a subject.
+  static async getTeachers(subjectId: number) {
+    return SubjectModel.getTeachers(subjectId);
+  }
+
+  // Add teacher to a subject.
+  static async addTeacher(subjectId: number, teacherId: number) {
+    return SubjectModel.addTeacher(subjectId, teacherId);
+  }
+
+  // Remove teacher from a subject.
+  static async removeTeacher(subjectId: number, teacherId: number) {
+    return SubjectModel.removeTeacher(subjectId, teacherId);
+  }
+
   // Get all subjectworks for a subject.
   static async getSubjectworks(subjectId: number) {
     return SubjectModel.getSubjectworks(subjectId);

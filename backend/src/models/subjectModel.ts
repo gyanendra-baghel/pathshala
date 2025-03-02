@@ -76,6 +76,36 @@ class SubjectModel {
     });
   }
 
+  // Get all teachers in a subject.
+  static async getTeachers(subjectId: number) {
+    return prisma.subjectTeacher.findMany({
+      where: { subjectId },
+      include: { teacher: true },
+    });
+  }
+
+  // Add Teacher to a subject.
+  static async addTeacher(subjectId: number, teacherId: number) {
+    return prisma.subjectTeacher.create({
+      data: {
+        subjectId,
+        teacherId,
+        gradeId: 1, // Replace 1 with the appropriate gradeId value
+      },
+      include: { teacher: true },
+    });
+  }
+
+  // Remove Teacher from a subject.
+  static async removeTeacher(subjectId: number, teacherId: number) {
+    return prisma.subjectTeacher.deleteMany({
+      where: {
+        subjectId,
+        teacherId,
+      },
+    });
+  }
+
   // Add subjectwork
   static async addSubjectwork(data: any) {
     return prisma.subjectWork.create({

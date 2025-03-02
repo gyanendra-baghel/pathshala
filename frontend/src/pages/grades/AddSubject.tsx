@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
-import InputField from "../../../components/form/InputField";
+import InputField from "../../components/form/InputField";
 import { useDispatch } from "react-redux";
-import { AppDispatch, RootState } from "../../../redux/store";
-import { addSubject } from "../../../redux/features/subjectSlice";
-import SelectField from "../../../components/form/SelectField";
+import { AppDispatch, RootState } from "../../redux/store";
+import { addSubject } from "../../redux/features/subjectSlice";
+import SelectField from "../../components/form/SelectField";
 import { useSelector } from "react-redux";
 
 // Validation schema for Subject
