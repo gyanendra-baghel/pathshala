@@ -26,6 +26,22 @@ class SubjectService {
     return SubjectModel.getStudents(subjectId);
   }
 
+  static async getSubjectByTeacher(teacherId: number) {
+    const subjectTeacher = await SubjectModel.getSubjectByTeacher(teacherId);
+    if (!subjectTeacher) {
+      throw new ApiError(404, "Teacher not found");
+    }
+    return subjectTeacher.map((st) => st.subject);
+  }
+
+  static async getSubjectByStudent(studentId: number) {
+    const subjectStudent = await SubjectModel.getSubjectByStudent(studentId);
+    if (!subjectStudent) {
+      throw new ApiError(404, "Student not found");
+    }
+    return subjectStudent.map((st) => st.subject);
+  }
+
   static async addStudent(subjectId: number, studentIds: number) {
     const subject = await SubjectModel.getSubjectById(subjectId);
     if (!subject) {

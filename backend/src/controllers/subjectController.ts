@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import SubjectService from "../services/subjectService";
 import { z } from "zod";
 import ApiError from "../utils/ApiError";
+import { UserRole } from "../@types/types";
 
 class SubjectController {
   // Get all subjects for a specific school
@@ -11,8 +12,20 @@ class SubjectController {
         throw new ApiError(401, "Unauthorized");
       }
       const schoolId = req.user.schoolId;
-      const subjects = await SubjectService.getSubjectsBySchool(schoolId);
-      res.status(200).json(subjects);
+      const userId = req.user.userId;
+      const role = req.user.role;
+      if ([UserRole.ADMIN, UserRole.MAIN_ADMIN].includes(role)) {
+        const subjects = await SubjectService.getSubjectsBySchool(schoolId);
+        res.status(200).json(subjects);
+      } else if (role === UserRole.TEACHER) {
+        const subjects = await SubjectService.getSubjectByTeacher(userId);
+        res.status(200).json(subjects);
+      } else if (role === UserRole.STUDENT) {
+        const subjects = await SubjectService.getSubjectByStudent(userId);
+        res.status(200).json(subjects);
+      } else {
+        throw new ApiError(403, "Forbidden");
+      }
     } catch (error) {
       next(error);
     }

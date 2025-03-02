@@ -42,6 +42,22 @@ class SubjectModel {
     });
   }
 
+  // Get subject by teacher ID.
+  static async getSubjectByTeacher(teacherId: number) {
+    return prisma.subjectTeacher.findMany({
+      where: { teacherId },
+      include: { subject: true },
+    });
+  }
+
+  // Get subject by student ID.
+  static async getSubjectByStudent(studentId: number) {
+    return prisma.subjectStudent.findMany({
+      where: { studentId },
+      include: { subject: true },
+    });
+  }
+
   // Get All students in a subject.
   static async getStudents(subjectId: number) {
     return prisma.subjectStudent.findMany({

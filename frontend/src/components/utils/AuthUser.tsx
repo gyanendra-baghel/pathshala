@@ -6,7 +6,6 @@ import { AppDispatch, RootState } from "../../redux/store";
 import { authenticateUser } from "../../redux/features/authSlice";
 import { LandingPage } from "../../pages/Home";
 import { fetchGrades } from "../../redux/features/gradeSlice";
-import { UserRole } from "../../utils/types";
 import { fetchSubjects } from "../../redux/features/subjectSlice";
 
 interface AuthUserProps {
@@ -23,10 +22,9 @@ const AuthUser: React.FC<AuthUserProps> = ({ element }) => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (user && user.role === UserRole.MAIN_ADMIN) {
-      dispatch(fetchGrades());
-      dispatch(fetchSubjects());
-    }
+    if (!user) return;
+    dispatch(fetchGrades());
+    dispatch(fetchSubjects());
   }, [dispatch, user]);
 
   if (!user && location.pathname == "/") {
