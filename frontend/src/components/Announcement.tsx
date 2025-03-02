@@ -34,6 +34,9 @@ const AnnouncementSection: React.FC = () => {
     <div className="space-y-4 bg-white p-4 rounded-lg shadow">
       <h2 className="text-xl font-bold">Latest Announcements</h2>
       <div className="grid gap-4">
+        {announcements.length === 0 && (
+          <div className="text-gray-600 text-center">No announcements</div>
+        )}
         {announcements.map((announcement) => (
           <div key={announcement.id} className="bg-gray-50 p-4">
             <div className="flex items-center gap-2">

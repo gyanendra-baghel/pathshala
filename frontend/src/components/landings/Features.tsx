@@ -1,9 +1,17 @@
+import {
+  Bell,
+  CalendarClock,
+  ClipboardList,
+  DollarSign,
+  LineChart,
+  Waypoints,
+} from "lucide-react";
 import React from "react";
 
 const Features: React.FC = () => {
   const features = [
     {
-      icon: "fas fa-clipboard-list",
+      icon: <ClipboardList />,
       title: "Attendance Management",
       description:
         "Track student and staff attendance digitally with automated reports and notifications.",
@@ -11,7 +19,7 @@ const Features: React.FC = () => {
       iconColor: "text-blue-500",
     },
     {
-      icon: "fas fa-dollar-sign",
+      icon: <DollarSign />,
       title: "Fee Management",
       description:
         "Streamline fee collection with automated billing, receipts, and payment tracking.",
@@ -19,7 +27,7 @@ const Features: React.FC = () => {
       iconColor: "text-green-500",
     },
     {
-      icon: "fas fa-chart-line",
+      icon: <LineChart />,
       title: "Performance Analytics",
       description:
         "Monitor academic performance with detailed analytics and progress tracking.",
@@ -27,7 +35,7 @@ const Features: React.FC = () => {
       iconColor: "text-purple-500",
     },
     {
-      icon: "fas fa-calendar-alt",
+      icon: <CalendarClock />,
       title: "Timetable Management",
       description:
         "Create and manage class schedules with conflict detection and easy updates.",
@@ -35,7 +43,7 @@ const Features: React.FC = () => {
       iconColor: "text-red-500",
     },
     {
-      icon: "fas fa-bell",
+      icon: <Bell />,
       title: "Communication Portal",
       description:
         "Keep parents informed with automated notifications and announcements.",
@@ -43,7 +51,7 @@ const Features: React.FC = () => {
       iconColor: "text-yellow-500",
     },
     {
-      icon: "fas fa-cogs",
+      icon: <Waypoints />,
       title: "Resource Management",
       description:
         "Efficiently manage school resources, inventory, and facilities.",
@@ -59,15 +67,13 @@ const Features: React.FC = () => {
       <p className="text-center text-gray-600 mb-12">
         Everything you need to run your school efficiently in one platform
       </p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mx-2">
         {features.map((feature, index) => (
           <div key={index} className="bg-white p-6 rounded-lg shadow-md">
             <div
               className={`w-12 h-12 flex items-center justify-center rounded-full ${feature.bgColor} mb-4`}
             >
-              <i
-                className={`${feature.icon} ${feature.iconColor} text-2xl`}
-              ></i>
+              {feature.icon}
             </div>
             <h2 className="text-xl font-semibold mb-2">{feature.title}</h2>
             <p className="text-gray-600">{feature.description}</p>

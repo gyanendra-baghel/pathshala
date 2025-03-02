@@ -90,6 +90,8 @@ const FinanceChart = () => {
         <p className="text-center text-gray-500">Loading data...</p>
       ) : error ? (
         <p className="text-center text-red-500">{error}</p>
+      ) : filteredData.length == 0 ? (
+        <div className="text-center text-gray-500">No data available</div>
       ) : (
         <ResponsiveContainer width="100%" height={350}>
           <LineChart
