@@ -107,12 +107,6 @@ const Classroom: React.FC = () => {
                       Teachers
                     </Link>
                   </div>
-
-                  <Link
-                    to={`/c/${subject.id}`}
-                    className="absolute inset-0 z-10"
-                    aria-hidden="true"
-                  />
                 </div>
               </div>
             </div>

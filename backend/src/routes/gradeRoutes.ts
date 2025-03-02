@@ -14,12 +14,7 @@ router.post(
 );
 
 // Get all grades for a specific school
-router.get(
-  "/",
-  authMiddleware,
-  roleMiddleware([UserRole.ADMIN, UserRole.TEACHER]),
-  GradeController.getGradesBySchool
-);
+router.get("/", authMiddleware, GradeController.getGradesBySchool);
 
 // Get a specific grade by ID
 router.get(
@@ -40,8 +35,8 @@ router.put(
 // Delete a grade by ID
 router.delete(
   "/:id",
-  // authMiddleware,
-  // roleMiddleware([UserRole.ADMIN]),
+  authMiddleware,
+  roleMiddleware([UserRole.ADMIN]),
   GradeController.deleteGrade
 );
 

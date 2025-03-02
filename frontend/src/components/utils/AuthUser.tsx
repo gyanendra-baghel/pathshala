@@ -7,6 +7,7 @@ import { authenticateUser } from "../../redux/features/authSlice";
 import { LandingPage } from "../../pages/Home";
 import { fetchGrades } from "../../redux/features/gradeSlice";
 import { fetchSubjects } from "../../redux/features/subjectSlice";
+import LoadingCard from "../ui/LoadingCard";
 
 interface AuthUserProps {
   element: React.ReactNode;
@@ -32,7 +33,7 @@ const AuthUser: React.FC<AuthUserProps> = ({ element }) => {
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingCard />;
   }
   if (!user) {
     return <AccessDenied />;

@@ -79,8 +79,8 @@ export interface Teacher extends User {
 export interface Grade {
   id: string;
   name: string;
-  students: string[]; // student IDs
-  teacherId: string;
+  students?: string[]; // student IDs
+  teacherId?: string;
 }
 
 export interface Class {
