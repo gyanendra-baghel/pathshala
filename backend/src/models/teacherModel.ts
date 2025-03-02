@@ -19,6 +19,9 @@ class TeacherModel {
   static async getTeacherById(id: number) {
     return prisma.teacher.findUnique({
       where: { id },
+      include: {
+        school: true,
+      },
     });
   }
 

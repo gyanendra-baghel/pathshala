@@ -8,6 +8,9 @@ class AdminModel {
   static async getAdminById(id: number) {
     return prisma.admin.findUnique({
       where: { id },
+      include: {
+        school: true,
+      },
     });
   }
 

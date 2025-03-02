@@ -10,6 +10,21 @@ export enum Gender {
   OTHER = "OTHER",
 }
 
+export interface School {
+  id: string;
+  name: string;
+  address: string;
+  postalCode: string;
+  schoolBoard: string;
+  phone: string;
+  email: string;
+  logo?: string;
+  website?: string;
+  established?: string;
+  principal?: string;
+  vicePrincipal?: string;
+}
+
 export interface Subject {
   id: string;
   name: string;
@@ -30,7 +45,10 @@ export interface User {
   role: UserRole;
   name: string;
   email: string;
-  password?: string;
+  phone: string;
+  password: string;
+  schoolId: string;
+  school?: School;
 }
 
 export interface Student extends User {
@@ -54,7 +72,6 @@ export interface Teacher extends User {
   dob?: string;
   role: UserRole.TEACHER;
   address: string;
-  phone?: string;
   gender?: Gender;
   subjects: number[];
 }

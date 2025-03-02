@@ -7,12 +7,13 @@ import AccessDenied from "../components/utils/AccessDenied";
 import { User } from "../utils/types";
 import { MenuCard } from "../components/ui/MenuCard";
 import { EditIcon } from "lucide-react";
+import SchoolDetails from "../components/SchoolDetails";
 
 const Profile: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   const [isEditing, setIsEditing] = React.useState(false);
 
-  const handleSave = (values: User) => {
+  const saveCredientials = (values: User) => {
     // You can add API call here to update the student data
     console.log("Updated student data:", values);
   };
@@ -29,12 +30,21 @@ const Profile: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <MenuCard title="Profile" menuItems={menuItems}>
+      <MenuCard
+        title="Personal Credientials"
+        menuItems={menuItems}
+        className="my-4"
+      >
         <div className="space-y-4">
-          <Formik initialValues={user} onSubmit={handleSave}>
+          <Formik initialValues={user} onSubmit={saveCredientials}>
             {() => (
               <Form>
-                <InputField name="email" label="Email" readOnly={true} />
+                <InputField
+                  name="email"
+                  label="Email"
+                  id="personalEmail"
+                  readOnly={true}
+                />
                 <InputField
                   name="phoneNumber"
                   label="Phone"
@@ -67,6 +77,7 @@ const Profile: React.FC = () => {
           </Formik>
         </div>
       </MenuCard>
+      <SchoolDetails />
     </div>
   );
 };

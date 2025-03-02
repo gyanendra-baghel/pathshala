@@ -7,7 +7,6 @@ class SchoolController {
   // Create a new school
   static async createSchool(req: Request, res: Response, next: NextFunction) {
     try {
-      const schoolData = req.body; // Data from the request body
       const SchoolWithAdminRegistrationSchema = z.object({
         school: z.object({
           name: z.string().min(3).max(100),
@@ -27,7 +26,7 @@ class SchoolController {
       });
 
       // Validate the request body
-      SchoolWithAdminRegistrationSchema.parse(schoolData);
+      const schoolData = SchoolWithAdminRegistrationSchema.parse(req.body);
 
       const school = await SchoolService.createSchool(schoolData);
       res.status(201).json(school);
@@ -49,9 +48,8 @@ class SchoolController {
   // Get a school by ID
   static async getSchoolById(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params;
-      const schoolId = parseInt(id);
-      z.number().positive().parse(schoolId);
+      const schoolId = z.coerce.number().positive().parse(req.params.id);
+
       const school = await SchoolService.getSchoolById(schoolId);
       if (!school) {
         throw new ApiError(404, "School not found");
@@ -65,10 +63,8 @@ class SchoolController {
   // Update a school by ID
   static async updateSchool(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params;
-      const schoolId = parseInt(id);
-      z.number().positive().parse(schoolId);
-      const schoolData = req.body;
+      const schoolId = z.coerce.number().positive().parse(req.params.id);
+
       const SchoolUpdateSchema = z.object({
         name: z.string().min(3).max(100).optional(),
         email: z.string().email().optional(),
@@ -85,7 +81,7 @@ class SchoolController {
           .regex(/^\d{6}$/)
           .optional(),
       });
-      SchoolUpdateSchema.parse(schoolData);
+      const schoolData = SchoolUpdateSchema.parse(req.body);
       const updatedSchool = await SchoolService.updateSchool(
         schoolId,
         schoolData
@@ -102,9 +98,8 @@ class SchoolController {
   // Delete a school by ID
   static async deleteSchool(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params;
-      const schoolId = parseInt(id);
-      z.number().positive().parse(schoolId);
+      const schoolId = z.coerce.number().positive().parse(req.params.id);
+
       const deletedSchool = await SchoolService.deleteSchool(schoolId);
       if (!deletedSchool) {
         throw new ApiError(404, "School not found");

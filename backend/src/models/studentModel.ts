@@ -43,6 +43,7 @@ export class StudentModel {
         fees: true,
         grade: true,
         subjects: true,
+        school: true,
       },
     });
   }

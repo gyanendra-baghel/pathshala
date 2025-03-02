@@ -9,12 +9,7 @@ const router = Router();
 router.post("/", SchoolController.createSchool);
 
 // Route to get school details (Admin only)
-router.get(
-  "/",
-  authMiddleware,
-  roleMiddleware([UserRole.ADMIN]),
-  SchoolController.getAllSchools
-);
+router.get("/", authMiddleware, SchoolController.getAllSchools);
 
 // Route to get school details (Admin only)
 router.get(

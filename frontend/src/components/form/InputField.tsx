@@ -4,6 +4,7 @@ interface InputFieldProps {
   label: string;
   name: string;
   type?: string;
+  id?: string;
   placeholder?: string;
   readOnly?: boolean;
 }
@@ -12,18 +13,22 @@ const InputField: React.FC<InputFieldProps> = ({
   label,
   name,
   type = "text",
+  id,
   placeholder,
   readOnly = false,
 }) => {
   return (
     <div className="mb-4">
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+      <label
+        htmlFor={id || name}
+        className="block text-sm font-medium text-gray-700"
+      >
         {label}
       </label>
       {type === "textarea" ? (
         <Field
           as="textarea"
-          id={name}
+          id={id || name}
           name={name}
           placeholder={placeholder}
           className="mt-1 p-2 block w-full h-32 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
@@ -31,7 +36,7 @@ const InputField: React.FC<InputFieldProps> = ({
         />
       ) : (
         <Field
-          id={name}
+          id={id || name}
           name={name}
           type={type}
           placeholder={placeholder}
