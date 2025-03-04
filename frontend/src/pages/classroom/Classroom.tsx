@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { Plus, Users, Book, GraduationCap } from "lucide-react";
+import { UserRole } from "../../utils/types";
 
 const Classroom: React.FC = () => {
+  const { user } = useSelector((state: RootState) => state.auth);
   const { subjects } = useSelector((state: RootState) => state.subject);
 
   return (
@@ -17,23 +19,26 @@ const Classroom: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-3">
-          <Link
-            to="/classes/add-subject"
-            className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          >
-            <Plus className="w-5 h-5 mr-2" />
-            Add Subject
-          </Link>
+        {user?.role &&
+          [UserRole.MAIN_ADMIN, UserRole.TEACHER].includes(user.role) && (
+            <div className="flex flex-wrap gap-3">
+              <Link
+                to="/classes/add-subject"
+                className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                <Plus className="w-5 h-5 mr-2" />
+                Add Subject
+              </Link>
 
-          <Link
-            to="/classes/add"
-            className="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg shadow hover:bg-emerald-700 transition-colors focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
-          >
-            <Plus className="w-5 h-5 mr-2" />
-            Add Grade
-          </Link>
-        </div>
+              <Link
+                to="/classes/add"
+                className="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg shadow hover:bg-emerald-700 transition-colors focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+              >
+                <Plus className="w-5 h-5 mr-2" />
+                Add Grade
+              </Link>
+            </div>
+          )}
       </div>
 
       {subjects.length === 0 ? (

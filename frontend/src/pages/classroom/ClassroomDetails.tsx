@@ -1,13 +1,117 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ClassWork, Subject } from "../../utils/types";
-import { Calendar, Clock, Paperclip } from "lucide-react";
+import {
+  AlertTriangle,
+  Calendar,
+  Clock,
+  Home,
+  Paperclip,
+  RefreshCw,
+} from "lucide-react";
 import API from "../../utils/api";
 import CollapsibleCard from "../../components/ui/CollapsibleCard";
+import LoadingCard from "../../components/ui/LoadingCard";
+
+interface ClassroomNotFoundProps {
+  classId?: string | number;
+  onReturnHome?: () => void;
+}
+
+const ClassroomNotFound: React.FC<ClassroomNotFoundProps> = ({
+  classId,
+  onReturnHome,
+}) => {
+  return (
+    <div className="h-full flex flex-col items-center justify-center p-6 bg-gray-50">
+      <div className="text-center max-w-md">
+        <div className="mb-6 flex justify-center">
+          <AlertTriangle
+            className="text-yellow-500 w-24 h-24"
+            strokeWidth={1.5}
+          />
+        </div>
+
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">
+          Classroom Not Found
+        </h2>
+
+        {classId && (
+          <p className="text-gray-600 mb-4">
+            The classroom with ID{" "}
+            <span className="font-semibold">{classId}</span> could not be
+            located in the system.
+          </p>
+        )}
+
+        <div className="space-y-4">
+          <p className="text-gray-500">
+            This could be due to:
+            <ul className="list-disc list-inside text-left mt-2">
+              <li>Incorrect classroom ID</li>
+              <li>Classroom may have been deleted</li>
+              <li>You might not have permission to access this classroom</li>
+            </ul>
+          </p>
+
+          <div className="flex justify-center gap-4 mt-6">
+            <button
+              onClick={() => window.location.reload()}
+              className="
+                px-4 py-2 
+                bg-blue-100 text-blue-700 
+                rounded-md 
+                hover:bg-blue-200 
+                transition-colors
+                flex items-center gap-2
+              "
+            >
+              <RefreshCw className="w-4 h-4" />
+              Reload Page
+            </button>
+
+            {onReturnHome ? (
+              <button
+                onClick={onReturnHome}
+                className="
+                  px-4 py-2 
+                  bg-green-100 text-green-700 
+                  rounded-md 
+                  hover:bg-green-200 
+                  transition-colors
+                  flex items-center gap-2
+                "
+              >
+                <Home className="w-4 h-4" />
+                Return Home
+              </button>
+            ) : (
+              <a
+                href="/"
+                className="
+                  px-4 py-2 
+                  bg-green-100 text-green-700 
+                  rounded-md 
+                  hover:bg-green-200 
+                  transition-colors
+                  flex items-center gap-2
+                "
+              >
+                <Home className="w-4 h-4" />
+                Return Home
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const ClassroomDetails: React.FC = () => {
   const { classId } = useParams<{ classId: string }>();
   const [classroom, setClassroom] = useState<Subject | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const [classWorks, setClassWorks] = useState<ClassWork[]>([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -17,17 +121,27 @@ const ClassroomDetails: React.FC = () => {
 
   useEffect(() => {
     const fetchClassroom = async () => {
-      const response = await API.get(`/subjects/${classId}`);
-      if (response.status === 200) {
-        setClassroom(response.data);
-        setClassWorks(response.data.sobjectWorks);
+      setLoading(true);
+      try {
+        const response = await API.get(`/subjects/${classId}`);
+        if (response.status === 200) {
+          setClassroom(response.data);
+          setClassWorks(response.data.sobjectWorks);
+        }
+      } catch (error) {
+        console.error("Error fetching classroom:", error);
       }
+      setLoading(false);
     };
     fetchClassroom();
   }, [classId]);
 
+  if (loading) {
+    return <LoadingCard />;
+  }
+
   if (!classId || !classroom) {
-    return <div>Classroom not found</div>;
+    return <ClassroomNotFound classId={classId} />;
   }
 
   const handleAddClassWork = async (e: React.FormEvent) => {

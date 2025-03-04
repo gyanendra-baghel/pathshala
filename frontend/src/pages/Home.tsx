@@ -29,9 +29,11 @@ export function LandingPage() {
                   Get Started
                 </button>
               </Link>
-              <button className="bg-gray-800 text-white px-6 py-3 rounded text-lg">
-                Learn More
-              </button>
+              <Link to="/login?type=demo">
+                <button className="bg-gray-700 text-white px-6 py-3 rounded text-lg">
+                  Get Demo
+                </button>
+              </Link>
             </div>
             <div className="hidden items-center space-x-2 text-green-500 mb-6 md:flex">
               <i className="fas fa-check"></i>

@@ -28,14 +28,11 @@ const AuthUser: React.FC<AuthUserProps> = ({ element }) => {
     dispatch(fetchSubjects());
   }, [dispatch, user]);
 
-  if (!user && location.pathname == "/") {
-    return <LandingPage />;
-  }
-
   if (loading) {
     return <LoadingCard />;
-  }
-  if (!user) {
+  } else if (!user && location.pathname == "/") {
+    return <LandingPage />;
+  } else if (!user) {
     return <AccessDenied />;
   }
   return React.cloneElement(element as React.ReactElement, {}, <Outlet />);

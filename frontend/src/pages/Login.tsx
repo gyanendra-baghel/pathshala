@@ -4,9 +4,11 @@ import { UserRole } from "../utils/types";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
 import { loginUser } from "../redux/features/authSlice";
+import { useSearchParams } from "react-router-dom";
 
 export const Login: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const [searchParams] = useSearchParams();
   const { error, loading } = useSelector((state: RootState) => state.auth);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -14,18 +16,22 @@ export const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState<boolean>(false);
 
+  const type = searchParams.get("type");
+
   useEffect(() => {
-    if (role === UserRole.STUDENT) {
-      setEmail("amit.sharma@example.com");
-      setPassword("securePass123");
-    } else if (role === UserRole.TEACHER) {
-      setEmail("durgesh.tripathiec2021@indoreinstitute.com");
-      setPassword("Gyanendra12@");
-    } else {
-      setEmail("rahul.sharma@greenwoodschool.com");
-      setPassword("SecurePass@123");
+    if (type == "demo") {
+      if (role === UserRole.STUDENT) {
+        setEmail("amit.sharma@example.com");
+        setPassword("securePass123");
+      } else if (role === UserRole.TEACHER) {
+        setEmail("durgesh.tripathiec2021@indoreinstitute.com");
+        setPassword("Gyanendra12@");
+      } else {
+        setEmail("rahul.sharma@greenwoodschool.com");
+        setPassword("SecurePass@123");
+      }
     }
-  }, [role]);
+  }, [role, type]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,6 +65,13 @@ export const Login: React.FC = () => {
             Sign in to access your school dashboard
           </p>
         </div>
+        {type == "demo" && (
+          <div>
+            <p className="text-center font-bold mt-4">
+              Login with the given credentials (For Demo)
+            </p>
+          </div>
+        )}
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-5">
