@@ -2,11 +2,15 @@ import React from "react";
 import FinanceChart from "../../components/FinanceChart";
 import Announcement from "../../components/Announcement";
 import RecentTransactions from "../../components/RecentTransactions";
+import { RootState } from "../../redux/store";
+import { useSelector } from "react-redux";
 
 const AdminDashboard: React.FC = () => {
+  const { students } = useSelector((state: RootState) => state.student);
+  const { teachers } = useSelector((state: RootState) => state.teacher);
   return (
     <div className="">
-      <div className="flex items-center justify-between p-4 bg-white shadow-sm mb-4">
+      {/* <div className="flex items-center justify-between p-4 bg-white shadow-sm mb-4">
         <div className="flex items-center">
           <input
             type="text"
@@ -22,7 +26,7 @@ const AdminDashboard: React.FC = () => {
             className="w-10 h-10 rounded-full"
           />
         </div>
-      </div>
+      </div> */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
         <div className="bg-white p-4 rounded-lg shadow">
           <div className="flex items-center">
@@ -31,7 +35,7 @@ const AdminDashboard: React.FC = () => {
             </div>
             <div className="ml-4">
               <p className="text-gray-500">Total Students</p>
-              <p className="text-2xl font-semibold">1,100/1,257</p>
+              <p className="text-2xl font-semibold">{students.length}</p>
             </div>
           </div>
         </div>
@@ -64,7 +68,7 @@ const AdminDashboard: React.FC = () => {
             </div>
             <div className="ml-4">
               <p className="text-gray-500">Total Teachers</p>
-              <p className="text-2xl font-semibold">48</p>
+              <p className="text-2xl font-semibold">{teachers.length}</p>
             </div>
           </div>
         </div>

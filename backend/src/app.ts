@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/authRoutes";
+import attendanceRoutes from "./routes/attendanceRoutes";
 import announcementRoutes from "./routes/announcementRoutes";
 import schoolRoutes from "./routes/schoolRoutes";
 import gradeRoutes from "./routes/gradeRoutes";
@@ -31,6 +32,7 @@ app.get("/", (req, res) => {
   res.send("Welcome to the School Management API");
 });
 app.use("/api/auth", authRoutes);
+app.use("/api/attendance", attendanceRoutes);
 app.use("/api/schools", schoolRoutes);
 app.use("/api/grades", gradeRoutes);
 app.use("/api/students", studentRoutes);

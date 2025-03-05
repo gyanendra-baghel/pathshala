@@ -14,7 +14,6 @@ import {
   Download,
   RefreshCw,
 } from "lucide-react";
-import API from "../../utils/api";
 import { Student } from "../../utils/types";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
@@ -80,10 +79,11 @@ const StudentCard = ({ student }: { student: Student }) => {
 
 const Students: React.FC = () => {
   const { grades } = useSelector((state: RootState) => state.grade);
-  const [students, setStudents] = useState<Student[]>([]);
+  const { students, loading } = useSelector(
+    (state: RootState) => state.student
+  );
   const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
   const [totalStudents, setTotalStudents] = useState(0);
 
   // Filter states
@@ -96,23 +96,8 @@ const Students: React.FC = () => {
 
   // Generate sample student data
   useEffect(() => {
-    const fetchStudents = async () => {
-      setIsLoading(true);
-      try {
-        const response = await API.get("/students");
-        if (response.status === 200) {
-          setStudents(response.data);
-          setTotalStudents(response.data.length);
-        }
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Failed to fetch students:", error);
-        setIsLoading(false);
-      }
-    };
-
-    fetchStudents();
-  }, []);
+    setTotalStudents(students.length);
+  }, [students]);
 
   // Filter students based on search query and other filters
   useEffect(() => {
@@ -309,7 +294,7 @@ const Students: React.FC = () => {
       </div>
 
       {/* Students Grid */}
-      {isLoading ? (
+      {loading ? (
         <LoadingCard />
       ) : filteredStudents.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

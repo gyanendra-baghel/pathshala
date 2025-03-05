@@ -83,7 +83,7 @@ export interface Grade {
   teacherId?: string;
 }
 
-export interface Class {
+export interface ClassRoom {
   id: string;
   name: string;
   subject: string;
@@ -121,7 +121,7 @@ export interface Attendance {
   id: string;
   studentId: string;
   date: string;
-  status: "present" | "absent";
+  status: "PRESENT" | "ABSENT" | "LATE";
 }
 
 export interface Announcement {

@@ -166,6 +166,7 @@ model Attendance {
 
   subject       Subject          @relation(fields: [subjectId], references: [id])
   student       Student        @relation(fields: [studentId], references: [id])
+  @@unique([studentId, subjectId, date])
 }
 
 // Fee Management

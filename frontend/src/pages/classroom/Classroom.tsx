@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { Plus, Users, Book, GraduationCap } from "lucide-react";
@@ -8,6 +8,8 @@ import { UserRole } from "../../utils/types";
 const Classroom: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   const { subjects } = useSelector((state: RootState) => state.subject);
+
+  if (!user) return <Navigate to="/login" />;
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -19,26 +21,25 @@ const Classroom: React.FC = () => {
           </p>
         </div>
 
-        {user?.role &&
-          [UserRole.MAIN_ADMIN, UserRole.TEACHER].includes(user.role) && (
-            <div className="flex flex-wrap gap-3">
-              <Link
-                to="/classes/add-subject"
-                className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >
-                <Plus className="w-5 h-5 mr-2" />
-                Add Subject
-              </Link>
+        {[UserRole.MAIN_ADMIN, UserRole.TEACHER].includes(user.role) && (
+          <div className="flex flex-wrap gap-3">
+            <Link
+              to="/classes/add-subject"
+              className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              <Plus className="w-5 h-5 mr-2" />
+              Add Subject
+            </Link>
 
-              <Link
-                to="/classes/add"
-                className="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg shadow hover:bg-emerald-700 transition-colors focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
-              >
-                <Plus className="w-5 h-5 mr-2" />
-                Add Grade
-              </Link>
-            </div>
-          )}
+            <Link
+              to="/classes/add"
+              className="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg shadow hover:bg-emerald-700 transition-colors focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+            >
+              <Plus className="w-5 h-5 mr-2" />
+              Add Grade
+            </Link>
+          </div>
+        )}
       </div>
 
       {subjects.length === 0 ? (
@@ -76,9 +77,9 @@ const Classroom: React.FC = () => {
                   </div>
                 </div>
 
-                <p className="text-gray-600 mt-2 line-clamp-2">
+                <div className="text-gray-600 mt-2 line-clamp-1">
                   {subject.description}
-                </p>
+                </div>
 
                 <div className="mt-4 flex items-center">
                   <Users className="w-4 h-4 text-gray-400 mr-1.5" />
@@ -98,20 +99,24 @@ const Classroom: React.FC = () => {
                     View Details
                   </Link>
 
-                  <div className="flex gap-4">
-                    <Link
-                      to={`/c/${subject.id}/students`}
-                      className="text-gray-600 hover:text-indigo-600 text-sm font-medium transition-colors"
-                    >
-                      Students
-                    </Link>
-                    <Link
-                      to={`/c/${subject.id}/teachers`}
-                      className="text-gray-600 hover:text-indigo-600 text-sm font-medium transition-colors"
-                    >
-                      Teachers
-                    </Link>
-                  </div>
+                  {[UserRole.MAIN_ADMIN, UserRole.TEACHER].includes(
+                    user.role
+                  ) && (
+                    <div className="flex gap-4">
+                      <Link
+                        to={`/c/${subject.id}/students`}
+                        className="text-gray-600 hover:text-indigo-600 text-sm font-medium transition-colors"
+                      >
+                        Students
+                      </Link>
+                      <Link
+                        to={`/c/${subject.id}/teachers`}
+                        className="text-gray-600 hover:text-indigo-600 text-sm font-medium transition-colors"
+                      >
+                        Teachers
+                      </Link>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

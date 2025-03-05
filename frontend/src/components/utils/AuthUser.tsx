@@ -8,6 +8,8 @@ import { LandingPage } from "../../pages/Home";
 import { fetchGrades } from "../../redux/features/gradeSlice";
 import { fetchSubjects } from "../../redux/features/subjectSlice";
 import LoadingCard from "../ui/LoadingCard";
+import { fetchStudents } from "../../redux/features/studentSlice";
+import { fetchTeachers } from "../../redux/features/teacherSlice";
 
 interface AuthUserProps {
   element: React.ReactNode;
@@ -24,6 +26,12 @@ const AuthUser: React.FC<AuthUserProps> = ({ element }) => {
 
   useEffect(() => {
     if (!user) return;
+    if (["MAIN_ADMIN"].includes(user.role)) {
+      dispatch(fetchTeachers());
+    }
+    if (["MAIN_ADMIN", "TEACHER"].includes(user.role)) {
+      dispatch(fetchStudents());
+    }
     dispatch(fetchGrades());
     dispatch(fetchSubjects());
   }, [dispatch, user]);
