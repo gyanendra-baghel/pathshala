@@ -29,6 +29,7 @@ import AddSubjectPage from "./pages/grades/AddSubject";
 import ManageStudent from "./pages/classroom/ManageStudents";
 import AuthRole from "./components/utils/AuthRole";
 import ManageTeacher from "./pages/classroom/ManageTeachers";
+import TimetableEditor from "./pages/admin/TimeTableEditor";
 
 function App() {
   return (
@@ -44,7 +45,7 @@ function App() {
           <Route path="settings" element={<Settings />} />
           <Route path="c/:classId/teachers" element={<ManageTeacher />} />
           <Route path="reports" element={<Reports />} />
-          <Route path="timetable" element={<UnderProduction />} />
+          <Route path="timetable" element={<TimetableEditor />} />
           <Route path="analytics" element={<UnderProduction />} />
         </Route>
         <Route

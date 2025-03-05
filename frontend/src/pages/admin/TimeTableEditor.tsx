@@ -1,353 +1,403 @@
-// import React, { useState } from "react";
-// import { useAppContext } from "../../context/AppContext";
-// import { Class, Teacher, Student } from "../../types";
-// import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import React, { useState } from "react";
+import { Clock, Edit2, Save, X, PlusCircle, Book, Users } from "lucide-react";
 
-// const TimetableEditor: React.FC = () => {
-//   const { classes, teachers, students, addClass, updateClass, removeClass } =
-//     useAppContext();
-//   const [selectedClass, setSelectedClass] = useState<Class | null>(null);
-//   const [name, setName] = useState("");
-//   const [subject, setSubject] = useState("");
-//   const [teacherId, setTeacherId] = useState("");
-//   const [grade, setGrade] = useState("");
-//   const [description, setDescription] = useState("");
-//   const [classStudents, setClassStudents] = useState<string[]>([]);
-//   const [timetable, setTimetable] = useState<{
-//     [key: string]: { [day: string]: Class[] };
-//   }>({
-//     "09:00 - 10:00": {
-//       Monday: [],
-//       Tuesday: [],
-//       Wednesday: [],
-//       Thursday: [],
-//       Friday: [],
-//     },
-//     "10:00 - 11:00": {
-//       Monday: [],
-//       Tuesday: [],
-//       Wednesday: [],
-//       Thursday: [],
-//       Friday: [],
-//     },
-//     "11:00 - 12:00": {
-//       Monday: [],
-//       Tuesday: [],
-//       Wednesday: [],
-//       Thursday: [],
-//       Friday: [],
-//     },
-//     "12:00 - 01:00": {
-//       Monday: [],
-//       Tuesday: [],
-//       Wednesday: [],
-//       Thursday: [],
-//       Friday: [],
-//     },
-//     "01:00 - 02:00": {
-//       Monday: [],
-//       Tuesday: [],
-//       Wednesday: [],
-//       Thursday: [],
-//       Friday: [],
-//     },
-//     "02:00 - 03:00": {
-//       Monday: [],
-//       Tuesday: [],
-//       Wednesday: [],
-//       Thursday: [],
-//       Friday: [],
-//     },
-//     "03:00 - 04:00": {
-//       Monday: [],
-//       Tuesday: [],
-//       Wednesday: [],
-//       Thursday: [],
-//       Friday: [],
-//     },
-//   });
+// Remove unused Section interface
+// interface Section {
+//   id: number;
+//   name: string;
+// }
 
-//   const handleAddClass = (e: React.FormEvent) => {
-//     e.preventDefault();
-//     const newClass: Class = {
-//       id: Date.now().toString(),
-//       name,
-//       subject,
-//       teacherId,
-//       grade,
-//       description,
-//       students: classStudents,
-//     };
-//     addClass(newClass);
-//     resetForm();
-//   };
+interface Faculty {
+  firstName: string;
+  lastName: string;
+}
 
-//   const handleEditClass = (class_: Class) => {
-//     setSelectedClass(class_);
-//     setName(class_.name);
-//     setSubject(class_.subject);
-//     setTeacherId(class_.teacherId);
-//     setGrade(class_.grade);
-//     setDescription(class_.description);
-//     setClassStudents(class_.students);
-//   };
+interface Room {
+  name: string;
+}
 
-//   const handleUpdateClass = (e: React.FormEvent) => {
-//     e.preventDefault();
-//     if (!selectedClass) return;
-//     const updatedClass: Class = {
-//       ...selectedClass,
-//       name,
-//       subject,
-//       teacherId,
-//       grade,
-//       description,
-//       students: classStudents,
-//     };
-//     updateClass(updatedClass);
-//     resetForm();
-//   };
+interface TimetableSlot {
+  id: number;
+  subject: { name: string };
+  faculty: Faculty;
+  dayOfWeek: string;
+  period: number;
+  startTime: Date;
+  endTime: Date;
+  classType: string;
+  room: Room;
+}
 
-//   const handleRemoveClass = (id: string) => {
-//     removeClass(id);
-//   };
+// Dummy data to simulate multiple sections
+const dummySections = [
+  { id: 1, name: "Grade 1 - Section A" },
+  { id: 2, name: "Grade 1 - Section B" },
+  { id: 3, name: "Grade 2 - Section A" },
+  { id: 4, name: "Grade 2 - Section B" },
+];
 
-//   const resetForm = () => {
-//     setSelectedClass(null);
-//     setName("");
-//     setSubject("");
-//     setTeacherId("");
-//     setGrade("");
-//     setDescription("");
-//     setClassStudents([]);
-//   };
+// Add index signature to dummyTimetableSlots type
+const dummyTimetableSlots: { [key: number]: TimetableSlot[] } = {
+  1: [
+    // Timetable for Grade 1 - Section A
+    {
+      id: 1,
+      subject: { name: "Mathematics" },
+      faculty: { firstName: "John", lastName: "Doe" },
+      dayOfWeek: "MONDAY",
+      period: 1,
+      startTime: new Date("2024-03-05T09:00:00"),
+      endTime: new Date("2024-03-05T10:00:00"),
+      classType: "LECTURE",
+      room: { name: "Room 101" },
+    },
+  ],
+  2: [
+    // Timetable for Grade 1 - Section B
+    {
+      id: 2,
+      subject: { name: "Science" },
+      faculty: { firstName: "Jane", lastName: "Smith" },
+      dayOfWeek: "MONDAY",
+      period: 1,
+      startTime: new Date("2024-03-05T09:00:00"),
+      endTime: new Date("2024-03-05T10:00:00"),
+      classType: "LAB",
+      room: { name: "Lab 202" },
+    },
+  ],
+};
 
-//   const toggleStudentSelection = (studentId: string) => {
-//     setClassStudents((prev) =>
-//       prev.includes(studentId)
-//         ? prev.filter((id) => id !== studentId)
-//         : [...prev, studentId]
-//     );
-//   };
+const DAYS_OF_WEEK = [
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+  "SATURDAY",
+];
 
-//   const onDragEnd = (result: any) => {
-//     const { source, destination } = result;
-//     if (!destination) return;
+const CLASS_TYPES = ["LECTURE", "ACTIVITY", "LAB", "SPORTS"];
 
-//     const sourceTime = source.droppableId.split("-")[0];
-//     const sourceDay = source.droppableId.split("-")[1];
-//     const destinationTime = destination.droppableId.split("-")[0];
-//     const destinationDay = destination.droppableId.split("-")[1];
+const TimetableEditor = () => {
+  const [selectedSection, setSelectedSection] = useState(dummySections[0].id);
+  const [timetableSlots, setTimetableSlots] = useState(dummyTimetableSlots);
+  const [editingSlot, setEditingSlot] = useState<TimetableSlot | null>(null);
 
-//     const sourceClasses = Array.from(timetable[sourceTime][sourceDay]);
-//     const [movedClass] = sourceClasses.splice(source.index, 1);
+  const handleSectionChange = (sectionId: number) => {
+    setSelectedSection(sectionId);
+    setEditingSlot(null);
+  };
 
-//     const destinationClasses = Array.from(
-//       timetable[destinationTime][destinationDay]
-//     );
-//     destinationClasses.splice(destination.index, 0, movedClass);
+  const handleEditSlot = (slot: TimetableSlot) => {
+    setEditingSlot(slot);
+  };
 
-//     setTimetable({
-//       ...timetable,
-//       [sourceTime]: {
-//         ...timetable[sourceTime],
-//         [sourceDay]: sourceClasses,
-//         [destinationDay]: destinationClasses,
-//       },
-//     });
-//   };
+  const handleSaveSlot = (updatedSlot: TimetableSlot) => {
+    setTimetableSlots((prev) => ({
+      ...prev,
+      [selectedSection]: prev[selectedSection].map((slot) =>
+        slot.id === updatedSlot.id ? updatedSlot : slot
+      ),
+    }));
+    setEditingSlot(null);
+  };
 
-//   return (
-//     <div className="space-y-4">
-//       <h2 className="text-2xl font-bold">Timetable Editor</h2>
-//       <form
-//         onSubmit={selectedClass ? handleUpdateClass : handleAddClass}
-//         className="space-y-4"
-//       >
-//         <div>
-//           <label className="block text-sm font-medium text-gray-700">
-//             Class Name
-//           </label>
-//           <input
-//             type="text"
-//             value={name}
-//             onChange={(e) => setName(e.target.value)}
-//             className="mt-1 block w-full px-4 py-2 border rounded-lg"
-//             required
-//           />
-//         </div>
-//         <div>
-//           <label className="block text-sm font-medium text-gray-700">
-//             Subject
-//           </label>
-//           <input
-//             type="text"
-//             value={subject}
-//             onChange={(e) => setSubject(e.target.value)}
-//             className="mt-1 block w-full px-4 py-2 border rounded-lg"
-//             required
-//           />
-//         </div>
-//         <div>
-//           <label className="block text-sm font-medium text-gray-700">
-//             Teacher
-//           </label>
-//           <select
-//             value={teacherId}
-//             onChange={(e) => setTeacherId(e.target.value)}
-//             className="mt-1 block w-full px-4 py-2 border rounded-lg"
-//             required
-//           >
-//             <option value="">Select Teacher</option>
-//             {teachers.map((teacher) => (
-//               <option key={teacher.id} value={teacher.id}>
-//                 {teacher.name}
-//               </option>
-//             ))}
-//           </select>
-//         </div>
-//         <div>
-//           <label className="block text-sm font-medium text-gray-700">
-//             Grade
-//           </label>
-//           <input
-//             type="text"
-//             value={grade}
-//             onChange={(e) => setGrade(e.target.value)}
-//             className="mt-1 block w-full px-4 py-2 border rounded-lg"
-//             required
-//           />
-//         </div>
-//         <div>
-//           <label className="block text-sm font-medium text-gray-700">
-//             Description
-//           </label>
-//           <textarea
-//             value={description}
-//             onChange={(e) => setDescription(e.target.value)}
-//             className="mt-1 block w-full px-4 py-2 border rounded-lg"
-//             rows={4}
-//             required
-//           />
-//         </div>
-//         <div>
-//           <label className="block text-sm font-medium text-gray-700">
-//             Students
-//           </label>
-//           <div className="grid grid-cols-2 gap-2 mt-1">
-//             {students.map((student) => (
-//               <div key={student.id} className="flex items-center">
-//                 <input
-//                   type="checkbox"
-//                   checked={classStudents.includes(student.id)}
-//                   onChange={() => toggleStudentSelection(student.id)}
-//                   className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
-//                 />
-//                 <label className="ml-2 text-sm text-gray-900">
-//                   {student.name}
-//                 </label>
-//               </div>
-//             ))}
-//           </div>
-//         </div>
-//         <div>
-//           <button
-//             type="submit"
-//             className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-//           >
-//             {selectedClass ? "Update Class" : "Add Class"}
-//           </button>
-//         </div>
-//       </form>
-//       <h3 className="text-xl font-semibold mt-8 mb-4">Timetable</h3>
-//       <DragDropContext onDragEnd={onDragEnd}>
-//         <table className="min-w-full bg-white">
-//           <thead>
-//             <tr>
-//               <th className="py-2 px-4 border-b">Time</th>
-//               <th className="py-2 px-4 border-b">Monday</th>
-//               <th className="py-2 px-4 border-b">Tuesday</th>
-//               <th className="py-2 px-4 border-b">Wednesday</th>
-//               <th className="py-2 px-4 border-b">Thursday</th>
-//               <th className="py-2 px-4 border-b">Friday</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {Object.keys(timetable).map((time) => (
-//               <tr key={time}>
-//                 <td className="py-2 px-4 border-b">{time}</td>
-//                 {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map(
-//                   (day) => (
-//                     <Droppable
-//                       droppableId={`${time}-${day}`}
-//                       key={`${time}-${day}`}
-//                     >
-//                       {(provided) => (
-//                         <td
-//                           ref={provided.innerRef}
-//                           {...provided.droppableProps}
-//                           className="py-2 px-4 border-b"
-//                         >
-//                           {timetable[time][day].map((class_, index) => (
-//                             <Draggable
-//                               key={class_.id}
-//                               draggableId={class_.id}
-//                               index={index}
-//                             >
-//                               {(provided) => (
-//                                 <div
-//                                   ref={provided.innerRef}
-//                                   {...provided.draggableProps}
-//                                   {...provided.dragHandleProps}
-//                                   className="mb-2 p-2 bg-gray-100 rounded-lg shadow"
-//                                 >
-//                                   <h5 className="font-semibold">
-//                                     {class_.name}
-//                                   </h5>
-//                                   <p className="text-gray-600">
-//                                     Subject: {class_.subject}
-//                                   </p>
-//                                   <p className="text-gray-600">
-//                                     Teacher:{" "}
-//                                     {
-//                                       teachers.find(
-//                                         (t) => t.id === class_.teacherId
-//                                       )?.name
-//                                     }
-//                                   </p>
-//                                   <p className="text-gray-600">
-//                                     Grade: {class_.grade}
-//                                   </p>
-//                                   <p className="text-gray-600">
-//                                     Description: {class_.description}
-//                                   </p>
-//                                   <p className="text-gray-600">
-//                                     Students:{" "}
-//                                     {class_.students
-//                                       .map(
-//                                         (id) =>
-//                                           students.find((s) => s.id === id)
-//                                             ?.name
-//                                       )
-//                                       .join(", ")}
-//                                   </p>
-//                                 </div>
-//                               )}
-//                             </Draggable>
-//                           ))}
-//                           {provided.placeholder}
-//                         </td>
-//                       )}
-//                     </Droppable>
-//                   )
-//                 )}
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-//       </DragDropContext>
-//     </div>
-//   );
-// };
+  const handleCancelEdit = () => {
+    setEditingSlot(null);
+  };
 
-// export default TimetableEditor;
+  const handleAddNewSlot = () => {
+    const newSlot: TimetableSlot = {
+      id: Date.now(),
+      subject: { name: "" },
+      faculty: { firstName: "", lastName: "" },
+      dayOfWeek: "MONDAY",
+      period: 1,
+      startTime: new Date(),
+      endTime: new Date(),
+      classType: "LECTURE",
+      room: { name: "" },
+    };
+
+    setTimetableSlots((prev) => ({
+      ...prev,
+      [selectedSection]: [...(prev[selectedSection] || []), newSlot],
+    }));
+    setEditingSlot(newSlot);
+  };
+
+  const handleDeleteSlot = (slotId: number) => {
+    setTimetableSlots((prev) => ({
+      ...prev,
+      [selectedSection]: prev[selectedSection].filter(
+        (slot) => slot.id !== slotId
+      ),
+    }));
+  };
+
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4 flex items-center">
+        <Clock className="mr-2" /> Multi-Section Timetable
+      </h1>
+
+      {/* Section Selection */}
+      <div className="mb-4 flex items-center space-x-2 overflow-x-auto">
+        {dummySections.map((section) => (
+          <button
+            key={section.id}
+            onClick={() => handleSectionChange(section.id)}
+            className={`
+              px-4 py-2 rounded flex items-center 
+              ${
+                selectedSection === section.id
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }
+            `}
+          >
+            <Users className="mr-2" size={20} />
+            {section.name}
+          </button>
+        ))}
+      </div>
+
+      {/* Timetable Management */}
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold flex items-center">
+          <Book className="mr-2" />
+          Timetable for{" "}
+          {dummySections.find((s) => s.id === selectedSection)?.name}
+        </h2>
+        <button
+          onClick={handleAddNewSlot}
+          className="bg-green-500 text-white px-4 py-2 rounded flex items-center hover:bg-green-600"
+        >
+          <PlusCircle className="mr-2" /> New Slot
+        </button>
+      </div>
+
+      <div className="grid gap-4">
+        {DAYS_OF_WEEK.map((day) => (
+          <div key={day} className="bg-white shadow rounded-lg p-4">
+            <h3 className="text-lg font-semibold mb-3">{day}</h3>
+
+            {(timetableSlots[selectedSection] || [])
+              .filter((slot) => slot.dayOfWeek === day)
+              .sort((a, b) => a.period - b.period)
+              .map((slot) => (
+                <div
+                  key={slot.id}
+                  className="border-b py-3 flex justify-between items-center"
+                >
+                  {editingSlot && editingSlot.id === slot.id ? (
+                    <EditSlotForm
+                      slot={editingSlot}
+                      onSave={handleSaveSlot}
+                      onCancel={handleCancelEdit}
+                    />
+                  ) : (
+                    <>
+                      <div>
+                        <p className="font-semibold">
+                          {slot.subject.name} (Period {slot.period})
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {slot.faculty.firstName} {slot.faculty.lastName}|{" "}
+                          {slot.room.name} | {slot.classType}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {new Date(slot.startTime).toLocaleTimeString()} -
+                          {new Date(slot.endTime).toLocaleTimeString()}
+                        </p>
+                      </div>
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => handleEditSlot(slot)}
+                          className="text-blue-500 hover:text-blue-700"
+                        >
+                          <Edit2 size={20} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteSlot(slot.id)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <X size={20} />
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              ))}
+
+            {!(timetableSlots[selectedSection] || []).filter(
+              (slot) => slot.dayOfWeek === day
+            ).length && (
+              <p className="text-gray-500 text-center py-4">
+                No classes scheduled for this day
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+interface EditSlotFormProps {
+  slot: TimetableSlot;
+  onSave: (slot: TimetableSlot) => void;
+  onCancel: () => void;
+}
+
+const EditSlotForm: React.FC<EditSlotFormProps> = ({
+  slot,
+  onSave,
+  onCancel,
+}) => {
+  const [editedSlot, setEditedSlot] = useState<TimetableSlot>({ ...slot });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setEditedSlot((prev) => {
+      if (name.startsWith("subject.")) {
+        return {
+          ...prev,
+          subject: {
+            ...prev.subject,
+            [name.split(".")[1]]: value,
+          },
+        };
+      }
+      if (name.startsWith("faculty.")) {
+        return {
+          ...prev,
+          faculty: {
+            ...prev.faculty,
+            [name.split(".")[1]]: value,
+          },
+        };
+      }
+      if (name.startsWith("room.")) {
+        return {
+          ...prev,
+          room: {
+            ...prev.room,
+            [name.split(".")[1]]: value,
+          },
+        };
+      }
+      if (name === "startTime" || name === "endTime") {
+        return {
+          ...prev,
+          [name]: new Date(value),
+        };
+      }
+      return { ...prev, [name]: value };
+    });
+  };
+
+  const handleSave = () => {
+    onSave(editedSlot);
+  };
+
+  return (
+    <div className="w-full grid grid-cols-2 gap-4">
+      <input
+        name="subject.name"
+        value={editedSlot.subject.name}
+        onChange={handleChange}
+        placeholder="Subject Name"
+        className="border p-2 rounded"
+      />
+      <select
+        name="dayOfWeek"
+        value={editedSlot.dayOfWeek}
+        onChange={handleChange}
+        className="border p-2 rounded"
+      >
+        {DAYS_OF_WEEK.map((day) => (
+          <option key={day} value={day}>
+            {day}
+          </option>
+        ))}
+      </select>
+      <input
+        name="faculty.firstName"
+        value={editedSlot.faculty.firstName}
+        onChange={handleChange}
+        placeholder="Faculty First Name"
+        className="border p-2 rounded"
+      />
+      <input
+        name="faculty.lastName"
+        value={editedSlot.faculty.lastName}
+        onChange={handleChange}
+        placeholder="Faculty Last Name"
+        className="border p-2 rounded"
+      />
+      <input
+        name="period"
+        type="number"
+        value={editedSlot.period}
+        onChange={handleChange}
+        placeholder="Period"
+        className="border p-2 rounded"
+      />
+      <select
+        name="classType"
+        value={editedSlot.classType}
+        onChange={handleChange}
+        className="border p-2 rounded"
+      >
+        {CLASS_TYPES.map((type) => (
+          <option key={type} value={type}>
+            {type}
+          </option>
+        ))}
+      </select>
+      <input
+        name="room.name"
+        value={editedSlot.room.name}
+        onChange={handleChange}
+        placeholder="Room Name"
+        className="border p-2 rounded"
+      />
+      <div className="grid grid-cols-2 gap-2">
+        <input
+          name="startTime"
+          type="time"
+          value={editedSlot.startTime.toTimeString().slice(0, 5)}
+          onChange={handleChange}
+          className="border p-2 rounded"
+        />
+        <input
+          name="endTime"
+          type="time"
+          value={editedSlot.endTime.toTimeString().slice(0, 5)}
+          onChange={handleChange}
+          className="border p-2 rounded"
+        />
+      </div>
+      <div className="col-span-2 flex space-x-2">
+        <button
+          onClick={handleSave}
+          className="bg-green-500 text-white px-4 py-2 rounded flex items-center flex-1 justify-center"
+        >
+          <Save className="mr-2" /> Save
+        </button>
+        <button
+          onClick={onCancel}
+          className="bg-red-500 text-white px-4 py-2 rounded flex items-center flex-1 justify-center"
+        >
+          <X className="mr-2" /> Cancel
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default TimetableEditor;
