@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 const AdminDashboard: React.FC = () => {
   const { students } = useSelector((state: RootState) => state.student);
   const { teachers } = useSelector((state: RootState) => state.teacher);
+
   return (
     <div className="">
       {/* <div className="flex items-center justify-between p-4 bg-white shadow-sm mb-4">
@@ -46,7 +47,12 @@ const AdminDashboard: React.FC = () => {
             </div>
             <div className="ml-4">
               <p className="text-gray-500">Fees Collected</p>
-              <p className="text-2xl font-semibold">₹8.5L</p>
+              <p className="text-2xl font-semibold">
+                ₹8.5L
+                <span className="text-xs text-gray-600 font-normal">
+                  (Currently Fixed)
+                </span>
+              </p>
             </div>
           </div>
         </div>
@@ -57,7 +63,12 @@ const AdminDashboard: React.FC = () => {
             </div>
             <div className="ml-4">
               <p className="text-gray-500">Pending Dues</p>
-              <p className="text-2xl font-semibold">₹2.3L</p>
+              <p className="text-2xl font-semibold">
+                ₹2.3L{" "}
+                <span className="text-xs text-gray-600 font-normal">
+                  (Currently Fixed)
+                </span>
+              </p>
             </div>
           </div>
         </div>

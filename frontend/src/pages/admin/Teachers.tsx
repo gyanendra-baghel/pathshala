@@ -86,12 +86,6 @@ const Teachers: React.FC = () => {
           {filteredTeachers.map((teacher) => (
             <TeacherCard key={teacher.id} teacher={teacher} />
           ))}
-          {filteredTeachers.map((teacher) => (
-            <TeacherCard key={teacher.id} teacher={teacher} />
-          ))}
-          {filteredTeachers.map((teacher) => (
-            <TeacherCard key={teacher.id} teacher={teacher} />
-          ))}
         </div>
       )}
     </div>
