@@ -107,12 +107,12 @@ export interface ClassWork {
 
 export interface Fee {
   id?: number;
-  studentId: number | string;
+  studentId: string;
   feeStructureId?: number | string;
   amount: number;
   description: string;
   status?: string;
-  createdAt: string;
+  createdAt?: string;
   student?: Student;
   feeStructure?: FeeStructure;
 }

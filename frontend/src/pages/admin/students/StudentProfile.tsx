@@ -205,7 +205,7 @@ const StudentDetails: React.FC = () => {
       <StudentFeeStructure studentId={studentId} />
       <FeePayment
         studentId={studentId}
-        showFeePaymant={showFeePayment}
+        showFeePayment={showFeePayment}
         setShowFeePayment={setShowFeePayment}
       />
     </div>
