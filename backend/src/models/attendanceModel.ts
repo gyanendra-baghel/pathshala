@@ -1,5 +1,6 @@
 import { AttendanceStatus } from "@prisma/client";
 import prisma from "../config/database";
+import ApiError from "../utils/ApiError";
 
 export class AttendanceModel {
   // Record attendance for a student
@@ -7,16 +8,18 @@ export class AttendanceModel {
     // Check if attendance for student, subject, and date already exists
     const existingAttendance = await prisma.attendance.findUnique({
       where: {
-        studentId_subjectId_date: {
+        studentId_subjectId_slot_date: {
           studentId: data.studentId,
           subjectId: data.subjectId,
+          slot: data.slot,
           date: data.date || new Date(),
         },
       },
     });
 
     if (existingAttendance) {
-      throw new Error(
+      throw new ApiError(
+        404,
         "Attendance already recorded for this student and subject"
       );
     }
@@ -43,10 +46,11 @@ export class AttendanceModel {
         // Check for existing record
         const existingAttendance = await tx.attendance.findUnique({
           where: {
-            studentId_subjectId_date: {
+            studentId_subjectId_slot_date: {
               studentId: attendanceData.studentId,
               subjectId: attendanceData.subjectId,
               date: attendanceData.date || new Date(),
+              slot: attendanceData.slot,
             },
           },
         });

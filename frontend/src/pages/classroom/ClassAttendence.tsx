@@ -10,6 +10,7 @@ const ClassAttendance: React.FC = () => {
   const [attendance, setAttendance] = useState<Attendance[]>([]);
   const today = new Date().toISOString().split("T")[0];
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [slotNumber, setSlotNumber] = useState<string>("0");
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -73,6 +74,7 @@ const ClassAttendance: React.FC = () => {
         const response = await API.post("/attendance", {
           studentId,
           subjectId: parseInt(classId),
+          slot: parseInt(slotNumber),
           date: today,
           status: "PRESENT",
         });
@@ -108,6 +110,7 @@ const ClassAttendance: React.FC = () => {
           classId,
           date: today,
           status: "ABSENT",
+          slot: slotNumber,
         }));
 
       if (missingAttendance.length > 0) {
@@ -122,6 +125,21 @@ const ClassAttendance: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      <div>
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold">Class Attendance</h2>
+          <div>
+            <label className="mr-2">Slot Number:</label>
+            <input
+              type="number"
+              min={0}
+              value={slotNumber}
+              onChange={(e) => setSlotNumber(e.target.value)}
+              className="w-16 px-2 py-1 border border-gray-300 rounded-md"
+            />
+          </div>
+        </div>
+      </div>
       <h2 className="text-2xl font-bold">Mark Today's Attendance</h2>
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">

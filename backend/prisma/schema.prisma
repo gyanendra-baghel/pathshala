@@ -161,12 +161,13 @@ model Attendance {
   subjectId     Int
   studentId     Int
   date          DateTime       @default(now())
+  slot          Int            // Slot number for the day
   status        AttendanceStatus
   reason        String?        // Optional reason for absence or lateness
 
   subject       Subject          @relation(fields: [subjectId], references: [id])
   student       Student        @relation(fields: [studentId], references: [id])
-  @@unique([studentId, subjectId, date])
+  @@unique([studentId, subjectId, slot, date])
 }
 
 // Fee Management

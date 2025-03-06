@@ -120,6 +120,7 @@ export interface Fee {
 export interface Attendance {
   id: string;
   studentId: string;
+  slot: number;
   date: string;
   status: "PRESENT" | "ABSENT" | "LATE";
 }

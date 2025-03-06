@@ -7,6 +7,7 @@ const CreateAttendanceSchema = z.object({
   subjectId: z.number().int().positive(),
   studentId: z.number().int().positive(),
   date: z.coerce.date(),
+  slot: z.number().int().positive(),
   status: z.nativeEnum(AttendanceStatus),
   reason: z.string().optional(),
 });
